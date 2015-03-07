@@ -27,6 +27,8 @@ var equalityRegex = /:/; // currently unused; may be expanded
 
 // these need to be global because of recursive scoping issues
 // alternative would be recursive construction of a ParseResult
+//
+// prepended "parser_" to eliminate namespace issues
 var parser_parsedElements = [];
 var parser_identifiers = [];
 var parser_dates = [];
@@ -53,6 +55,7 @@ function ParseResult(parsedElements, identifiers, dates, definitions, events, ot
 	this.other = other;
 	
 	this.getIdentifiers = function () {
+		// return an array of all Identifier and Date Elements
 		var identifierPool = [];
 		for (i in this.identifiers) {
 			identifierPool.push(this.identifiers[i]);
@@ -64,7 +67,7 @@ function ParseResult(parsedElements, identifiers, dates, definitions, events, ot
 	}
 	
 	this.getElementByKey = function (key) {
-		// TODO: function description
+		// given an identifier string, return the Element associated with that identifier
 		for (i in this.identifiers) {
 			if (this.identifiers[i].identifier === key) {
 				return this.identifiers[i];
@@ -75,7 +78,9 @@ function ParseResult(parsedElements, identifiers, dates, definitions, events, ot
 				return this.dates[i];
 			}
 		}
-
+		
+		console.log("Element not found in call to getElementByKey: " + key);
+		return undefined;
 	}
 }
 
@@ -102,7 +107,7 @@ function IdentifierElement (identifier) {
 	this.subelements = []; // to be appended to if applicable
 	
 	// not sure if these methods will be necessary; TODO
-	this.setIdentfier = function(identifier) {
+	this.setIdentifier = function(identifier) {
 		this.identifier = identifier;
 	}
 	this.getIdentifier = function(identifier) {
@@ -172,7 +177,9 @@ function parseInput(elements) {
 		// parse indent-organized RawElements
 		var parsedElement = parseRawElement(rawElements[i]);
 		
-		parser_parsedElements.push(parsedElement);
+		if (parser_parsedElements.indexOf(parsedElement) === -1) {
+			parser_parsedElements.push(parsedElement);
+		}
 	}
 	
 	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_dates, parser_definitions, parser_events, parser_other);
@@ -268,18 +275,28 @@ function parseRawElement(rawElement) {
 		components[0] = components[0].trim();
 	}
 	
-	if (dateRegex.test(components[0]) ) {
-		// make new element
-		newElement = new DateElement(components[0]);
-
-		if (components.length > 1) {
-			parser_dates.push(newElement);
+	for (var i in parser_parsedElements) {
+		// check to see if identifier previously defined
+		if (parser_parsedElements[i].getIdentifier() === components[0]) {
+			// if so, define "newElement" to be the previously defined element
+			newElement = parser_parsedElements[i];
 		}
-	} else if (ideaRegex.test(components[0]) ) {
-		newElement = new IdentifierElement(components[0]);
+	}
+	
+	if (typeof newElement === "undefined") {
+		if (dateRegex.test(components[0]) ) {
+			// make new element
+			newElement = new DateElement(components[0]);
+
+			if (components.length > 1) {
+				parser_dates.push(newElement);
+			}
+		} else if (ideaRegex.test(components[0]) ) {
+			newElement = new IdentifierElement(components[0]);
 		
-		if (components.length > 1) {
-			parser_identifiers.push(newElement);
+			if (components.length > 1) {
+				parser_identifiers.push(newElement);
+			}
 		}
 	}
 	
@@ -296,9 +313,10 @@ function parseRawElement(rawElement) {
 			elementDefinitions[i] = elementDefinitions[i].trim();
 		}
 		
-		// assign definitions of element
-		newElement.definitions = elementDefinitions;
+		// merge definitions of element
+		newElement.definitions = newElement.definitions.concat(elementDefinitions);
 		
+		// add new definitions to relevant parser pools
 		if (newElement instanceof DateElement) {
 			for (i in elementDefinitions) {
 				parser_events.push(elementDefinitions[i]);
