@@ -1,0 +1,94 @@
+<!--
+QuiNote Software Group 2015
+Authors: Simone, Kat, Cameron, Elliott
+Landing page
+
+Loads all necessary scripts, stylesheets, etc
+If state variable is passed in, loads text editor
+Else displays installation page
+-->
+
+
+<html>
+  <head>
+  
+  <title>Quinote</title>
+  
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  
+  <link rel="stylesheet" type="text/css" href="style/frontend.css" />
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" href="quill/quill.base.css">
+  
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>-->
+  <script src="https://apis.google.com/js/client.js"></script>
+  <script src="js/backend.js"></script> 
+  <script type="text/javascript">
+var id="";
+var exportid = "";
+
+/*
+* Google passes information in via http state variable
+* PHP assigns these variables to javascript variables if they exist
+* Note the PHP runs when the page is originally loaded (thats also why its kept at index.html)
+*/
+function getStateVars() {
+	<?php
+		if (isset($_GET['state'])):
+			$seeing = true;
+       	 		$state = json_decode(stripslashes($_GET['state']));
+       			 $_SESSION['mode'] = $state->action;
+       	?>
+			
+	id = "<?php if (isset($state->ids)){
+          			echo $state->ids[0]; } ?>";
+        exportid = "<?php if (isset($state->exportIds)) {
+        			echo $state->exportIds[0]; } ?>";
+        <?php endif; ?>
+        
+        console.log(id);
+        console.log(exportid);
+}
+
+/* backend structure: most methods call the other methods when they are done executing, to prevent things loading in wrong order
+* onload() is first function called, when html page is ready (consider replacing with jQuery document.onload)
+* First chain of events that handles permissions and authorization
+*   handleClientLoad calls getAuth(). Gets auth token
+*   once auth token is loaded, loadFile() is called.
+*
+* loadFile() sets off second chain of events: download and display
+*/
+
+function onload() {
+	<?php if ($seeing) {
+	echo "handleClientLoad();";
+	}
+	else {
+	echo "console.log('something else');";
+	}
+	 ?>
+}
+
+    </script>
+    
+  </head>
+  <body onload='onload();'>
+    <?php 
+    if (isset($_GET['state'])) {
+    	/*this means were traveling here from google and you should load text editor*/
+	$homepage = file_get_contents('frontend.html');
+	echo $homepage;
+    	}
+    else {
+    	echo "Get QuiNote page<br />";
+    	echo "QuiNote is a note-taking program that can generate pop-quiz study aids<br />";
+    	echo "<button onclick='install();'>Get QuiNote!</button>";
+    	}
+?>
+    
+    
+</body>
+</html>

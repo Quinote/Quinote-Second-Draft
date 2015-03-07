@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <script src="https://apis.google.com/js/client.js"></script>
+    <script type="text/javascript">
+      var CLIENT_ID = '526842392555-28flrr7rakr08ofmoupm7b9umkhl13o4.apps.googleusercontent.com';
+      var SCOPES = [
+          'https://www.googleapis.com/auth/drive.file'
+          // Add other scopes needed by your application. in comma seperated list
+        ];
+
+      /**
+       * Called when the client library is loaded.
+       */
+      function handleClientLoad() {
+        console.log('Library loaded');
+        checkAuth();
+        console.log('authorized');
+        loadClient(console.log('hi'));
+      }
+
+      /**
+       * Check if the current user has authorized the application.
+       */
+      function checkAuth() {
+        gapi.auth.authorize(
+            {'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': true},
+            handleAuthResult);
+      }
+
+	/**
+	 * Load the Drive API client.
+	 * @param {Function} callback Function to call when the client is loaded.
+	 */
+	function loadClient(callback) {
+	  gapi.client.load('drive', 'v2', callback);
+	}
+
+      /**
+       * Called when authorization server replies.
+       *
+       * @param {Object} authResult Authorization result.
+       */
+      function handleAuthResult(authResult) {
+        if (authResult) {
+          // Access token has been successfully retrieved, requests can be sent to the API
+        } else {
+          // No access token could be retrieved, force the authorization flow (by setting immediate to false).
+          gapi.auth.authorize(
+              {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false},
+              handleAuthResult);
+        }
+      }
+      
+      console.log('reached bottom');
+      handleClientLoad();
+    </script>
+  </head>
+  <body>
+    page loaded
+  </body>
+</html>
