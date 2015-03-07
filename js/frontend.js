@@ -19,9 +19,17 @@ var flag = true;
 //**************************************
 
 $(document).ready(function() {
-	$('#buttonGenerateQuiz').click(function() {// GENERATE QUIZ
+	$('#buttonGenerateQuiz').click(function() { // GENERATE QUIZ
 		
 		parseResult = parseInput(editor.getText().split("\n"));
+		if (parseResult.dates.length < 4 && parseResult.identifiers.length < 4) {
+			alert("You need more notes to make a quiz!");
+			$("#quizDialog").removeClass("dialogVisible");
+			return;
+		}
+		
+		
+		
 		optionList = new OptionList(2,2,2);
 		quiz = makeQuiz(parseResult, optionList);
 		console.log(parseResult, quiz);
@@ -236,6 +244,16 @@ function showQuiz(){
 	document.getElementById("two").style.display="none";
 };
 
+function unshowQuiz() { 
+	//$("#quizopener").style.display="none";
+	$("#quizframe").style.visibility="hidden";
+	//$("#scorepage").style.display="none";
+	//$("#svgOpener").style.display="none";
+	//$("#scoreKeeper").style.display="none";
+	//$("#one").style.display="none";
+	//$("#two").style.display="none";
+}
+
 function checkPage(){
 	document.getElementById("buttonCheck").style.display="none";
 	document.getElementById("buttonNext").style.display="";
@@ -298,6 +316,26 @@ function showIncorrect(){
 	var a2Text="Incorrect! The answer is: ";
 	twoAns.innerHTML= a2Text + currentQuestion.answer;
 	document.getElementById("buttonNext").style.display="";	
+}
+
+function uninitQuizFrame() {
+	var overlay = document.querySelector( '.dialogShadow' );
+	[].slice.call( document.querySelectorAll( '.dialogTrigger' ) ).forEach( function( el, i ) {
+		var transform = document.querySelector( '#quizDialog' ),
+		close = transform.querySelector( '.dialogClose' );
+		function removeDialog() {
+			$("#quizDialog").removeClass("dialogVisible");
+		}
+		function removeDialogHandler() {
+			removeDialog();
+		}
+		el.addEventListener( 'click', function( ev ) {
+			$("#quizDialog").addClass("dialogVisible");
+		});
+		close.addEventListener( 'click', function( ev ) {
+			removeDialogHandler();
+		});
+	});
 }
 
 var dialog = (function() {
