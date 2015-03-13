@@ -10,7 +10,10 @@
 						User Document Title
 					</span> -->
 					<span>
-						<img src="style/svg/typeQuinoteWhite.svg">
+						<img style="float: left" src="style/svg/typeQuinoteWhite.svg">
+					</span>
+					<span> 
+						<input style="float: right" class="button quiButton" type="button" id="buttonSave" value="Save" />
 					</span>
 				</div>
 			</div>
@@ -68,7 +71,7 @@
 							</div>
 							<div class="controlmenu" id="listControl">
 								<img class="icons" id="numlist" src="style/svg/numlistIcon.svg">
-								<img class="icons" id="bullist" src="style/svg/bullistIcon.svg">f
+								<img class="icons" id="bullist" src="style/svg/bullistIcon.svg">
 							</div>	
 						</div>
 					</div>
@@ -86,7 +89,13 @@
             </div>
 						<h2>Quiz Options</h2>
 						<h3>Length:</h3>
-						<input size="4" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Questions
+						<input size="3" type="text" id="qLengthMC" name="numeric" value="" class='numberonly'/> Multiple Choice
+						<br>
+						<input size="3" type="text" id="qLengthTF" name="numeric" value="" class='numberonly'/> Fill in the Blank
+						<br>
+						<input size="3" type="text" id="qLengthFB" name="numeric" value="" class='numberonly'/> True/False
+						<br>
+						<input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
 						<br><br>
 						<div id="generateQuizHolder">
 							<input class="dialogTrigger button quiButton" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
@@ -106,7 +115,7 @@
 								<div id="openText">
 								Your quiz is ready! Click start to begin!
 								</div>
-								<img width="200px" height="200px" src="style/svg/pageMainShadow.svg">
+								<img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
 								<input class="button quiButton" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
 							</div>
 							<div id="quizframe">
@@ -179,13 +188,13 @@
 				</div>
 			</div>
 		</div>
-		<div id="shadow" class="dialogShadow"></div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>	
 			
-
-
 		    <!--Editor scripts-->
 	<script type="text/javascript" src="quill/quill.min.js"></script>
       <script type="text/javascript" src="js/editor.js"></script>
       <script type="text/javascript" src="js/parser.js"></script>
       <script type="text/javascript" src="js/quizmaker.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
+

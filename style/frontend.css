@@ -6,9 +6,9 @@ body {
 	background-image: url(svg/background10.svg);
 }
 #topheader {
-	background-color: rgb(79,165,66);
-	position: fixed; 
-	left:0; 
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
+	position: absolute; 
+	left:0;
 	top:0; 
 	height: 60px;
 	width:100%; 
@@ -36,8 +36,15 @@ body {
 	min-height: 205px;
 
 }
+.summary-wrapper{
+	max-height: 300px;
+	overflow-y: auto;
+}
+#notes-list{
+	overflow-y:auto;
+}
 #pagecontainer{
-	position: fixed;
+	position: absolute;
 	padding-top: 70px;
 	width: 100%;
 	height: 100%;
@@ -46,7 +53,6 @@ body {
 	float: right;
 }
 .container {
-	background: #;
 	min-height: 100%;
 }
 footer {
@@ -69,21 +75,8 @@ footer {
 .dialogVisible {
 	visibility: visible;
 }
-.dialogShadow{
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	visibility: hidden;
-	top: 0;
-	left: 0;
-	z-index: 1;
-	opacity: 0;
-	background: rgba(0, 0, 0, 0.77);
-/*	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;*/
-	transition: all 0.3s;
-}
-.dialogVisible ~ .dialogShadow {
+
+.dialogVisible {
 	opacity: 1;
 	visibility: visible;
 }
@@ -135,7 +128,7 @@ footer {
 	border: 1px solid #dbedd9;
 }
 #editorToolbar{
-	background-color: #4FA542;
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
 	height: 50px;
 	overflow: hidden;
 	width:210mm;
@@ -203,6 +196,7 @@ h3 {
 #quizopener {
 	text-align: center;
 	font-size: 18px;
+	margin: auto 0;
 }
 #quizButtons{
 	float: right;

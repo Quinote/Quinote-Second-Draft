@@ -39,11 +39,13 @@ $(document).ready(function() {
 		$('#quizframe').toggle();
 		$('#scorepage').toggle();
 		$('#quizDialog').css("z-index", "4");
+		$('#pagecontainer').css({"-webkit-filter" : "blur(3px)"});
 		//showQuiz();
 	});
 	
 	$('#buttonCloseQuiz').click(function(){
 		$('#quizDialog').css("z-index", "-10");
+		$('#pagecontainer').css({"-webkit-filter" : "blur(0px)"});
 	});
 
 	$('#buttonStartQuiz').click(function(){
@@ -340,7 +342,6 @@ function uninitQuizFrame() {
 
 var dialog = (function() {
 	function init() {
-		var overlay = document.querySelector( '.dialogShadow' );
 		[].slice.call( document.querySelectorAll( '.dialogTrigger' ) ).forEach( function( el, i ) {
 			var transform = document.querySelector( '#quizDialog' ),
 			close = transform.querySelector( '.dialogClose' );
@@ -385,7 +386,16 @@ function completeQuiz(){
 $(function(){
 	$("#editorspace").draggable({
 		handle: "#editorToolbar",
-		containment: "parent"
+		containment: "#pagecontainer",
+		scroll: true
 	});
-	$("#sidebar").draggable({ containment: "parent" });
+	$("#sidebar").draggable({ 
+		containment: "#pagecontainer",
+		scroll: true });
 });
+$(".numberonly").on("keypress keyup blur",function (event) {    
+          $(this).val($(this).val().replace(/[^\d].+/, ""));
+           if ((event.which < 48 || event.which > 57)) {
+               event.preventDefault();
+           }
+       });
