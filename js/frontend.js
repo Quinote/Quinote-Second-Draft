@@ -14,6 +14,9 @@ var choices;
 var selectTF = ["true", "false"];
 var flag = true;
 
+// FOR TESTING ONLY
+var test_ = false;
+
 //**************************************
 // HANDLERS
 //**************************************
@@ -43,6 +46,19 @@ $(document).ready(function() {
 		$('#scorepage').toggle();
 		$('#quizDialog').css("z-index", "4");
 		$('#pagecontainer').css({"-webkit-filter" : "blur(3px)"});
+		
+		// FOR PURPOSES OF TESTING
+		if (test_) {
+			$("#scorepage").css({"display" : "none"});
+			hideCorrect();
+			hideIncorrect();
+			$("#quizopener").css({"display" : "block"});
+			$("#quizframe").toggle();
+			$("#question").toggle();
+		} else {
+			test_ = true;
+		}
+		
 	});
 	
 	$('#buttonCloseQuiz').click(function(){
@@ -374,6 +390,7 @@ function completeQuiz(){
 	var tot = (parseInt(om));
 	$("#question").html("<h4>Your score is: "+numberCorrect+"/"+totalQuestions+"<h4>");
 	$("#scoreDisplay").html("" +numberCorrect+"/"+totalQuestions+ "");
+	/*
 	document.getElementById("answer_text").style.display="none";
 	document.getElementById("answer_choice").style.display="none";
 	document.getElementById("answer_check").style.display="none";
@@ -383,6 +400,16 @@ function completeQuiz(){
 	document.getElementById("buttonCheck").style.display="none";
 	document.getElementById("quizframe").style.display="none";
 	document.getElementById("quizopener").style.display="none";
+	*/
+	$("#answer_text").toggle();
+	$("#answer_choice").toggle();
+	$("#answer_check").toggle();
+	$("#scorepage").toggle();
+	$("#buttonNext").toggle();
+	$("#question").toggle();
+	//$("#buttonCheck").toggle();
+	$("#quizframe").toggle();
+	//$("#quizopener").toggle();
 };
 
 
