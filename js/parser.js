@@ -106,7 +106,6 @@ function IdentifierElement (identifier) {
 	this.definitions = []; // to be set if applicable
 	this.subelements = []; // to be appended to if applicable
 	
-	// not sure if these methods will be necessary; TODO
 	this.setIdentifier = function(identifier) {
 		this.identifier = identifier;
 	}

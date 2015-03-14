@@ -20,17 +20,20 @@ var flag = true;
 
 $(document).ready(function() {
 	$('#buttonGenerateQuiz').click(function() { // GENERATE QUIZ
-		
 		parseResult = parseInput(editor.getText().split("\n"));
 		if (parseResult.dates.length < 4 && parseResult.identifiers.length < 4) {
 			alert("You need more notes to make a quiz!");
 			$("#quizDialog").removeClass("dialogVisible");
 			return;
 		}
+
+		var numMC = parseInt($("#qLengthMC").val());
+		var numTF = parseInt($("#qLengthTF").val());
+		var numFB = parseInt($("#qLengthFB").val());
 		
+		totalQuestions = numMC + numTF + numFB;
 		
-		
-		optionList = new OptionList(2,2,2);
+		optionList = new OptionList(numMC, numTF, numFB);
 		quiz = makeQuiz(parseResult, optionList);
 		console.log(parseResult, quiz);
 		totalQuestions = quiz.size();
@@ -40,7 +43,6 @@ $(document).ready(function() {
 		$('#scorepage').toggle();
 		$('#quizDialog').css("z-index", "4");
 		$('#pagecontainer').css({"-webkit-filter" : "blur(3px)"});
-		//showQuiz();
 	});
 	
 	$('#buttonCloseQuiz').click(function(){
@@ -62,7 +64,7 @@ $(document).ready(function() {
 	});
 
 	$("#buttonCheck").click(function() { // CHECK answer button
-
+		// currently unused
 	});
 });
 
@@ -165,6 +167,7 @@ function nextHandler() {
 		} 
 	} else {
 		tearDown(); //?
+		
 	}
 }
 
