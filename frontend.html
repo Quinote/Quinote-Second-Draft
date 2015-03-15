@@ -197,4 +197,11 @@
       <script type="text/javascript" src="js/parser.js"></script>
       <script type="text/javascript" src="js/quizmaker.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
-
+	<script>
+	$(document).ready( function () {
+		// set initial values of question quantity fields to 0 (instead of "")
+		$("#qLengthMC").val(0);
+		$("#qLengthTF").val(0);
+		$("#qLengthFB").val(0);
+	});
+	</script>
