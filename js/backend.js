@@ -1,6 +1,5 @@
 var CLIENT_ID = '526842392555-28flrr7rakr08ofmoupm7b9umkhl13o4.apps.googleusercontent.com';
 var SCOPES = [
-              'https://www.googleapis.com/auth/drive',
               'https://www.googleapis.com/auth/drive.install',
               'https://www.googleapis.com/auth/drive.file'
               // Add other scopes needed by your application. in comma separated list
