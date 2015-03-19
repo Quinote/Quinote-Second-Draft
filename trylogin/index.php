@@ -1,22 +1,16 @@
 <?php
 
-include('credentials.php');
-
-/*********************/
-/*Connect to database*/
-/*********************/
-$connection = mysql_connect('localhost',$user,$password) or die("Couldn't connect to the server");
-mysql_select_db($db,$connection) or die("Couldn't connect to the database");
-
-//starts PHP session. Thats where login vars are stored
-session_start();
+require('methods.php');
 
 /*********************/
 /*
   Check if user has navigated here from login form
   Check if user exists
   Check if password is ok
-  Grant cookie
+  Add them to $_SESSION
+  
+  we should then send them along--> the editor (remove die, send onward)
+  
   */
 /*********************/
 if ($_POST['login']) {
@@ -27,9 +21,10 @@ if ($_POST['login']) {
 		if ($user == '0') {
 			die("That user doesn't exist. <a href='index.php'>&larr; Back</a>");
 		}
-		if ($user['password'] != $password) {
+		else if ($user['password'] != $password) {
 			die("Incorrect password <a href='index.php'>&larr; Back</a>");
 		}
+		else {
 		$salt = hash("sha512", rand() . rand() . rand());
 		/*setcookie("c_user",hash("sha512",$username),time()+24*60*60,"/");
 		setcookie("c_salt",$salt,time() + 24*60*60, "/");*/
@@ -37,16 +32,22 @@ if ($_POST['login']) {
 		$_SESSION['c_user']=hash("sha512",$username);
 		$_SESSION['c_salt']=$salt;
 		$userID = $user['id'];
+		$_SESSION['userid']=$userID;
+		$_SESSION['username']=$username;
+		
 		mysql_query("UPDATE `users` SET `salt`='$salt' WHERE `id`='$userID'");
-		die("You are now logged in as $username");
+		//die("You are now logged in as $username");
+		header( 'Location: filebrowser.php' );
+		}
 	}
 }
 
 /*Check to see if user is logged in*/
-include('islogged.php');
-if($logged == true){
-	die("You are logged in");
+/*If they are logged in, redirect to the active user's files*/
+if(islogged()){
+	header( 'Location: filebrowser.php' );
 }
+
 
 /*********************/
 /*
@@ -54,31 +55,41 @@ if($logged == true){
   */
 /*********************/
 $page = "<body>
-	<div style='width:80%; border: 1 px solid #e3e3e3;'>
-		<h1>Login</h1>
-		<form action='' method='post'>
-			<table><tr>
+	<div style='width:80%; border: 1 px solid #e3e3e3; padding: 15px; margin:10%'>
+	
+	<div id='formdiv' border='1 px' padding='10px'>
+	<form action='' method='post'>
+		<table>
+			<tr>
 				<td><b>Username:</b></td>
 				<td><input type='text' name='username' /></td></tr>
 
-				<tr>
+			<tr>
 				<td><b>Password:</b></td>
 				<td><input type='password' name='password' /></td>
-				</tr>
+			</tr>
 
-				<tr>
+			<tr>
 				<td><input type='submit' value='Login' name='login' /></td>
-				</tr>
+			</tr>
 
 			</table>
 		</form>
+	</div><!--end formdiv-->
+	
+
+		<div>
+		No account? <a href='register.php'>Register now</a><br />
+		</div>
+		<br />
 		
 		<div>
-		No account? <a href='register.php'>Register now</a>
+		You will not be able to save and store your files here without an account. However you can use our <a href=''>anonymous editor</a> and still generate quizzes! 
 		</div>
 </div>
 </body>";
 
+//display HTML login form
 echo $page;
 
 ?>

@@ -1,21 +1,11 @@
 <?php
 
-include('credentials.php');
-
-/*********************/
-/*Connect to database*/
-/*********************/
-$connection = mysql_connect('localhost',$user,$password) or die("Couldn't connect to the server");
-mysql_select_db($db,$connection) or die("Couldn't connect to the database");
-
-
-// Starts a PHP session. Thats where login status, etc is stored
-session_start();
+require('methods.php');
 
 
 /*********************/
 /*If user has submitted register form
-  Make sure username isn't taken and they are being reasonable
+  Make sure username isn't taken and they are being reasonable (should switch to javascript pre-POST in later versions)
   Add them to the users database
 */
 /*********************/
@@ -30,17 +20,21 @@ if ($_POST['register']){
 		if (!ctype_alnum($username)){
 			die("Username must be alphanumeric. <a href='register.php'>&larr; Back</a>");
 		}
-		if (strlen($username) > 300){
-			die("Sorry, this is an absurdly long username. Try again, with less than 300 characters");
+		if (strlen($username) > 200){
+			die("Sorry, this is an absurdly long username. Try again, with less than 200 characters");
 		}
 		$salt = hash("sha512", rand() . rand() . rand());
 		mysql_query("INSERT INTO `users` (`username`,`password`,`salt`) VALUES ('$username', '$password', '$salt')");
 		$_SESSION['c_user']=hash("sha512",$username);
 		$_SESSION['c_salt']=$salt;
+		$_SESSION['username']=$username;
+		$id = mysql_fetch_array(mysql_query("SELECT * FROM `USERS` WHERE `username`='$username'"));
+		$id = $id[0]['id'];
+		$_SESSION['userid']=$id;
 		
 		/*setcookie("c_user",hash("sha512",$username),time() + 24*60*60, "/");
 		setcookie("c_salt",$salt,time() + 24*60*60,"/");*/
-		die("Your account has been created and you are now logged in.");
+		header( 'Location: filebrowser.php' );
 	}
 }
 

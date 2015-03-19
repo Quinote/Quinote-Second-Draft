@@ -1,31 +1,30 @@
 <?php
 
-include('credentials.php');
-
-/*********************/
-/*Connect to database*/
-/*********************/
-$connection = mysql_connect('localhost',$user,$password) or die("Couldn't connect to the server");
-mysql_select_db($db,$connection) or die("Couldn't connect to the database");
-
-//starts PHP session. Thats where login vars are stored:
-session_start();
+require('methods.php');
 
 //checks for login and stores it in $logged
 //If the user isn't logged in, redirect to login lander page
-include('islogged.php');
-if(!$logged) {
-header('Location: index.php');
+if(!islogged()) {
+	header('Location: index.php');
 }
 
+$userid = $_SESSION['userid'];
 $username=$_SESSION['username'];
 $page="<BODY>
 Welcome $username<br />
-<a href='logout.php'>Logout</a><br /><br />
+<a href='logout.php'>Logout</a><br /><br />";
+echo $page;
 
-Text editor goes here
-</BODY>";
+$result = getFiles($userid);
+$filemeta = '';
+foreach($result as $row) {
+	$id=$row['file_id'];
+	$filemeta = $filemeta . $id .', '. $row['parent_id'].', ' . $row['title'];
+	$link = "<a href='editor.php?id=$id'>$filemeta</a><br />";
+	echo $link;
+}
 
-echo $page
+$page="</BODY>";
+echo $page;
 
 ?>
