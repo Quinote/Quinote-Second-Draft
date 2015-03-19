@@ -23,10 +23,6 @@ if ($_POST['register']){
 	if ($_POST['username'] && $_POST['password']){
 		$username = mysql_real_escape_string($_POST['username']);
 		$password = mysql_real_escape_string(hash("sha512",$_POST['password']));
-		$name = '';
-		if ($_POST['name']){
-			$name = mysql_real_escape_string(strip_tags($_POST['name']));
-		}
 		$check = mysql_fetch_array(mysql_query("SELECT * FROM `users` WHERE `username`='$username'"));
 		if($check != '0'){
 			die("That username already exists. <a href='register.php'>&larr; Back</a>");
@@ -38,7 +34,7 @@ if ($_POST['register']){
 			die("Sorry, this is an absurdly long username. Try again, with less than 300 characters");
 		}
 		$salt = hash("sha512", rand() . rand() . rand());
-		mysql_query("INSERT INTO `users` (`username`,`password`,`name`,`salt`) VALUES ('$username', '$password', '$name', '$salt')");
+		mysql_query("INSERT INTO `users` (`username`,`password`,`salt`) VALUES ('$username', '$password', '$salt')");
 		$_SESSION['c_user']=hash("sha512",$username);
 		$_SESSION['c_salt']=$salt;
 		
@@ -69,11 +65,6 @@ $page="<BODY>
 		<tr>
 		<td><b>Password:</b></td>
 		<td><input type='password' name='password' /></td>
-		</tr>
-
-		<tr>
-		<td><b>Name, how nosy:</b></td>
-		<td><input type='text' name='name' /></td>
 		</tr>
 
 		<tr>
