@@ -18,31 +18,85 @@
 var editor;
 
 var main = function() {
-    // Initialize Quill editor
-    editor = new Quill('#editor', {
-        modules: {
-            'toolbar': {
-                container: '#toolbar'
-            }
-        },
-        styles: false
-    });
+    editor = CKEDITOR.replace('editor');
+    //editor = CKEDITOR.replace('editor', {
+    //    removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
+    //    allowedContent: 'strong em u s ul ol; a[!href]; img[!src,width,height];'
+    //} );
 
-    /*************************************
-     * Event Handlers
-     *************************************/
-    editor
-        .on('text-change', function(delta, source) {
-            buildList(parseEditorText());
-        })
-    ;
+    //console.log(editor.commands);
 
-    // Must use JQuery here to grab actual html object
-    $('#editor')
+    $('#bold')
         .click(function() {
-            editor.focus();
+            editor.execCommand('bold');
         })
     ;
+    $('#underline')
+        .click(function() {
+            editor.execCommand('underline');
+        })
+    ;
+    $('#italic')
+        .click(function() {
+            editor.execCommand('italic');
+        })
+    ;
+    $('#strike')
+        .click(function() {
+            editor.execCommand('strike');
+        })
+    ;
+
+
+    $('#numlist')
+        .click(function() {
+            editor.execCommand('numberedlist');
+        })
+    ;
+    $('#bullist')
+        .click(function() {
+            editor.execCommand('bulletedlist');
+        })
+    ;
+    $('#inindent')
+        .click(function() {
+            editor.execCommand('indent');
+        })
+    ;
+    $('#deindent')
+        .click(function() {
+            editor.execCommand('outdent');
+        })
+    ;
+
+    //$('#zoomin')
+    //    .click(function() {
+    //        editor.execCommand('maximize');
+    //    })
+    //;
+
+
+
+
+
+
+
+    //
+    ///*************************************
+    // * Event Handlers
+    // *************************************/
+    //editor
+    //    .on('text-change', function(delta, source) {
+    //        buildList(parseEditorText());
+    //    })
+    //;
+    //
+    //// Must use JQuery here to grab actual html object
+    //$('#editor')
+    //    .click(function() {
+    //        editor.focus();
+    //    })
+    //;
 
     //$('#fontsize')
     //    .on('change')(function() {
@@ -54,7 +108,7 @@ var main = function() {
 
     // Set up initial environment
     //resizeEditor();
-    editor.focus();
+    //editor.focus();
     //$.each([8, 10, 12, 14, 16, 18, 24, 30, 36, 48, 72, 96], function(index, value) {
     //    var fSize = $('.ql-size');
     //    fSize.append($('<option value=' + this.value + '>' + value + '</option>'));
