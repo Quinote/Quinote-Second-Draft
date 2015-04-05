@@ -9,10 +9,10 @@ of arrays of (possibly nested) objects.
 
 TODO: 
 	- ordered lists
-	- better dateRegex
 	- create an emptyRegex to identify whitespace
-	- where is preformatting / API-dependent separation of elements done?
 
+	- BIG BUG: creating a list and then deleting the contents of the first 
+		point introduces an unexpected <br>!
 */
 
 //**************************************
@@ -24,6 +24,9 @@ var aliasRegex = /\[.*\]/;
 var aliasSeparatorRegex = /;|,/;
 var ideaRegex = /([^:])+/;
 var equalityRegex = /:/; // currently unused; may be expanded
+var listBeginRegex = /<ul>/;
+var listEndRegex = /<\/ul>/;
+
 
 // these need to be global because of recursive scoping issues
 // alternative would be recursive construction of a ParseResult
@@ -173,14 +176,32 @@ function parseInput(html) {
 	// reset state of global variables for new parse
 	resetState();
 	
+	// split HTML by linebreaks (<br>)
 	var elements = reductiveSplit(getEditorHtml(), "<br>");
-	console.log(elements);
-	
+		
 	// get list of top-level elements containing their subelements
-	//var rawElements = readIndentLevels(elements, 0, 0);
+	var rawElements = [];
 	
-	var rawElements = readLists(elements);
-	
+	for (var i in elements) {
+		// recursively parse if element contains a list
+		if (elements[i].indexOf("<ul>") !== -1 ) {
+			
+			// strip off proceeding element, if present
+			var proceedingElement = elements[i].substring(elements[i].lastIndexOf("</ul>") + 5);
+			
+			// read list + top-level element
+			rawElements.push(readLists(elements[i].substring(0, elements[i].lastIndexOf("</ul>"))));
+			
+			// re-add proceeding element, if applicable
+			if (proceedingElement.length > 0) {
+				rawElements.push(new RawElement(proceedingElement));
+			}
+		} else if (elements[i].length > 0) {
+			//otherwise, just push top-level element
+			rawElements.push(new RawElement(elements[i]));
+		}
+	}
+			
 	for (var i=0; i<rawElements.length; i++) {
 		// ignore empty lines
 		if (rawElements[i].value.length === 0) continue;
@@ -252,8 +273,52 @@ function readIndentLevels (elements, index, indentationLevel) {
 	return indentLevelElements;
 }
 
-function readLists(elements) {
-	//TODO TODO TODO TODO
+function readLists(element) {
+	// recursively process subordinate elements in a list
+	
+	// strip off top-level identifier/definition
+	var contents = element.split(/<ul>(.+)/);
+	
+	var newElement = new RawElement(contents[0]);
+	
+	if (typeof contents[1] !== "undefined" && contents[1].length > 0) {
+		// parse subordinate elements and assign to subelements field
+		newElement.subelements = processListElements(contents[1]);
+	}
+	
+	return newElement;
+}
+
+function processListElements(contents) {
+	// given a string representing the contents of a list, recursively
+	// process the contents of that list as RawElements
+	
+	 // string leading and trailing <li> and </li>
+	contents = contents.substring(4, contents.length-5);
+	
+	// split by list element breaks
+	var listElements = contents.split("</li></li>");
+	
+	var subelements = [];
+	
+	for (var i in listElements) {
+		// recurse on further sublists, if present
+		if (listElements[i].indexOf("<ul>") !== -1 ) {
+			var proceedingElement = listElements[i].substring(listElements[i].lastIndexOf("</ul>") + 5);
+			
+			subelements.push(readLists(listElements[i].substring(0, listElements[i].lastIndexOf("</ul>"))));
+			
+			if (proceedingElement.length > 0) {
+				subelements.push(new RawElement(proceedingElement));
+			}
+			
+		// otherwise, just add a new RawElement
+		} else {
+			subelements.push(new RawElement(listElements[i]));
+		}
+	}
+	
+	return subelements;
 }
 	
 
