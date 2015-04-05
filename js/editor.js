@@ -85,11 +85,12 @@ var main = function() {
     ///*************************************
     // * Event Handlers
     // *************************************/
-    //editor
-    //    .on('text-change', function(delta, source) {
-    //        buildList(parseEditorText());
-    //    })
-    //;
+    editor
+        .on('change', function() {
+            console.log(getEditorText());
+            buildList(parseEditorText());
+        })
+    ;
     //
     //// Must use JQuery here to grab actual html object
     //$('#editor')
@@ -126,6 +127,13 @@ $(document).ready(main);
  * Helper functions
  *************************************/
 
+var getEditorText = function() {
+    var data = editor.getData();
+    //console.log(data);
+    return data;
+}
+
+
 var resizeEditor = function() {
     /* Resizes the editor box based on window height,
      * top margin size, and toolbar height.
@@ -149,7 +157,7 @@ var parseEditorText = function() {
      * TODO:
      *    • Parse results from getHTML() rather that getText()
      */
-    var textArray = editor.getText().split("\n");
+    var textArray = getEditorText().split("\n");
     return parseInput(textArray);
 };
 
