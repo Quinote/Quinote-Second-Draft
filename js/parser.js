@@ -177,7 +177,9 @@ function parseInput(html) {
 	console.log(elements);
 	
 	// get list of top-level elements containing their subelements
-	var rawElements = readIndentLevels(elements, 0, 0);
+	//var rawElements = readIndentLevels(elements, 0, 0);
+	
+	var rawElements = readLists(elements);
 	
 	for (var i=0; i<rawElements.length; i++) {
 		// ignore empty lines
@@ -199,6 +201,9 @@ function parseInput(html) {
 /////////////////////////
 
 function readIndentLevels (elements, index, indentationLevel) {
+	/* TO BE DEPRECATED WITH INTRODUCTION OF HTML LIST ORDERING
+	   (4-5-15)
+	
 	/* given line-by-line input array elements, 
 		recursively parse those lines (in-order)
 		and their subelements
@@ -246,6 +251,11 @@ function readIndentLevels (elements, index, indentationLevel) {
 	}
 	return indentLevelElements;
 }
+
+function readLists(elements) {
+	//TODO TODO TODO TODO
+}
+	
 
 function countSubelements(rawElement) {
 	// recursively determine the number of subelements in a parent Element's tree			
