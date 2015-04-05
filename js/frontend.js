@@ -31,6 +31,8 @@ var test_ = false;
 
 $(document).ready(function() {
 	$('#buttonGenerateQuiz').click(function() { // GENERATE QUIZ
+		
+		
 		parseResult = parseInput(editor.getText().split("\n"));
 		
 		// check to make sure notes are of sufficient size
@@ -106,6 +108,31 @@ $(document).ready(function() {
 	$("#buttonCheck").click(function() { // CHECK answer button
 		// currently unused
 	});
+	
+	// question number field listeners
+	$("#qLengthMC").change( function() {
+		// set to 0 if NaN
+		if (isNaN($("#qLengthMC").val())) $("#qLengthMC").val(0); 
+		//update qLength field
+		setQLength();
+	});
+
+	$("#qLengthTF").change( function() {
+		if (isNaN($("#qLengthTF").val())) $("#qLengthTF").val(0); 
+		setQLength();
+	});
+
+	$("#qLengthFB").change( function() {
+		if (isNaN($("#qLengthFB").val())) $("#qLengthFB").val(0); 
+		setQLength();
+	});
+
+	function setQLength() {
+		var sum = 0;
+		sum = parseInt($("#qLengthMC").val()) + parseInt($("#qLengthTF").val()) + parseInt($("#qLengthFB").val());
+		$("#qLength").val(sum);
+	}
+	
 });
 
 //**************************************
