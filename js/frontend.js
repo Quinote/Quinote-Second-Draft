@@ -422,6 +422,8 @@ function completeQuiz(){
 	document.getElementById("buttonCheck").style.display="none";
 	document.getElementById("quizframe").style.display="none";
 	document.getElementById("quizopener").style.display="none";
+	document.getElementById("scoreKeeper").style.display="none";
+=======
 	*/
 	$("#answer_text").toggle();
 	$("#answer_choice").toggle();
