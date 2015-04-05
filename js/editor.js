@@ -134,6 +134,10 @@ var getEditorHtml = function() {
     return data;
 };
 
+var setEditorHtml = function(html) {
+    editor.document.getBody().setHtml(html);
+};
+
 var reductiveSplit = function(data, separator) {
     data = data.split(separator);
     //data.filter(function(element) {
