@@ -87,7 +87,6 @@ var main = function() {
     // *************************************/
     editor
         .on('change', function() {
-            console.log(getEditorText());
             buildList(parseEditorText());
         })
     ;
@@ -127,12 +126,33 @@ $(document).ready(main);
  * Helper functions
  *************************************/
 
-var getEditorText = function() {
-    var data = editor.getData();
+var getEditorHtml = function() {
+    /* Returns the Html from the editor.
+     */
+    var data = editor.document.getBody().getHtml();
     //console.log(data);
     return data;
-}
+};
 
+var setEditorHtml = function(html) {
+    editor.document.getBody().setHtml(html);
+};
+
+var reductiveSplit = function(data, separator) {
+    data = data.split(separator);
+    //data.filter(function(element) {
+    //    element != "";
+    //});
+    var i = 0;
+    while (i < data.length) {
+        if (data[i] === "" || data[i] === "&nbps;" || data[i] === "<br />") {
+            data.splice(i, 1);
+            i--;
+        }
+        i++;
+    }
+    return data;
+};
 
 var resizeEditor = function() {
     /* Resizes the editor box based on window height,
@@ -157,7 +177,7 @@ var parseEditorText = function() {
      * TODO:
      *    • Parse results from getHTML() rather that getText()
      */
-    var textArray = getEditorText().split("\n");
+    var textArray = reductiveSplit(getEditorHtml(), "<br>");
     return parseInput(textArray);
 };
 
@@ -185,8 +205,8 @@ var buildList = function(parseResult) {
     for (i=0; i<parseResult.parsedElements.length; i++) {
         var nextElement = parseResult.parsedElements[i];
 
-        var listItem = $('<li>').text(nextElement.getIdentifier());
-        listItem.addClass(classString(nextElement));
+        var listItem = '<li class=' + classString(nextElement) + '>' + nextElement.getIdentifier() + '</li>';
+        //listItem.addClass(classString(nextElement));
         list.append(listItem);
 
         if (nextElement.subelements.length > 0) {
@@ -209,7 +229,7 @@ function buildSublist(elements, indentLevel) {
 
     for (i=0; i<elements.length; i++) {
         var nextElement = elements[i];
-        newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "<\li>";
+        newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "</li>";
         if (nextElement.subelements.length > 0) {
             // recurse on sublists
             newList += buildSublist(nextElement.subelements, indentLevel+1);
