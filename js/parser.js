@@ -47,12 +47,13 @@ var parser_aliases = [];
 // Main return object //
 ////////////////////////
 
-function ParseResult(parsedElements, identifiers, definitions, other) {
+function ParseResult(parsedElements, identifiers, definitions, aliases, other) {
 	this.parsedElements = parsedElements;
 	this.identifiers = identifiers;
 	//this.dates = dates; // DEPRECATED
 	this.definitions = definitions;
 	//this.events = events; // DEPRECATED
+	this.aliases = aliases;
 	this.other = other;
 	
 	this.getIdentifiers = function () {
