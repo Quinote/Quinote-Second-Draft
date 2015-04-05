@@ -227,6 +227,10 @@ function makeQuiz(parseResult, optionList) {
 		generatedQuestions.push(newQuestion);
 	}
 	
+	// FOR TESTING PURPOSES TODO //
+	console.log(parseResult.aliases);
+	//***************************//
+	
 	return new Quiz(generatedQuestions);
 }
 
