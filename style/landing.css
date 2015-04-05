@@ -18,10 +18,7 @@ body {
 	width: 100%;
 	position: relative;
 	text-align: left;
-	background-image: url(images/os.jpg);
-	background-position: top center;
-	background-repeat: no-repeat;
-	background-size: contain;
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
 }
 #header {
 	width: 100%;
