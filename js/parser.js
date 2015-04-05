@@ -164,14 +164,17 @@ function OtherElement (value) {
 //  Main access method //
 /////////////////////////
 
-function parseInput(elements) {
-	/* Given a list of elements, first assign hierarchy based on indent
+function parseInput(html) {
+	/* Given the html input, first assign hierarchy based on indent
 	levels then parse according to parse rules. Returns a ParseResult
 	object containing the results of the final parsing function
 	*/
 	
 	// reset state of global variables for new parse
 	resetState();
+	
+	var elements = reductiveSplit(getEditorHtml(), "<br>");
+	console.log(elements);
 	
 	// get list of top-level elements containing their subelements
 	var rawElements = readIndentLevels(elements, 0, 0);

@@ -177,8 +177,8 @@ var parseEditorText = function() {
      * TODO:
      *    • Parse results from getHTML() rather that getText()
      */
-    var textArray = reductiveSplit(getEditorHtml(), "<br>");
-    return parseInput(textArray);
+    //var textArray = reductiveSplit(getEditorHtml(), "<br>");
+    return parseInput(getEditorHtml());
 };
 
 var classString = function(element) {
