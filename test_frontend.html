@@ -1,7 +1,30 @@
+<html>
+  <head>
+  
+  <title>Quinote</title>
+  
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  
+  <link rel="stylesheet" type="text/css" href="style/frontend.css" />
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" href="quill/quill.base.css">
+  
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+<!--not positive that the following two are necessary, but in theory shouldnt break anything-->
+  <script src="https://apis.google.com/js/client.js"></script>
+  <script src="js/backend.js"></script>
+
+</head>
+<body>
 
 <div id="page">
 			<div id="topheader">
+				<div id="back">
+					<img src="style/svg/googleDrive.svg">
+				</div>
 				<div id="topNav">
 <!-- 					<span style="verticle-align:middle">
 						User Document Title
@@ -194,12 +217,6 @@
       <script type="text/javascript" src="js/parser.js"></script>
       <script type="text/javascript" src="js/quizmaker.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
-	
-	<script>
-	$(document).ready( function () {
-		// set initial values of question quantity fields to 0 (instead of "")
-		$("#qLengthMC").val(0);
-		$("#qLengthTF").val(0);
-		$("#qLengthFB").val(0);
-	});
-	</script>
+
+</body>
+</html>

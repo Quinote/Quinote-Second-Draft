@@ -1,9 +1,17 @@
-// A model for quiz code
+/* QuiNote Software Group 2015
+Authors: Katherine Glover, Elliott Warkus, Cameron Basham
+
+Contains code responsible for managing interaction between 
+UI elements and hidden user-side functions (parsing, quiz
+creation).
+
+ */
 
 //**************************************
 // GLOBAL VARIABLES
 //**************************************
 
+// Need to be wary of namespace collisions with these titles
 var parseResult;
 var optionList;
 var quiz;
@@ -11,8 +19,11 @@ var totalQuestions;
 var numberCorrect;
 var currentQuestion;
 var choices;
-var selectTF = ["true", "false"];
+var selectTF = ["true", "false"]; // undesirable
 var flag = true;
+
+// FOR TESTING ONLY
+var test_ = false;
 
 //**************************************
 // HANDLERS
@@ -20,17 +31,33 @@ var flag = true;
 
 $(document).ready(function() {
 	$('#buttonGenerateQuiz').click(function() { // GENERATE QUIZ
-		
 		parseResult = parseInput(editor.getText().split("\n"));
+		
+		// check to make sure notes are of sufficient size
 		if (parseResult.dates.length < 4 && parseResult.identifiers.length < 4) {
 			alert("You need more notes to make a quiz!");
 			$("#quizDialog").removeClass("dialogVisible");
 			return;
 		}
 		
+		// retrieve quantities for each type of question
+		var numMC = parseInt($("#qLengthMC").val());
+		if (isNaN(numMC)) { numMC = 0; }
+		var numTF = parseInt($("#qLengthTF").val());
+		if (isNaN(numTF)) { numTF = 0; }
+		var numFB = parseInt($("#qLengthFB").val());
+		if (isNaN(numFB)) { numFB = 0; }
 		
+		totalQuestions = numMC + numTF + numFB;
 		
-		optionList = new OptionList(2,2,2);
+		// check for valid quantity inputs
+		if (totalQuestions < 1 || isNaN(totalQuestions)) {
+			alert("Please choose at least one question type!");
+			$("#quizDialog").removeClass("dialogVisible");
+			return;
+		}
+		
+		optionList = new OptionList(numMC, numTF, numFB);
 		quiz = makeQuiz(parseResult, optionList);
 		console.log(parseResult, quiz);
 		totalQuestions = quiz.size();
@@ -40,7 +67,22 @@ $(document).ready(function() {
 		$('#scorepage').toggle();
 		$('#quizDialog').css("z-index", "4");
 		$('#pagecontainer').css({"-webkit-filter" : "blur(3px)"});
-		//showQuiz();
+		
+		// FOR PURPOSES OF TESTING
+		// This is the current fix for the quiz reset problem.
+		// It should be replaced with *real* code at some point.
+		if (test_) {
+			$("#scorepage").css({"display" : "none"});
+			hideCorrect();
+			hideIncorrect();
+			$("#quizopener").css({"display" : "block"});
+			$("#quizframe").toggle();
+			$("#question").toggle();
+		} else {
+			test_ = true;
+		}
+		///////////////////////////////////////////////////////
+		
 	});
 	
 	$('#buttonCloseQuiz').click(function(){
@@ -62,7 +104,7 @@ $(document).ready(function() {
 	});
 
 	$("#buttonCheck").click(function() { // CHECK answer button
-
+		// currently unused
 	});
 });
 
@@ -97,10 +139,8 @@ function checkMCQuestion() {
 	if (index === -1) {
         document.getElementById("answerSelections").style.visibility="visible";
 		alert("Please select an answer");
-		console.log("No answers selected", ($('input[name="rd"]:checked').length > 0));
 	} else {
 		var selected = choices[index];
-		console.log(selected);
 		if (selected === currentQuestion.answer) {
 			showCorrect();
 			numberCorrect++;
@@ -123,7 +163,6 @@ function checkTFQuestion() {
 	if (index === -1) {
         document.getElementById("answerSelections").style.visibility="visible";
 		alert("Please select an answer");
-		console.log("No answers selected", ($('input[name="rd"]:checked').length > 0));
 	} else {
 		var selected = selectTF[index];
 		if (selected === currentQuestion.answer) {
@@ -165,6 +204,7 @@ function nextHandler() {
 		} 
 	} else {
 		tearDown(); //?
+		
 	}
 }
 
@@ -185,6 +225,7 @@ function nextQuestion() {
 	} else if (currentQuestion instanceof FillInTheBlankQuestion) {
 		initializeFITBQuestion(currentQuestion);
 	} else {
+		// should be unreachable
 		console.log("Error: Question type unrecognized.");
 	}
 }
@@ -247,6 +288,8 @@ function showQuiz(){
 };
 
 function unshowQuiz() { 
+	// FLAGGED FOR REMOVAL
+	
 	//$("#quizopener").style.display="none";
 	$("#quizframe").style.visibility="hidden";
 	//$("#scorepage").style.display="none";
@@ -272,9 +315,7 @@ function showText(){
 function hideText(){
 	document.getElementById("answer_text").style.display="none";
 }
-function showRadiobuttons(question){
-	//var choices = question.getAllAnswers();
-	
+function showRadiobuttons(question){	
 	document.getElementById("rad1").innerHTML = choices[0];
 	document.getElementById("rad2").innerHTML = choices[1];
 	document.getElementById("rad3").innerHTML = choices[2];
@@ -289,7 +330,6 @@ function showCheckbuttons(){
 	document.getElementById("false").innerHT = selectTF[1];
 	document.getElementById("true").value = selectTF[0];
 	document.getElementById("false").value = selectTF[1];
-	return;
 }
 function showRadioChoice(){
 	document.getElementById("answer_choice").style.display="";
@@ -371,6 +411,8 @@ function completeQuiz(){
 	var tot = (parseInt(om));
 	$("#question").html("<h4>Your score is: "+numberCorrect+"/"+totalQuestions+"<h4>");
 	$("#scoreDisplay").html("" +numberCorrect+"/"+totalQuestions+ "");
+	/* Investigating this as a cause of "quiz reset error"
+	
 	document.getElementById("answer_text").style.display="none";
 	document.getElementById("answer_choice").style.display="none";
 	document.getElementById("answer_check").style.display="none";
@@ -381,6 +423,17 @@ function completeQuiz(){
 	document.getElementById("quizframe").style.display="none";
 	document.getElementById("quizopener").style.display="none";
 	document.getElementById("scoreKeeper").style.display="none";
+=======
+	*/
+	$("#answer_text").toggle();
+	$("#answer_choice").toggle();
+	$("#answer_check").toggle();
+	$("#scorepage").toggle();
+	$("#buttonNext").toggle();
+	$("#question").toggle();
+	//$("#buttonCheck").toggle();
+	$("#quizframe").toggle();
+	//$("#quizopener").toggle();
 };
 
 
