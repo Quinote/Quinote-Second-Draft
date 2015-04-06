@@ -17,7 +17,7 @@
 
 var editor;
 
-var main = function() {
+var editorMain = function() {
     //editor = CKEDITOR.replace('editor');
     editor = CKEDITOR.replace('editor', {
         removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
@@ -139,7 +139,7 @@ var main = function() {
 
 };
 
-$(document).ready(main);
+$(document).ready(editorMain);
 
 /*************************************
  * Helper functions
