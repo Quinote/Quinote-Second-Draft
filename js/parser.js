@@ -265,6 +265,11 @@ function readLists(element) {
 		newElement.subelements = processListElements(contents[1]);
 	}
 	
+	// assign parent pointers
+	for (var i in newElement.subelements) {
+		newElement.subElements[i].parent = newElement;
+	}
+	
 	return newElement;
 }
 
