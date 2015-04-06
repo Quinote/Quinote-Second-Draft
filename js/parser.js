@@ -9,21 +9,24 @@ of arrays of (possibly nested) objects.
 
 TODO: 
 	- ordered lists
-	- better dateRegex
 	- create an emptyRegex to identify whitespace
-	- where is preformatting / API-dependent separation of elements done?
 
+	- BIG BUG: creating a list and then deleting the contents of the first 
+		point introduces an unexpected <br>!
 */
 
 //**************************************
 // GLOBAL VARIABLES
 //**************************************
 
-var dateRegex = /[0-9]+-[0-9]+-[0-9]+/;
+// var dateRegex = /[0-9]+-[0-9]+-[0-9]+/; DEPRECATED
 var aliasRegex = /\[.*\]/;
 var aliasSeparatorRegex = /;|,/;
 var ideaRegex = /([^:])+/;
 var equalityRegex = /:/; // currently unused; may be expanded
+var listBeginRegex = /<ul>/;
+var listEndRegex = /<\/ul>/;
+
 
 // these need to be global because of recursive scoping issues
 // alternative would be recursive construction of a ParseResult
@@ -31,10 +34,11 @@ var equalityRegex = /:/; // currently unused; may be expanded
 // prepended "parser_" to eliminate namespace issues
 var parser_parsedElements = [];
 var parser_identifiers = [];
-var parser_dates = [];
+// var parser_dates = []; // DEPRECATED; to be fully removed later
 var parser_definitions = [];
-var parser_events = [];
+// var parser_events = []; // DEPRECATED
 var parser_other = [];
+var parser_aliases = [];
 
 
 
@@ -46,38 +50,40 @@ var parser_other = [];
 // Main return object //
 ////////////////////////
 
-function ParseResult(parsedElements, identifiers, dates, definitions, events, other) {
+function ParseResult(parsedElements, identifiers, definitions, aliases, other) {
 	this.parsedElements = parsedElements;
 	this.identifiers = identifiers;
-	this.dates = dates;
+	//this.dates = dates; // DEPRECATED
 	this.definitions = definitions;
-	this.events = events;
+	//this.events = events; // DEPRECATED
+	this.aliases = aliases;
 	this.other = other;
 	
 	this.getIdentifiers = function () {
-		// return an array of all Identifier and Date Elements
+		// return an array of all Identifier Elements
 		var identifierPool = [];
 		for (i in this.identifiers) {
 			identifierPool.push(this.identifiers[i]);
 		}
-		for (i in this.dates) {
+		/*for (i in this.dates) {
 			identifierPool.push(this.dates[i]);
-		}
+		}*/
 		return identifierPool;
 	}
 	
 	this.getElementByKey = function (key) {
-		// given an identifier string, return the Element associated with that identifier
+		/* given an identifier string, try to return the Element 
+		   associated with that identifier */
 		for (i in this.identifiers) {
 			if (this.identifiers[i].identifier === key) {
 				return this.identifiers[i];
 			}
 		}
-		for (i in this.dates) {
+		/*for (i in this.dates) {
 			if (this.dates[i].date === key) {
 				return this.dates[i];
 			}
-		}
+		}*/
 		
 		console.log("Element not found in call to getElementByKey: " + key);
 		return undefined;
@@ -91,6 +97,7 @@ function RawElement(value) {
 		RawElement reflects only indentation level organization
 	*/
 	this.value = value; // Identifier and possibly definition
+	this.parent; // Parent RawElement, if applicable
 	this.subelements = [];
 }
 
@@ -115,6 +122,11 @@ function IdentifierElement (identifier) {
 }
 
 function DateElement (date) {
+	/* ******************************************************
+	   AS OF 4-5-15, THIS CLASS IS DEPRECATED, TO BE REPLACED
+	   BY THE UNIVERSAL "IDENTIFIER : DEFINITION" MODEL
+	   ******************************************************
+	
 	/* Like an IdentifierElement, a DateElement contains at
 		least a date and possibly a definition and/or list.
 	
@@ -126,8 +138,6 @@ function DateElement (date) {
 	this.definitions = [];
 	this.subelements = [];
 	
-	
-	// not sure if these methods will be necessary; TODO
 	this.setIdentifier = function(identifier) {
 		if (!dateRegex.test(identifier)) {
 			console.log("WARNING: setting DateElement identifier " + this.identifier + " to non-date " + identifier);
@@ -157,8 +167,8 @@ function OtherElement (value) {
 //  Main access method //
 /////////////////////////
 
-function parseInput(elements) {
-	/* Given a list of elements, first assign hierarchy based on indent
+function parseInput(html) {
+	/* Given the html input, first assign hierarchy based on indent
 	levels then parse according to parse rules. Returns a ParseResult
 	object containing the results of the final parsing function
 	*/
@@ -166,28 +176,55 @@ function parseInput(elements) {
 	// reset state of global variables for new parse
 	resetState();
 	
+	// split HTML by linebreaks (<br>)
+	var elements = reductiveSplit(getEditorHtml(), "<br>");
+		
 	// get list of top-level elements containing their subelements
-	var rawElements = readIndentLevels(elements, 0, 0);
+	var rawElements = [];
 	
+	for (var i in elements) {
+		// recursively parse if element contains a list
+		if (elements[i].indexOf("<ul>") !== -1 ) {
+			
+			// strip off proceeding element, if present
+			var proceedingElement = elements[i].substring(elements[i].lastIndexOf("</ul>") + 5);
+			
+			// read list + top-level element
+			rawElements.push(readLists(elements[i].substring(0, elements[i].lastIndexOf("</ul>"))));
+			
+			// re-add proceeding element, if applicable
+			if (proceedingElement.length > 0) {
+				rawElements.push(new RawElement(proceedingElement));
+			}
+		} else if (elements[i].length > 0) {
+			//otherwise, just push top-level element
+			rawElements.push(new RawElement(elements[i]));
+		}
+	}
+			
 	for (var i=0; i<rawElements.length; i++) {
-		// ignore empty lines; see TODO
+		// ignore empty lines
 		if (rawElements[i].value.length === 0) continue;
 		
 		// parse indent-organized RawElements
 		var parsedElement = parseRawElement(rawElements[i]);
 		
+		// check if element already contained
 		if (parser_parsedElements.indexOf(parsedElement) === -1) {
 			parser_parsedElements.push(parsedElement);
 		}
 	}
 	
-	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_dates, parser_definitions, parser_events, parser_other);
+	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_other);
 	return parseResult;
 }
 
 /////////////////////////
 
 function readIndentLevels (elements, index, indentationLevel) {
+	/* TO BE DEPRECATED WITH INTRODUCTION OF HTML LIST ORDERING
+	   (4-5-15)
+	
 	/* given line-by-line input array elements, 
 		recursively parse those lines (in-order)
 		and their subelements
@@ -196,7 +233,7 @@ function readIndentLevels (elements, index, indentationLevel) {
 	
 	while (index < elements.length) {
 		
-		// format of element depends on surrounding API, see TODO
+		// note: format of element depends on surrounding API
 		var val = elements[index];
 		
 		// get indentation level of current element
@@ -223,6 +260,11 @@ function readIndentLevels (elements, index, indentationLevel) {
 				// otherwise, current element is a list; make recursive call
 				currentElement.subelements = readIndentLevels(elements, index, nextIndentation);
 				
+				// assign currentElement to parent field of subelements
+				for (var i in currentElement.subelements) {
+					currentElement.subelements[i].parent = currentElement;
+				}
+				
 				// increase index by size of list (recursive call)
 				index += countSubelements(currentElement);
 			}
@@ -230,6 +272,55 @@ function readIndentLevels (elements, index, indentationLevel) {
 	}
 	return indentLevelElements;
 }
+
+function readLists(element) {
+	// recursively process subordinate elements in a list
+	
+	// strip off top-level identifier/definition
+	var contents = element.split(/<ul>(.+)/);
+	
+	var newElement = new RawElement(contents[0]);
+	
+	if (typeof contents[1] !== "undefined" && contents[1].length > 0) {
+		// parse subordinate elements and assign to subelements field
+		newElement.subelements = processListElements(contents[1]);
+	}
+	
+	return newElement;
+}
+
+function processListElements(contents) {
+	// given a string representing the contents of a list, recursively
+	// process the contents of that list as RawElements
+	
+	 // string leading and trailing <li> and </li>
+	contents = contents.substring(4, contents.length-5);
+	
+	// split by list element breaks
+	var listElements = contents.split("</li></li>");
+	
+	var subelements = [];
+	
+	for (var i in listElements) {
+		// recurse on further sublists, if present
+		if (listElements[i].indexOf("<ul>") !== -1 ) {
+			var proceedingElement = listElements[i].substring(listElements[i].lastIndexOf("</ul>") + 5);
+			
+			subelements.push(readLists(listElements[i].substring(0, listElements[i].lastIndexOf("</ul>"))));
+			
+			if (proceedingElement.length > 0) {
+				subelements.push(new RawElement(proceedingElement));
+			}
+			
+		// otherwise, just add a new RawElement
+		} else {
+			subelements.push(new RawElement(listElements[i]));
+		}
+	}
+	
+	return subelements;
+}
+	
 
 function countSubelements(rawElement) {
 	// recursively determine the number of subelements in a parent Element's tree			
@@ -242,7 +333,7 @@ function countSubelements(rawElement) {
 
 function parseRawElement(rawElement) {
 	/* recursively turn RawElements into their respective 
-	IdentifierElement or DateElement forms
+	IdentifierElement or DateElement forms 
 	*/
 	
 	var newElement;
@@ -276,21 +367,43 @@ function parseRawElement(rawElement) {
 	
 	for (var i in parser_parsedElements) {
 		// check to see if identifier previously defined
-		if (parser_parsedElements[i].getIdentifier() === components[0]) {
+		// is there a way to improve this over O(n)?
+		// ... becomes a possible concern with large input size
+		
+		var currentElement = parser_parsedElements[i];
+		
+		if (currentElement.getIdentifier() === components[0]) {
 			// if so, define "newElement" to be the previously defined element
-			newElement = parser_parsedElements[i];
+			newElement = currentElement;
+			
+			// element found; break out of for loop
+			break;
 		}
+		
+		for (var j in currentElement.aliases) {
+			if (currentElement.aliases[j] === components[0]) {
+				newElement = currentElement;
+				
+				break;
+			}
+		}	
 	}
 	
 	if (typeof newElement === "undefined") {
-		if (dateRegex.test(components[0]) ) {
+		// define newElement if no identifier/alias matches are found
+		
+		/*if (dateRegex.test(components[0]) ) {
 			// make new element
 			newElement = new DateElement(components[0]);
 
 			if (components.length > 1) {
 				parser_dates.push(newElement);
 			}
-		} else if (ideaRegex.test(components[0]) ) {
+		} else */
+			
+		// At the moment, this is largely a formality: ideaRegex will match
+		// virtually any input (consequence of eliminating DateElements
+		if (ideaRegex.test(components[0]) ) {
 			newElement = new IdentifierElement(components[0]);
 		
 			if (components.length > 1) {
@@ -299,10 +412,19 @@ function parseRawElement(rawElement) {
 		}
 	}
 	
-	// set aliases if applicable
+	// set/add aliases if applicable
 	if (typeof newElement !== "undefined" && typeof aliases !== "undefined") {
-		newElement.aliases = aliases;
-	}
+		
+		// case aliases previously undefined
+		if (newElement.aliases.length === 0) {
+			newElement.aliases = aliases;
+			
+		// case aliases previously defined
+		} else {
+			newElement.aliases = mergeArrays(newElement.aliases, aliases);
+			parser_aliases = mergeArrays(parser_aliases, aliases);
+		}
+	} 
 	
 	// test if definition present
 	if (components.length === 2 && components[1] != "") {
@@ -316,11 +438,14 @@ function parseRawElement(rawElement) {
 		newElement.definitions = newElement.definitions.concat(elementDefinitions);
 		
 		// add new definitions to relevant parser pools
-		if (newElement instanceof DateElement) {
+		
+		/*if (newElement instanceof DateElement) {
 			for (i in elementDefinitions) {
 				parser_events.push(elementDefinitions[i]);
 			}
-		} else if (newElement instanceof IdentifierElement) {
+		} else */
+			
+		if (newElement instanceof IdentifierElement) {
 			for (i in elementDefinitions) {
 				parser_definitions.push(elementDefinitions[i]);
 			}
@@ -360,8 +485,20 @@ function resetState() {
 	// clear global arrays
 	parser_parsedElements = [];
 	parser_identifiers = [];
-	parser_dates = [];
+	//parser_dates = []; // DEPRECATED
 	parser_definitions = [];
-	parser_events = [];
+	//parser_events = []; // DEPRECATED
 	parser_other = [];
+}
+
+function mergeArrays(arr1, arr2) {
+	// merge the contents of two arrays, removing duplicates
+	var ret = arr1.slice();
+	
+	for (var i in arr2) {
+		if (ret.indexOf(arr2[i]) === -1) {
+			ret.push(arr2[i]);
+		}
+	}
+	return ret;
 }

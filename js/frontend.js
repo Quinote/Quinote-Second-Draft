@@ -31,10 +31,13 @@ var test_ = false;
 
 $(document).ready(function() {
 	$('#buttonGenerateQuiz').click(function() { // GENERATE QUIZ
-		parseResult = parseInput(editor.getText().split("\n"));
+		
+		//retrieve and parse text
+		// NOTE: new text editor = NEW API CALL
+		parseResult = parseInput(getEditorHtml().split("<br>"));
 		
 		// check to make sure notes are of sufficient size
-		if (parseResult.dates.length < 4 && parseResult.identifiers.length < 4) {
+		if (parseResult.identifiers.length < 4) {
 			alert("You need more notes to make a quiz!");
 			$("#quizDialog").removeClass("dialogVisible");
 			return;
@@ -47,6 +50,7 @@ $(document).ready(function() {
 		if (isNaN(numTF)) { numTF = 0; }
 		var numFB = parseInt($("#qLengthFB").val());
 		if (isNaN(numFB)) { numFB = 0; }
+		setQLength();
 		
 		totalQuestions = numMC + numTF + numFB;
 		
@@ -106,6 +110,32 @@ $(document).ready(function() {
 	$("#buttonCheck").click(function() { // CHECK answer button
 		// currently unused
 	});
+	
+	// question number field listeners
+	$("#qLengthMC").change( function() {
+		// set to 0 if NaN
+		if (isNaN($("#qLengthMC").val())) $("#qLengthMC").val(0); 
+		//update qLength field
+		setQLength();
+	});
+
+	$("#qLengthTF").change( function() {
+		if (isNaN($("#qLengthTF").val())) $("#qLengthTF").val(0); 
+		setQLength();
+	});
+
+	$("#qLengthFB").change( function() {
+		if (isNaN($("#qLengthFB").val())) $("#qLengthFB").val(0); 
+		setQLength();
+	});
+
+	function setQLength() {
+		// set qLength field to sum of question types
+		var sum = 0;
+		sum = parseInt($("#qLengthMC").val()) + parseInt($("#qLengthTF").val()) + parseInt($("#qLengthFB").val());
+		$("#qLength").val(sum);
+	}
+	
 });
 
 //**************************************
@@ -281,7 +311,7 @@ function showQuiz(){
 	document.getElementById("quizopener").style.display="none";
 	document.getElementById("quizframe").style.visibility="visible";
 	document.getElementById("scorepage").style.display="none";
-	document.getElementById("svgOpener").style.display="none";
+	//document.getElementById("svgOpener").style.display="none";
 	document.getElementById("scoreKeeper").style.display="none";
 	document.getElementById("one").style.display="none";
 	document.getElementById("two").style.display="none";
