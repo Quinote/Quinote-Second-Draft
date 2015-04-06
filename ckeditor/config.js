@@ -8,33 +8,10 @@ CKEDITOR.editorConfig = function( config ) {
 	// For complete reference see:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-	//// The toolbar groups arrangement, optimized for two toolbar rows.
-	//config.toolbarGroups = [
-	//	{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-	//	{ name: 'paragraph',   groups: [ 'list', 'indent', 'source'] },
-	//	{ name: 'colors' },
-	//];
 
-	//config.toolbar = [
-	//	[ 'Source', 'Preview' ],
-	//	[ 'Undo', 'Redo' ],
-	//	[ 'BulletedList', 'NumberedList', 'Indent', 'Outdent' ],
-	//	'/',
-	//	[ 'Bold', 'Italic', 'Strike', 'Underline'],
-	//	[ 'Font', 'FontSize' ] // not working
-	//];
-
-	// Remove some buttons provided by the standard plugins, which are
-	// not needed in the Standard(s) toolbar.
-	//config.removeButtons = 'Subscript,Superscript,RemoveFormat';
-
-	// Set the most common block elements.
-	//config.format_tags = 'p;h1;h2;h3;pre';
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
-
-
 
 	config.enterMode = CKEDITOR.ENTER_BR;
 

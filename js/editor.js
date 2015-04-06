@@ -18,14 +18,54 @@
 var editor;
 
 var main = function() {
-    editor = CKEDITOR.replace('editor');
-    //editor = CKEDITOR.replace('editor', {
-    //    removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
-    //    allowedContent: 'strong em u s ul ol; a[!href]; img[!src,width,height];'
-    //} );
+    //editor = CKEDITOR.replace('editor');
+    editor = CKEDITOR.replace('editor', {
+        removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
+        allowedContent: 'strong em u s ul ol li; a[!href]; img[!src,width,height];'
+    } );
 
+
+    // TODO: Conditional list/indent, cancel other events
+    ///*************************************
+    // * Tab Key Handling
+    // *************************************/
+
+    //$('#editorspace').on('keydown', function(e) {
+    //    var keyCode = e.keyCode || e.which;
+    //    console.log(e);
+    //    if (keyCode === 2228233) {
+    //        e.preventDefault();
+    //        editor.execCommand('outdent');
+    //    } else if (keyCode === 9) {
+    //        e.preventDefault();
+    //        editor.execCommand('bulletedlist');
+    //    }
+    //});
+
+    editor.addCommand( 'handleTab', new CKEDITOR.command(editor, function() {
+            editor.execCommand('bulletedlist');
+        })
+    );
+    editor.setKeystroke( 9, 'handleTab' );
+
+    //editor.on( 'key', function( evt ) {
+    //    if (evt.data.keyCode === 2228233 /* SHIFT+TAB */) {
+    //        evt.cancel();
+    //        editor.execCommand('outdent');
+    //    } else if (evt.data.keyCode === 9 /* TAB */) {
+    //        evt.cancel();
+    //        editor.execCommand('bulletedlist');
+    //    }
+    //    //console.log(evt);
+    //});
+
+
+    // TODO: Font, Maximize?
+    ///*************************************
+    // * Toolbar Functionality
+    // *************************************/
     //console.log(editor.commands);
-
+    //console.log(editor.config.plugins);
     $('#bold')
         .click(function() {
             editor.execCommand('bold');
@@ -46,8 +86,6 @@ var main = function() {
             editor.execCommand('strike');
         })
     ;
-
-
     $('#numlist')
         .click(function() {
             editor.execCommand('numberedlist');
@@ -68,16 +106,11 @@ var main = function() {
             editor.execCommand('outdent');
         })
     ;
-
     //$('#zoomin')
     //    .click(function() {
     //        editor.execCommand('maximize');
     //    })
     //;
-
-
-
-
 
 
 
@@ -90,20 +123,6 @@ var main = function() {
             buildList(parseEditorText());
         })
     ;
-    //
-    //// Must use JQuery here to grab actual html object
-    //$('#editor')
-    //    .click(function() {
-    //        editor.focus();
-    //    })
-    //;
-
-    //$('#fontsize')
-    //    .on('change')(function() {
-    //        $('.ql-size').add
-    //    })
-
-    //$(window).resize(resizeEditor);
 
 
     // Set up initial environment
