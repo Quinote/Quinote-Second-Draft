@@ -9,10 +9,7 @@ a Quiz object containing a number of questions.
 
 TODO:
 	- Avoid making undefined into identifier elements?
-	- Likely a lot of bug-fixing
-	- Avoid infinite loop based on insufficient input size
 	- when receiving null results, readd elements to pool?
-
 
 */
 
