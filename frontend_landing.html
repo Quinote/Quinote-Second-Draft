@@ -2,29 +2,31 @@
 <html>
     <head>
 		<meta charset="UTF-8" />
-        <link rel="stylesheet" type="text/css" href="style/landing.css" />
+        <link rel="stylesheet" type="text/css" href="style/index.css" />
     </head>
 
     <body>
-    	<div id="wrap">
-    		<div id="container">
-    			<div id="header">
-                    <img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
-    				<div class="right-nav">
-    					<a id="login" class="nav" href="index_home">Log Out</a>
-    				</div>
-    			</div>
-    			<div id="content">
+       <div id="wrap">
+        <div id="container">
+            <div id="header">
+                <img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
+                <img width="10%" height="50px"  src="style/svg/typeQuinote.svg">
+                <div class="right-nav">
+                    <a id="home" class="nav" href="">Log Out</a>
+                </div>
+            </div>
+        </div>
+    		<div id="homeContainer">
+                 <div id="openQuinote">
+                    <input class="button quiButton" type="button" id="openQuinote" value="Create New File" />
+
+                </div>
+    			<div id="landingContent">
 
     				<div id="main-content">
 	    				<div class="section" id="welcome">
 	    				    <div id="main_about">
 	    				        <h2>Welcome Back</h2>
-	    				        <ul>
-                                    <li>Open QuiNote Workspace</li>
-                                    <li>Create New File</li>
-                                    <li>Import from Google Drive</li>
-                                </ul>
 
                                 <h3>File Library</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec est diam, congue non efficitur non, interdum ut nibh. Integer a ipsum porta, blandit libero sit amet, imperdiet erat. Cras vulputate enim erat, eget maximus ex rhoncus non. Curabitur laoreet est sit amet augue tempus mollis et vel nisl.</p>
@@ -36,7 +38,12 @@
     				</div>
     			</div>
     			<footer>
-    			Quinote 2015
+                    <div class="nav-footer">
+                        <a id="about" class="nav-home" href="index_about">About</a>
+                        <a id="help" class="nav-home" href="index_help">Help</a>
+                        <a id="login" class="nav-home" href="">Login</a>
+                    </div>
+        			Quinote 2015
     			</footer>
     		</div>
     	</div>

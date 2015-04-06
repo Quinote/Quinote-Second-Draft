@@ -7,17 +7,33 @@
 
     <body>
     	<div id="wrap">
+    	<div id="headerContainer">
+    		<div class="headerBackground">
+    			<img class="background" src="style/images/background.jpg" />
+    			<div class="screen">
+    				<ul class="slideshow">
+    					<li><span>Image 01</span></li>
+    					<li><span>Image 02</span></li>
+    					<li><span>Image 03</span></li>
+    					<li><span>Image 04</span></li>
+    					<li><span>Image 05</span></li>
+    					<li><span>Image 06</span></li>
+    				</ul>
+    			</div>
+    		</div>
+    	</div>
     		<div id="container">
-    			<div id="header">
+    			<div id="header-home">
     				<img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
     				<img width="10%" height="50px"  src="style/svg/typeQuinote.svg">
     				<div class="right-nav">
-    					<a id="about" class="nav" href="index_about">About</a>
-    					<a id="help" class="nav" href="index_help">Help</a>
-    					<a id="login" class="nav" href="">Login</a>
+    					<a id="about" class="nav-home" href="index_about">About</a>
+    					<a id="help" class="nav-home" href="index_help">Help</a>
+    					<a id="login" class="nav-home" href="">Login</a>
     				</div>
     			</div>
 				<div id="head-content">
+					
 				Quinote is a study aid that reads your notes and generates multiple choice, fill in the blank, and true/false quizzes!
 				</div>
     			<div id="content">
@@ -89,6 +105,42 @@
     			</footer>
     		</div>
     	</div>
+    	<script>
+    		(function() {
+
+    			/* Mockup responsiveness */
+    			var body = docElem = window.document.documentElement,
+    				wrap = document.getElementById( 'headerContainer' ),
+    				mockup = wrap.querySelector( '.headerBackground' ),
+    				mockupWidth = mockup.offsetWidth;
+
+    			scaleMockup();
+
+    			function scaleMockup() {
+    				var wrapWidth = wrap.offsetWidth,
+    					val = wrapWidth / mockupWidth;
+
+    				mockup.style.transform = 'scale3d(' + val + ', ' + val + ', 1)';
+    			}
+    			
+    			window.addEventListener( 'resize', resizeHandler );
+
+    			function resizeHandler() {
+    				function delayed() {
+    					resize();
+    					resizeTimeout = null;
+    				}
+    				if ( typeof resizeTimeout != 'undefined' ) {
+    					clearTimeout( resizeTimeout );
+    				}
+    				resizeTimeout = setTimeout( delayed, 50 );
+    			}
+
+    			function resize() {
+    				scaleMockup();
+    			}
+    		})();
+    	</script>
 	</body>
 
 
