@@ -3,30 +3,25 @@ Author: Elliott Warkus
 
 Contains methods for parsing textual input.
 
-Access is via calls to parseInput(elements), where elements is an array 
-of newline-separated strings, and returns a ParseResult object, which consists
+Access is via calls to parseInput(html), where html is a string of raw HTML consistent 
+with the text editor formatting, and returns a ParseResult object, which consists
 of arrays of (possibly nested) objects. 
 
 TODO: 
-	- ordered lists
-	- create an emptyRegex to identify whitespace
+	- ordered lists (?)
 
-	- BIG BUG: creating a list and then deleting the contents of the first 
-		point introduces an unexpected <br>!
+	- Creating a list and then deleting the contents of the first point introduces an unexpected <br>!
+	- Empty newlines create a single unprintable character?
 */
 
 //**************************************
 // GLOBAL VARIABLES
 //**************************************
 
-// var dateRegex = /[0-9]+-[0-9]+-[0-9]+/; DEPRECATED
 var aliasRegex = /\[.*\]/;
 var aliasSeparatorRegex = /;|,/;
 var ideaRegex = /([^:])+/;
 var equalityRegex = /:/; // currently unused; may be expanded
-var listBeginRegex = /<ul>/;
-var listEndRegex = /<\/ul>/;
-
 
 // these need to be global because of recursive scoping issues
 // alternative would be recursive construction of a ParseResult
@@ -34,9 +29,7 @@ var listEndRegex = /<\/ul>/;
 // prepended "parser_" to eliminate namespace issues
 var parser_parsedElements = [];
 var parser_identifiers = [];
-// var parser_dates = []; // DEPRECATED; to be fully removed later
 var parser_definitions = [];
-// var parser_events = []; // DEPRECATED
 var parser_other = [];
 var parser_aliases = [];
 
@@ -53,38 +46,26 @@ var parser_aliases = [];
 function ParseResult(parsedElements, identifiers, definitions, aliases, other) {
 	this.parsedElements = parsedElements;
 	this.identifiers = identifiers;
-	//this.dates = dates; // DEPRECATED
 	this.definitions = definitions;
-	//this.events = events; // DEPRECATED
 	this.aliases = aliases;
 	this.other = other;
 	
 	this.getIdentifiers = function () {
 		// return an array of all Identifier Elements
-		var identifierPool = [];
-		for (i in this.identifiers) {
-			identifierPool.push(this.identifiers[i]);
-		}
-		/*for (i in this.dates) {
-			identifierPool.push(this.dates[i]);
-		}*/
+		
+		var identifierPool = this.identifiers.slice();
 		return identifierPool;
 	}
 	
 	this.getElementByKey = function (key) {
 		/* given an identifier string, try to return the Element 
 		   associated with that identifier */
+		
 		for (i in this.identifiers) {
 			if (this.identifiers[i].identifier === key) {
 				return this.identifiers[i];
 			}
 		}
-		/*for (i in this.dates) {
-			if (this.dates[i].date === key) {
-				return this.dates[i];
-			}
-		}*/
-		
 		console.log("Element not found in call to getElementByKey: " + key);
 		return undefined;
 	}
@@ -111,6 +92,7 @@ function IdentifierElement (identifier) {
 	this.identifier = identifier;
 	this.aliases = []; // a list of other names by which this element may be known
 	this.definitions = []; // to be set if applicable
+	this.parent;
 	this.subelements = []; // to be appended to if applicable
 	
 	this.setIdentifier = function(identifier) {
@@ -150,14 +132,6 @@ function DateElement (date) {
 	
 }
 
-function OtherElement (value) {
-	/* An element which could not be parsed into a recognized
-		category.
-	
-		CURRENTLY UNUSED
-	*/
-	this.value = value;
-}
 
 //*************************************
 // FUNCTIONS
@@ -176,7 +150,10 @@ function parseInput(html) {
 	// reset state of global variables for new parse
 	resetState();
 	
-	// split HTML by linebreaks (<br>)
+	/* split HTML by linebreaks (<br>)
+	 *
+	 * reductiveSplit() is currently located in editor.js
+	 */ 
 	var elements = reductiveSplit(getEditorHtml(), "<br>");
 		
 	// get list of top-level elements containing their subelements
@@ -223,7 +200,9 @@ function parseInput(html) {
 
 function readIndentLevels (elements, index, indentationLevel) {
 	/* TO BE DEPRECATED WITH INTRODUCTION OF HTML LIST ORDERING
-	   (4-5-15)
+	   (4-5-15); NO LONGER SERVES A PURPOSE (replaced by readLists()
+	   and processListElements() )
+	*/
 	
 	/* given line-by-line input array elements, 
 		recursively parse those lines (in-order)
@@ -286,6 +265,11 @@ function readLists(element) {
 		newElement.subelements = processListElements(contents[1]);
 	}
 	
+	// assign parent pointers
+	for (var i in newElement.subelements) {
+		newElement.subElements[i].parent = newElement;
+	}
+	
 	return newElement;
 }
 
@@ -321,7 +305,6 @@ function processListElements(contents) {
 	return subelements;
 }
 	
-
 function countSubelements(rawElement) {
 	// recursively determine the number of subelements in a parent Element's tree			
 	var count = rawElement.subelements.length;
@@ -333,7 +316,7 @@ function countSubelements(rawElement) {
 
 function parseRawElement(rawElement) {
 	/* recursively turn RawElements into their respective 
-	IdentifierElement or DateElement forms 
+	IdentifierElement forms 
 	*/
 	
 	var newElement;
@@ -389,20 +372,11 @@ function parseRawElement(rawElement) {
 		}	
 	}
 	
+	// define newElement if no identifier/alias matches are found
 	if (typeof newElement === "undefined") {
-		// define newElement if no identifier/alias matches are found
 		
-		/*if (dateRegex.test(components[0]) ) {
-			// make new element
-			newElement = new DateElement(components[0]);
-
-			if (components.length > 1) {
-				parser_dates.push(newElement);
-			}
-		} else */
-			
 		// At the moment, this is largely a formality: ideaRegex will match
-		// virtually any input (consequence of eliminating DateElements
+		// virtually any input (consequence of eliminating DateElements)
 		if (ideaRegex.test(components[0]) ) {
 			newElement = new IdentifierElement(components[0]);
 		
@@ -438,18 +412,12 @@ function parseRawElement(rawElement) {
 		newElement.definitions = newElement.definitions.concat(elementDefinitions);
 		
 		// add new definitions to relevant parser pools
-		
-		/*if (newElement instanceof DateElement) {
-			for (i in elementDefinitions) {
-				parser_events.push(elementDefinitions[i]);
-			}
-		} else */
-			
 		if (newElement instanceof IdentifierElement) {
 			for (i in elementDefinitions) {
 				parser_definitions.push(elementDefinitions[i]);
 			}
 		}
+		
 	} else {
 		// if not, element is free-floating
 		if (typeof newElement === "undefined") {
@@ -458,15 +426,23 @@ function parseRawElement(rawElement) {
 		parser_other.push(newElement);
 	}
 	
-	for (var i=0; i<rawElement.subelements.length; i++) {
+	for (var i in rawElement.subelements) {
 		// recurse on subelements
 		newElement.subelements.push(parseRawElement(rawElement.subelements[i]));
+	}
+	
+	// update parent pointers, if applicable
+	for (var i in newElement.subelements) {
+		newElement.subelements[i].parent = newElement;
 	}
 
 	return newElement;
 }
 
 function getIndentationLevel(str) {
+	/* AS OF 4-5-15, THIS FUNCTION HAS NO PURPOSE
+	 */ 
+	
 	// count the indentation level of the given string
 	
 	var count = 0;
@@ -485,14 +461,13 @@ function resetState() {
 	// clear global arrays
 	parser_parsedElements = [];
 	parser_identifiers = [];
-	//parser_dates = []; // DEPRECATED
 	parser_definitions = [];
-	//parser_events = []; // DEPRECATED
 	parser_other = [];
 }
 
 function mergeArrays(arr1, arr2) {
 	// merge the contents of two arrays, removing duplicates
+	
 	var ret = arr1.slice();
 	
 	for (var i in arr2) {

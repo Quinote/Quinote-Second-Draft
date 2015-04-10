@@ -1,20 +1,24 @@
-<!--Hey Kat: I changed the save buttons display to none so people dont get confused during testing
-	change is in line 16-->
-<div id="page">
-			<div id="topheader">
-				<div id="topNav">
-<!-- 					<span style="verticle-align:middle">
-						User Document Title
-					</span> -->
-					<span>
-						<img style="float: left" src="style/svg/typeQuinoteWhite.svg">
-					</span>
-					<span> 
-						<input style="float: right; display:none;" class="button quiButton" type="button" id="buttonSave" value="Save" />
-					</span>
-				</div>
-			</div>
+ 	<link rel="stylesheet" type="text/css" href="style/frontend.css" />
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+<!--not positive that the following two are necessary, but in theory shouldnt break anything-->
+  <script src="https://apis.google.com/js/client.js"></script>
+  <script src="js/backend.js"></script>
+
+<!--Hey Kat: I changed the save buttons display to none so people dont get confused during testing
+	change is in line 16 ~~ NOTED! -->
+<div id="page">
+	<nav id="note-menu" class="note-menu">
+		<img src="style/svg/pageMainShadow.svg" id="open" class="menu-trigger" />
+		<ul>
+			<li><a href="#" class="">New File</a></li>
+			<li><a href="#" class="">Save</a></li>
+			<li><a href="#" class="">Help</a></li>
+			<li><a href="#" class="">Close</a></li>
+		</ul>
+	</nav>
 			<div id="pagecontainer">
 				<div id="editorspace">
 					<div id="editorToolbar">
@@ -203,5 +207,9 @@
 		$("#qLengthMC").val(0);
 		$("#qLengthTF").val(0);
 		$("#qLengthFB").val(0);
+		$("#qLength").val(0);
+	});
+	$( "#open" ).click(function() {
+	  $( "#note-menu" ).toggleClass( "note-menu-open" );
 	});
 	</script>
