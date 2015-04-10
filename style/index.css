@@ -4,6 +4,8 @@ body {
 	font-size: 14px;
 	line-height: 1.5em;
 	background-image: url(svg/background.svg);
+	font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+	font-weight: 100;
 }
 #wrap {
 	min-height: 100%;
@@ -48,13 +50,23 @@ body {
 	padding-right: 50px;
 	bottom: 0;
 }
+.head-login {
+	z-index: 3;
+	position: absolute;
+	top: 50px;
+	width: 210px;
+	left: 76%;
+	padding: 10px;
+	background-color: #fff;
+	display: none;
+}
 .nav-home {
-	padding-left: 20px;
+	padding-right: 20px;
 	color: #4FA542;
 	outline: #000;
 }
 .nav {
-	padding-left: 20px;
+	padding-right: 20px;
 	color: #000;
 	outline: #000;
 }

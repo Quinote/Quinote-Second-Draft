@@ -10,13 +10,33 @@
     		<div id="container">
     			<div id="header">
     				<img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
-    				<img width="10%" height="50px"  src="style/svg/typeQuinote.svg">
+    				<img width="12%" height="50px"  src="style/svg/typeQuinote.svg">
     				<div class="right-nav">
     					<a id="home" class="nav" href="index_home">Home</a>
     					<a id="help" class="nav" href="index_about">About</a>
-    					<a id="login" class="nav" href="">Login</a>
+    					<input type='submit' id="login" class="nav-home" value="Login" />
     				</div>
     			</div>
+                <div class="head-login">
+                    <form action='' method='post'>
+                        <table>
+                            <tr>
+                                <td><b>Username:</b></td>
+                                <td><input type='text' name='username' /></td></tr>
+                            <tr>
+                                <td><b>Password:</b></td>
+                                <td><input type='password' name='password' /></td>
+                            </tr>
+                            <tr>
+                                <td><b></b></td>
+                                <td><input style="float: right" type='submit' value='Login' name='login' /></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div id="create-account">
+                        No account? <a href='trylogin/register.php'>Register now</a><br />
+                    </div>
+                </div>
     			<div id="content">
 
     				<div id="main-content">
@@ -37,6 +57,12 @@
     			</footer>
     		</div>
     	</div>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script>
+            $( "#login" ).click(function() {
+              $( ".head-login" ).slideToggle( "slow" );
+            });
+        </script>
 	</body>
 
 
