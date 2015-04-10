@@ -1,14 +1,3 @@
- 	<link rel="stylesheet" type="text/css" href="style/frontend.css" />
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-  
-  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-<!--not positive that the following two are necessary, but in theory shouldnt break anything-->
-  <script src="https://apis.google.com/js/client.js"></script>
-  <script src="js/backend.js"></script>
-
-<!--Hey Kat: I changed the save buttons display to none so people dont get confused during testing
-	change is in line 16 ~~ NOTED! -->
 <div id="page">
 	<nav id="note-menu" class="note-menu">
 		<img src="style/svg/pageMainShadow.svg" id="open" class="menu-trigger" />
@@ -20,6 +9,13 @@
 		</ul>
 	</nav>
 			<div id="pagecontainer">
+				<div style="float:right">Save is going here for now<br>
+					<form>
+					<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
+					<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+					<input type='submit' name='submit' class='button' id='save_btn' value='Save' />
+					</form>
+				</div>
 				<div id="editorspace">
 					<div id="editorToolbar">
 						<div id="toolbar">
@@ -75,9 +71,12 @@
 								<img class="icons" id="numlist" src="style/svg/numlistIcon.svg">
 								<img class="icons" id="bullist" src="style/svg/bullistIcon.svg">
 							</div>	
+							
 						</div>
 					</div>
-					<div id="editor" name="editor"></div>
+					
+<textarea id='editor_div' name='editor_div'><!--CONTENT GOES HERE--></textarea>
+
 				</div>
 				<div id="sidebar">
 					<div id="sideheader">

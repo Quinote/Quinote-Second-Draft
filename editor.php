@@ -34,17 +34,25 @@ echo file_get_contents('header.html');
 
 //echoes file info into data-* object
 echo "<BODY>";
-echo "<div id='service-container' data-content='$content'></div>";
+/*echo "<div id='service-container' data-content='$content'></div>";
 
-echo "<form name='editor' action='' >";
+echo "<form name='test_editor' action='' >";
 echo "<textarea rows='10' cols='120' id='filecontent'>";
 echo "</textarea>";
 echo "<input type='hidden' id='userid' value='".$_SESSION['userid']."'>";
 echo "<input type='hidden' id='fileid' value='$fileid'>";
 echo "<input type='submit' name='submit' class='button' id='save_btn' value='Save' border='1px black solid' />";
-echo "</form>";
+echo "</form>";*/
 
-echo file_get_contents('test_frontend.html');
+$page = file_get_contents('frontend.html');
+$page = str_replace("<!--CONTENT GOES HERE-->",$content,$page);
+$page = str_replace("<!--USER ID GOES HERE-->",$_SESSION['userid'],$page);
+$page = str_replace("<!--FILE ID GOES HERE-->",$fileid,$page);
+echo $page;
+
+/*echo "<textarea id='editor_div' name='editor_div'>$content</textarea>";
+echo file_get_contents('frontend_2ndhalf.html');*/
+
 echo "</BODY></HTML>";
 
 ?>

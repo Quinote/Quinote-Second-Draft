@@ -14,15 +14,16 @@ $(function() {
     	
     	var userid = $('input#userid').val();
     	var fileid = $('input#fileid').val();
-    	var content = $('#filecontent').val();
-    	/*console.log(fileid);
+    	/*var content = $('#filecontent').val();*/
+    	var content = getEditorHtml();
+    	
+    	console.log(fileid);
     	console.log(userid);
-    	console.log(content);*/
+    	console.log(content);
     	
     	var dataString = 'userid='+ userid + '&fileid=' + fileid + '&content='+content;
     	
     	//console.log(dataString);
-    	console.log(getEditorHtml());
     	
 	$.ajax({
     		type: "POST",
@@ -44,12 +45,12 @@ $(function() {
 
 $(document).ready( function() {
 	//grabs file data from data-* object and puts it into the editor
-	var container = $('#service-container');
+	/*var container = $('#service-container');
 	var filetext = container.data('content');
 	$('#filecontent').html(filetext);
-	//setEditorHtml(filetext);
+	setEditorHtml(filetext);
 	
-	console.log(getEditorHtml());
+	console.log(getEditorHtml());*/
 	
 	
 });
