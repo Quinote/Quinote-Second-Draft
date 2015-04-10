@@ -90,9 +90,10 @@ function getFileContent($fileid) {
   only gets each files folder, title, and id (so large amounts of content aren't being sent unnecessarily)
 */
 //////////////////////////////////////
-function newFile($userid,$title,$parent_id) {
+function newFile($title,$parent_id) {
 	$title = mysql_real_escape_string($title);
-	$userid = mysql_real_escape_string($userid); //userid and parent_id may not be necessary, usually they are generated within session
+	//$userid = mysql_real_escape_string($userid); //userid and parent_id may not be necessary, usually they are generated within session
+	$userid = $_SESSION['userid'];
 	$parent_id = mysql_real_escape_string($parent_id);
 	$query = "SELECT * FROM `files` WHERE (`owner_id`=$userid AND `title`='$title' AND `parent_id`=$parent_id)";
 	$checkAlreadyExists = mysql_fetch_array(mysql_query($query));

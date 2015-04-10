@@ -9,8 +9,8 @@ Javascript methods for save
 /**************************************/
 $(function() {
     $("#save_btn").click(function() {
-    	console.log('Save button pressed');
-    	/*form validation stuff*/
+    	/*Enter form validation stuff*/
+    	console.log('save button pressed')
     	
     	var userid = $('input#userid').val();
     	var fileid = $('input#fileid').val();
@@ -22,6 +22,7 @@ $(function() {
     	var dataString = 'userid='+ userid + '&fileid=' + fileid + '&content='+content;
     	
     	//console.log(dataString);
+    	console.log(getEditorHtml());
     	
 	$.ajax({
     		type: "POST",
@@ -42,7 +43,15 @@ $(function() {
 });
 
 $(document).ready( function() {
-	//onload things
+	//grabs file data from data-* object and puts it into the editor
+	var container = $('#service-container');
+	var filetext = container.data('content');
+	$('#filecontent').html(filetext);
+	//setEditorHtml(filetext);
+	
+	console.log(getEditorHtml());
+	
+	
 });
 
 /**************************************/

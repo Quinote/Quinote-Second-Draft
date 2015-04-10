@@ -28,13 +28,16 @@ if ($_POST['register']){
 		$_SESSION['c_user']=hash("sha512",$username);
 		$_SESSION['c_salt']=$salt;
 		$_SESSION['username']=$username;
-		$id = mysql_fetch_array(mysql_query("SELECT * FROM `USERS` WHERE `username`='$username'"));
-		$id = $id[0]['id'];
+		
+		$id = mysql_insert_id();
 		$_SESSION['userid']=$id;
 		
 		/*setcookie("c_user",hash("sha512",$username),time() + 24*60*60, "/");
 		setcookie("c_salt",$salt,time() + 24*60*60,"/");*/
-		header( 'Location: filebrowser.php' );
+		header( 'Location: ../filebrowser.php' );
+	}
+	else {
+		die("Please provide a username and password. <a href='register.php'>&larr; Back</a>");
 	}
 }
 
@@ -60,6 +63,12 @@ $page="<BODY>
 		<td><b>Password:</b></td>
 		<td><input type='password' name='password' /></td>
 		</tr>
+		
+		<!--<tr>
+		<td><b>Email:</b><td>
+		<td><input type='email' name='email' /><br />
+		*Optional
+		</tr>-->
 
 		<tr>
 		<td><input type='submit' name='register' value='Register' /></td>

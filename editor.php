@@ -2,53 +2,49 @@
 
 require('trylogin/methods.php');
 
+//If user is not logged in, redirect to index.php
 if(!islogged()) {
 	header( 'Location: index.php' );
 }
+if(! $_POST['actionType']) {
+	//means the user is logged in, but navigated straight to the editor
+	//redirect user to their file management system
+	header( 'Location: filebrowser.php' );
+}
+
+//Check if user is making or opening file
+//Set fileid and content appropriately
+if($_POST['actionType'] == 'make') {
+	$title = htmlspecialchars($_POST['title'],ENT_QUOTES);
+	$fileid = newFile($title,0);
+	$content = 'brand new file';
+}
+else if($_POST['actionType'] == 'open') {
+	$fileid = $_POST['id'];
+	$content = getFileContent($fileid);
+}
 
 
-//future problems (an if _GET[id], else): should add error catch such that if user goes here directly while logged in, should make a new file
-
-/*<form method="post" action="yourFileName.php">
-    <input type="text" name="studentname">
-    <input type="submit" value="click" name="submit"> <!-- assign a name for the button -->
-</form>*/
-
-
-
-
-
-
+//*******************
 //Starts up HTML page
+//*******************
 echo "<HTML>";
 echo file_get_contents('header.html');
 
-/*
 
-$var > 2 ? true : false
-
+//echoes file info into data-* object
 echo "<BODY>";
-echo "<div class='service-container' data-service='<$_GET['id'] ? echo getFileContent($_GET['id']) : echo '' ?>'>
-</div>"*/
+echo "<div id='service-container' data-content='$content'></div>";
 
-
-echo "<BODY>";
 echo "<form name='editor' action='' >";
 echo "<textarea rows='10' cols='120' id='filecontent'>";
-if($_GET['id']) {
-	//echo $_GET['id'];
-	$res = getFileContent($_GET['id']);
-	echo $res;
-}
 echo "</textarea>";
 echo "<input type='hidden' id='userid' value='".$_SESSION['userid']."'>";
-echo "<input type='hidden' id='fileid' value='".$_GET['id']."'>";
-echo "<input type='submit' name='submit' class='button' id='save_btn' value='Save' />";
+echo "<input type='hidden' id='fileid' value='$fileid'>";
+echo "<input type='submit' name='submit' class='button' id='save_btn' value='Save' border='1px black solid' />";
 echo "</form>";
 
-//echo file_get_contents('../frontend.html');
+echo file_get_contents('test_frontend.html');
 echo "</BODY></HTML>";
-
-
 
 ?>

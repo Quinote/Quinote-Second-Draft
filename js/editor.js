@@ -134,9 +134,15 @@ var getEditorHtml = function() {
     return data;
 };
 
-var setEditorHtml = function(html) {
+/*var setEditorHtml = function(html) {
     editor.document.getBody().setHtml(html);
-};
+};*/
+
+var container = $('#service-container');
+	var filetext = container.data('content');
+	//$('#filecontent').html(filetext);
+	console.log('text grabbed: '+filetext);
+	editor.setData('dooap');
 
 var reductiveSplit = function(data, separator) {
     data = data.split(separator);
@@ -145,7 +151,7 @@ var reductiveSplit = function(data, separator) {
     //});
     var i = 0;
     while (i < data.length) {
-        if (data[i] === "" || data[i] === "&nbps;" || data[i] === "<br />") {
+        if (data[i] === "" || data[i] === "&nbsp;" || data[i] === "<br />") {
             data.splice(i, 1);
             i--;
         }

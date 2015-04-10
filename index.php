@@ -60,8 +60,11 @@ if(!$message) {
 	$message = 'Welcome';
 }
 
+// ****************
+//  START HTML PAGE
+// ****************
 echo "<HTML>";
-echo file_get_contents('header.html'); //echo's <head> stuff
+echo file_get_contents('header.html');
 
 
 /*********************/
