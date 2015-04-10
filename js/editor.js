@@ -1,6 +1,6 @@
 /* Quinote Software Group 2015
  *
- * Author(s): Cameron Basham, Elliott Warkus, simone
+ * Author(s): Cameron Basham, Elliott Warkus, Simone Dozier
  *
  *
  *
@@ -15,17 +15,22 @@
  *
  */
 
-var editor;
+var editor, editorFocusManager;
 
 var editorMain = function() {
     //editor = CKEDITOR.replace('editor');
+
+    //editor = CKEDITOR.replace('editor_div', {
+    //    removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
+
     editor = CKEDITOR.replace('editor_div', {
-        removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
+        removePlugins: 'ckeditor-gwf-plugin, resize, tab',
         allowedContent: 'strong em u s ul ol li; a[!href]; img[!src,width,height];'
     } );
+    editorFocusManager = new CKEDITOR.focusManager( editor );
 
 
-    // TODO: Conditional list/indent, cancel other events
+    // TODO: Conditional list/indent, cancel other events, handle ranges (instead of just carets)
     ///*************************************
     // * Tab Key Handling
     // *************************************/
@@ -42,11 +47,11 @@ var editorMain = function() {
     //    }
     //});
 
-    editor.addCommand( 'handleTab', new CKEDITOR.command(editor, function() {
-            editor.execCommand('bulletedlist');
-        })
-    );
-    editor.setKeystroke( 9, 'handleTab' );
+    //editor.addCommand( 'handleTab', new CKEDITOR.command(editor, function() {
+    //        editor.execCommand('bulletedlist');
+    //    })
+    //);
+    //editor.setKeystroke( 9, 'handleTab' );
 
     //editor.on( 'key', function( evt ) {
     //    if (evt.data.keyCode === 2228233 /* SHIFT+TAB */) {
@@ -58,6 +63,44 @@ var editorMain = function() {
     //    }
     //    //console.log(evt);
     //});
+
+    editor.on('key', function(e) {
+        var key = e.data.keyCode;
+        //console.log(key);
+        if (key === 9 /* TAB */) {
+            var r = editor.getSelection()._.cache.nativeSel;
+            console.log(r);
+            if (r.type === "Caret") {
+                console.log( {html: getEditorHtml() } );
+                if (r.extentNode.parentElement.nodeName === "LI") {
+                    //$('#inindent').click();
+                } else {
+                    //$('#bullist').click();
+                }
+            } else if (r.type === "Range") {
+                if (r.extentNode === r.baseNode) {
+                    //console.log("SAME LINE");
+                } else {
+
+                }
+            } else {
+                console.log("Type '" + r.type + "' not handled.");
+            }
+
+            //.getRanges()[0]);
+            //var r = editor.getSelection().getRanges()[0];
+            //if (r.startContainer.$ == r.endContainer.$) {
+            //    console.log("Same!");
+            //} else {
+            //    console.log("Diff!");
+            //}
+            //editor.execCommand('bulletedlist');
+            return false;
+        } else if (key === 2228233 /* SHIFT+TAB */) {
+            editor.execCommand('outdent');
+            return false;
+        }
+    });
 
 
     // TODO: Font, Maximize?
@@ -88,22 +131,34 @@ var editorMain = function() {
     ;
     $('#numlist')
         .click(function() {
-            editor.execCommand('numberedlist');
+            if (editorFocusManager.hasFocus) {
+                editor.execCommand('numberedlist');
+                editorFocusManager.focus();
+            }
         })
     ;
     $('#bullist')
         .click(function() {
-            editor.execCommand('bulletedlist');
+            if (editorFocusManager.hasFocus) {
+                editor.execCommand('bulletedlist');
+                editorFocusManager.focus();
+            }
         })
     ;
     $('#inindent')
         .click(function() {
-            editor.execCommand('indent');
+            if (editorFocusManager.hasFocus) {
+                editor.execCommand('indent');
+                editorFocusManager.focus();
+            }
         })
     ;
     $('#deindent')
         .click(function() {
-            editor.execCommand('outdent');
+            if (editorFocusManager.hasFocus) {
+                editor.execCommand('outdent');
+                editorFocusManager.focus();
+            }
         })
     ;
     //$('#zoomin')
