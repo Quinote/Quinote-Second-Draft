@@ -1,27 +1,35 @@
 <html>
-  <head>
+
+<HEAD>
   
-  <title>Quinote</title>
+  <title>QuiNote</title>
   
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   
+  <!--visual-->
+  <link rel="stylesheet" type="text/css" href="style/index.css" />
   <link rel="stylesheet" type="text/css" href="style/frontend.css" />
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" href="style/landing.css" />
+  <link rel="icon" 
+      type="image/png" 
+      href="style/favicon.png" />
   
+  <!--scripts-->
   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-<!--not positive that the following is necessary, but in theory shouldnt break anything-->
   <script src="https://apis.google.com/js/client.js"></script>
+  <!--<script type="text/javascript" src="js/backend2.js"></script>-->
+  
+</HEAD>
 
-</head>
 <body>
 
 <!--READ: -->
 <!--When you copy your stuff to frontend.html, ONLY copy over stuff between the <body> tags
 aka from <div id=page> to the last <script> tag-->
-
+ 
 <div id="page">
 	<nav id="note-menu" class="note-menu">
 		<img src="style/svg/pageMainShadow.svg" id="open" class="menu-trigger" />
@@ -91,7 +99,7 @@ aka from <div id=page> to the last <script> tag-->
 						</div>
 					</div>
 					
-<textarea id='editor_div' name='editor_div'></textarea>
+<textarea id='editor_div' name='editor_div'>starter text</textarea>
 
 				</div>
 				<div id="sidebar">
@@ -228,18 +236,5 @@ aka from <div id=page> to the last <script> tag-->
 	  $( "#note-menu" ).toggleClass( "note-menu-open" );
 	});
 	</script>
-
-
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>	
-			
-		    <!--Editor scripts-->
-	<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="js/editor.js"></script>
-	<script type="text/javascript" src="js/parser.js"></script>
-	<script type="text/javascript" src="js/quizmaker.js"></script>
-	<script type="text/javascript" src="js/frontend.js"></script>
-	<script type="text/javascript" src="js/backend2.js"></script>
-
-</body>
-</html>
+	
+	</BODY></HTML>
