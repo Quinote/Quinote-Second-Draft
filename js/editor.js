@@ -1,6 +1,6 @@
 /* Quinote Software Group 2015
  *
- * Author(s): Cameron Basham, Elliott Warkus
+ * Author(s): Cameron Basham, Elliott Warkus, simone
  *
  *
  *
@@ -19,7 +19,7 @@ var editor;
 
 var editorMain = function() {
     //editor = CKEDITOR.replace('editor');
-    editor = CKEDITOR.replace('editor', {
+    editor = CKEDITOR.replace('editor_div', {
         removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
         allowedContent: 'strong em u s ul ol li; a[!href]; img[!src,width,height];'
     } );
@@ -153,15 +153,12 @@ var getEditorHtml = function() {
     return data;
 };
 
-/*var setEditorHtml = function(html) {
+var setEditorHtml = function(html) {
     editor.document.getBody().setHtml(html);
-};*/
+};
 
-var container = $('#service-container');
-	var filetext = container.data('content');
-	//$('#filecontent').html(filetext);
-	console.log('text grabbed: '+filetext);
-	editor.setData('dooap');
+//console.log(editor);
+	
 
 var reductiveSplit = function(data, separator) {
     data = data.split(separator);
