@@ -20,27 +20,28 @@ Displays user file library
                 <img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
                 <img width="12%" height="50px"  src="style/svg/typeQuinote.svg">
                 <div class="right-nav">
-                    <a id="home" class="nav" href="">Log Out</a>
+                    <a id="home" class="nav" href="trylogin/logout.php">Log Out</a>
                 </div>
             </div>
-        </div><br><br><br><br><br>
+        </div><br><br><br>
     		<div id="homeContainer">
-                 <div id="openQuinote">
-                    <h3>Make new file:</h3>
-                	<form id='filemaker' action='editor.php' method='post'>
-                                    <b>Title: </b><input type='text' name='title' value='Untitled' />
-                                    <input type='hidden' name='actionType' value='make' />
-                                    <input class='button quiButton' id='openQuinote' type='submit' value='Go' /></form>
-                </div>
     			<div id="landingContent">
 
     				<div id="main-content">
 	    				<div class="section" id="welcome">
 	    				    <div id="main_about">
-	    				        <h2>Welcome Back</h2>
+	    				        <h2>Welcome <!--SPLIT HERE--></h2>
+
+						<div id="openQuinote">
+                    					<h3>Make new file:</h3>
+                					<form id='filemaker' action='editor.php' method='post'>
+                                    			<b>Title: </b><input type='text' name='title' value='Untitled' />
+                                    			<input type='hidden' name='actionType' value='make' />
+                                    			<input class='button quiButton' id='openQuinote' type='submit' value='Go' /></form>
+               					</div>
 
                                 <h3>File Library</h3>
-                                <!--USER FILES GO HERE-->
+                                <!--SPLIT HERE-->
 
 	    				    </div>
 	    				</div>
