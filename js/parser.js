@@ -33,6 +33,10 @@ var parser_definitions = [];
 var parser_other = [];
 var parser_aliases = [];
 
+var parser_anonCount = 1; // count of "nameless" identifiers
+var parser_nameSet = {}; // map of identifiers/aliases to parseElements
+var parser_representedElements = []; // list of identifiers already represented
+
 
 
 //**************************************
@@ -43,11 +47,12 @@ var parser_aliases = [];
 // Main return object //
 ////////////////////////
 
-function ParseResult(parsedElements, identifiers, definitions, aliases, other) {
+function ParseResult(parsedElements, identifiers, definitions, aliases, nameSet, other) {
 	this.parsedElements = parsedElements;
 	this.identifiers = identifiers;
 	this.definitions = definitions;
 	this.aliases = aliases;
+	this.nameSet = nameSet;
 	this.other = other;
 	
 	this.getIdentifiers = function () {
@@ -60,14 +65,13 @@ function ParseResult(parsedElements, identifiers, definitions, aliases, other) {
 	this.getElementByKey = function (key) {
 		/* given an identifier string, try to return the Element 
 		   associated with that identifier */
+				
+		var ret = parser_nameSet[key];
 		
-		for (i in this.identifiers) {
-			if (this.identifiers[i].identifier === key) {
-				return this.identifiers[i];
-			}
+		if (typeof ret === "undefined") {
+			console.log("Element not found in call to getElementByKey: " + key);
 		}
-		console.log("Element not found in call to getElementByKey: " + key);
-		return undefined;
+		return ret;
 	}
 }
 
@@ -153,11 +157,33 @@ function parseInput(html) {
 	/* split HTML by linebreaks (<br>)
 	 *
 	 * reductiveSplit() is currently located in editor.js
-	 */ 
-	var elements = reductiveSplit(getEditorHtml(), "<br>");
-		
+	 */
+	
+	
+	var html = getEditorHtml();
+	
+	// going friggin' nuclear on \u200B
+	html = html.replace(/\u200B+/g, "");
+
+	var elements = reductiveSplit(html, "<br>");
+
+	// temp fix for issue of mid-list <br>s being inserted
+	var numElements = elements.length-1;
+	for (var i=0; i<numElements; i++) {
+		if (elements[i].length > 3 && elements[i+1].length > 4) {
+			if (elements[i].substring(elements[i].length-4, elements[i].length) === "<li>" &&
+					elements[i+1].substring(0, 5) === "</li>") {
+						
+				elements[i] = elements[i] + elements[i + 1];
+				elements.splice(i+1, 1);
+				numElements--;
+			}
+		}
+	}	
+	
 	// get list of top-level elements containing their subelements
 	var rawElements = [];
+	
 	
 	for (var i in elements) {
 		// recursively parse if element contains a list
@@ -173,12 +199,12 @@ function parseInput(html) {
 			if (proceedingElement.length > 0) {
 				rawElements.push(new RawElement(proceedingElement));
 			}
-		} else if (elements[i].length > 0) {
+		} else if (elements[i].length > 0 && !isWhitespace(elements[i])) {
 			//otherwise, just push top-level element
 			rawElements.push(new RawElement(elements[i]));
 		}
 	}
-			
+				
 	for (var i=0; i<rawElements.length; i++) {
 		// ignore empty lines
 		if (rawElements[i].value.length === 0) continue;
@@ -187,12 +213,18 @@ function parseInput(html) {
 		var parsedElement = parseRawElement(rawElements[i]);
 		
 		// check if element already contained
-		if (parser_parsedElements.indexOf(parsedElement) === -1) {
+		if (parser_representedElements.indexOf(parsedElement.getIdentifier()) === -1) {
 			parser_parsedElements.push(parsedElement);
+			updateRepresentedElements(parsedElement);
 		}
 	}
 	
-	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_other);
+	for (var i=0; i<parser_parsedElements.length; i++) {
+		setAnons(parser_parsedElements[i]);
+	}
+	
+	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_nameSet, parser_other);
+		
 	return parseResult;
 }
 
@@ -266,8 +298,8 @@ function readLists(element) {
 	}
 	
 	// assign parent pointers
-	for (var i in newElement.subelements) {
-		newElement.subElements[i].parent = newElement;
+	for (var i=0; i<newElement.subelements.length; i++) {
+		newElement.subelements[i].parent = newElement;
 	}
 	
 	return newElement;
@@ -281,7 +313,7 @@ function processListElements(contents) {
 	contents = contents.substring(4, contents.length-5);
 	
 	// split by list element breaks
-	var listElements = contents.split("</li></li>");
+	var listElements = contents.split("</li><li>");
 	
 	var subelements = [];
 	
@@ -297,7 +329,7 @@ function processListElements(contents) {
 			}
 			
 		// otherwise, just add a new RawElement
-		} else {
+		} else if (!isWhitespace(listElements[i])) {
 			subelements.push(new RawElement(listElements[i]));
 		}
 	}
@@ -328,6 +360,10 @@ function parseRawElement(rawElement) {
 		// strip leading/following whitespace
 		components[i] = components[i].trim();
 	}
+
+	if ((components[0].length === 0 || components[0] === "\u200B") && components.length > 1) {
+		components[0] = "[";
+	}
 	
 	// test for presence of aliases
 	if (components.length > 1 && aliasRegex.test(components[0])) {
@@ -348,42 +384,18 @@ function parseRawElement(rawElement) {
 		components[0] = components[0].trim();
 	}
 	
-	for (var i in parser_parsedElements) {
-		// check to see if identifier previously defined
-		// is there a way to improve this over O(n)?
-		// ... becomes a possible concern with large input size
-		
-		var currentElement = parser_parsedElements[i];
-		
-		if (currentElement.getIdentifier() === components[0]) {
-			// if so, define "newElement" to be the previously defined element
-			newElement = currentElement;
-			
-			// element found; break out of for loop
-			break;
-		}
-		
-		for (var j in currentElement.aliases) {
-			if (currentElement.aliases[j] === components[0]) {
-				newElement = currentElement;
-				
-				break;
-			}
-		}	
-	}
+	
+	newElement = parser_nameSet[components[0]];	
 	
 	// define newElement if no identifier/alias matches are found
 	if (typeof newElement === "undefined") {
+
+		newElement = new IdentifierElement(components[0]);
 		
-		// At the moment, this is largely a formality: ideaRegex will match
-		// virtually any input (consequence of eliminating DateElements)
-		if (ideaRegex.test(components[0]) ) {
-			newElement = new IdentifierElement(components[0]);
-		
-			if (components.length > 1) {
-				parser_identifiers.push(newElement);
-			}
+		if (components.length > 1) {
+			parser_identifiers.push(newElement);
 		}
+		
 	}
 	
 	// set/add aliases if applicable
@@ -398,7 +410,7 @@ function parseRawElement(rawElement) {
 			newElement.aliases = mergeArrays(newElement.aliases, aliases);
 			parser_aliases = mergeArrays(parser_aliases, aliases);
 		}
-	} 
+	}
 	
 	// test if definition present
 	if (components.length === 2 && components[1] != "") {
@@ -426,9 +438,24 @@ function parseRawElement(rawElement) {
 		parser_other.push(newElement);
 	}
 	
+	// HELPFUL COMMENT GOES HERE
+	parser_nameSet[newElement.getIdentifier()] = newElement;
+	
+	for (var i=0; i<newElement.aliases.length; i++) {
+		if (typeof parser_nameSet[newElement.aliases[i]] === "undefined") {
+			parser_nameSet[newElement.aliases[i]] = newElement;
+		}
+	}
+	
 	for (var i in rawElement.subelements) {
 		// recurse on subelements
-		newElement.subelements.push(parseRawElement(rawElement.subelements[i]));
+		var subelement = parseRawElement(rawElement.subelements[i]);
+		
+		// avoid ugly philosophical (and practical--endless recursion)
+		// self-containment issues
+		if (subelement !== newElement) {
+			newElement.subelements.push(subelement);
+		}
 	}
 	
 	// update parent pointers, if applicable
@@ -455,6 +482,28 @@ function getIndentationLevel(str) {
 	return count;
 }
 
+function setAnons(parseElement) {
+	// recursively replace "anonymous" identifiers with numbered labels
+	
+	if (parseElement.getIdentifier() === "[") {
+		parseElement.setIdentifier("[" + parser_anonCount + "]");
+		parser_anonCount++;
+	}
+	
+	for (var i=0; i<parseElement.subelements.length; i++) {
+		setAnons(parseElement.subelements[i]);
+	}
+}
+
+function updateRepresentedElements(parseElement) {
+	parser_representedElements.push(parseElement.getIdentifier());
+	for (var i=0; i<parseElement.subelements.length; i++) {
+		
+		updateRepresentedElements(parseElement.subelements[i]);
+		
+	}
+}
+
 function resetState() {
 	// Reset relevant global variables 
 	
@@ -463,6 +512,14 @@ function resetState() {
 	parser_identifiers = [];
 	parser_definitions = [];
 	parser_other = [];
+	
+	parser_anonCount = 1;
+	parser_nameSet = {};
+	parser_representedElements = [];
+}
+
+function isWhitespace(string) {
+	return /^(\s|\u200B)+$/.test(string);
 }
 
 function mergeArrays(arr1, arr2) {
