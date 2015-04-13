@@ -1,8 +1,21 @@
 <?php
+/*Quinote Software Group 2015
+/*
+/* Author: Simone Dozier
+/*
+/* User landing page
+/* Login information posts to this page
+/* On loading, processes login info if it exists
+/* If user is logged in (whether already was logged in or just arrived), display file library
+/* If user is not logged in, display error page that gives them another chance to log in
+*/
 
+//PHP sessions and database methods are handled here:
 require('trylogin/methods.php');
 
 global $message;
+global $login_error;
+$login_error = true;
 
 /*********************/
 /*
@@ -26,6 +39,7 @@ if ($_POST['login']) {
 			
 		}
 		else {
+		$login_error = false;
 		$message = "Welcome $username";
 		$salt = hash("sha512", rand() . rand() . rand());
 		
@@ -38,6 +52,9 @@ if ($_POST['login']) {
 		mysql_query("UPDATE `users` SET `salt`='$salt' WHERE `id`='$userid'");
 		}
 	}
+	else {
+		$message = "Please enter a username and password";
+	}
 }
 else {
 	if(!islogged()) {
@@ -45,55 +62,36 @@ else {
 		$message = "You are not logged in";
 	}
 	else { //user did not come here from log in form, but is logged in
+		$login_error = false;
 		$userid = $_SESSION['userid'];
 		$username = $_SESSION['username'];
 		$message = "Welcome $username";
 	}
 }
 
-/*
-* Starts up HTML page
-*/
-echo "<HTML>";
-echo file_get_contents('header.html');
 
-if($message != "Welcome $username") {
+/*
+* HTML page
+* Displays either error page or landing page depending on PHP controls
+*/
+if($login_error) {
 	//There has been some kind of error logging the user in
 	//Display error page
+	echo "<HTML>";
+	echo file_get_contents('header.html');
 	echo "<BODY>
-	<span>$message</span><br />";
+	<div style='width:80%; margin:10%;'><span style='color:#CD3333'>$message</span><br />";
 	echo file_get_contents('trylogin/login_error.html');
+	echo "</div></BODY></HTML>";
 }
 else {
-	//display the landing page
-	echo "<BODY>
-	<div id='wrap'>
-        <div id='container'>
-            <div id='header'>
-                <img width='5%' height='50px'  src='style/svg/pageMainShadow.svg'>
-                <img width='12%' height='50px'  src='style/svg/typeQuinote.svg'>
-                <div class='right-nav'>
-                    <a id='home' class='nav' href='trylogin/logout.php'>Log Out</a>
-                </div>
-            </div>
-        </div>
-        <br><br><br><br><br>
-    		<div id='homeContainer'>
-                 <div id='openQuinote'>
-                 	<h3>Make new file:</h3>
-                	<form id='filemaker' action='editor.php' method='post'>
-                                    <b>Title: </b><input type='text' name='title' value='Untitled' />
-                                    <input type='hidden' name='actionType' value='make' />
-                                    <input class='button quiButton' id='openQuinote' type='submit' value='Go' /></form>
-                </div>
-    			<div id='landingContent'>
-
-    				<div id='main-content'>
-	    				<div class='section' id='welcome'>
-	    				    <div id='main_about'>
-	    				        <h2>Welcome $username</h2>
-
-                                <h3>File Library</h3>";
+	/*grab static landing page
+	* split apart and insert session-specific variables
+	* to display */
+	$pieces = explode("<!--SPLIT HERE-->", file_get_contents('frontend_landing.html'));
+	echo $pieces[0];
+	echo $username;
+	echo $pieces[1];
 	
 	//Get the user files and list them:
 	$result = getFiles($userid);
@@ -109,25 +107,9 @@ else {
 		echo $link;
 		}
 
-
-	//echo the rest of the content
-	echo "</div>
-	    				</div>
-	    				<div class='break'></div>
-    				</div>
-    			</div>
-    			<footer>
-                    <div class='nav-footer'>
-                        <a id='home' class='nav-home' href='index.html'>Home</a>
-                        <a id='about' class='nav-home' href='index_about.html'>About</a>
-                        <a id='help' class='nav-home' href='index_help.html'>Help</a>
-                    </div>
-        			Quinote 2015
-    			</footer>
-    		</div>
-    	</div>";
+	//echo end of HTML doc
+	echo $pieces[2];
 }
 
 
-echo "</BODY></HTML>";
 ?>
