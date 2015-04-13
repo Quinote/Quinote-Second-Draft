@@ -37,9 +37,12 @@ body {
 }
 #head-content {
 	height: 500px;
+	padding-right: 40px;
+	padding-left: 40px;
 	color: #FFF;
+	line-height: 1.3em;
 	font-size: 20px;
-	text-align: center;
+	text-align: left;
 }
 .left-nav{
 	padding-left: 20px;

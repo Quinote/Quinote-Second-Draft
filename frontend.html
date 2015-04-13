@@ -1,46 +1,41 @@
+
 <div id="page">
-	<nav id="note-menu" class="note-menu">
-		<img src="style/svg/pageMainShadow.svg" id="open" class="menu-trigger" />
-		<ul>
-			<li><a href="#" class="">New File</a></li>
-			<li><a href="#" class="">Save</a></li>
-			<li><a href="#" class="">Help</a></li>
-			<li><a href="#" class="">Close</a></li>
-		</ul>
-	</nav>
+	<div id="header">
+<!-- 		<img width="5%" height="50px"  src="style/svg/menu.svg"> -->
+		<img width="12%" height="50px"  src="style/svg/typeQuinoteWhite.svg">
+		<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
+		<div class="right-nav">
+			<form class="nav-buttons">
+				<img width="5%" height="50px"  src="style/svg/home.svg">
+				<img width="5%" height="50px"  src="style/svg/new.svg">
+				<input type='image' width="5%" height="50px" src="style/svg/save.svg" name='submit' id='save_btn' value='Save'>
+			</form>
+		</div>
+	</div>
 			<div id="pagecontainer">
-				<div style="float:right">Save is going here for now<br>
-					<form>
-					<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
-					<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
-					<input type='submit' name='submit' class='button' id='save_btn' value='Save' />
-					</form>
-				</div>
 				<div id="editorspace">
 					<div id="editorToolbar">
+						<div id="toolbar-title">
+							<form>
+								<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+								FILE ID
+							</form>
+						</div>
 						<div id="toolbar">
 							<div class="controlmenu" id="control1">
-<!-- 							<img class="icons" id="print" src="style/svg/printIcon.svg">
-								<img class="icons" id="undo" src="style/svg/undoIcon.svg">
-								<img class="icons" id="redo" src="style/svg/redoIcon.svg"> -->
-								<img class="icons" id="format" src="style/svg/formatIcon.svg">
-								<img class="icons" id="removeFormat" src="style/svg/removeformatIcon.svg">
-							</div>
-							<div class="controlmenu" id="copypaste">
-								<img class="icons" id="cut" src="style/svg/cutIcon.svg">
-								<img class="icons" id="copy" src="style/svg/copyIcon.svg">
-								<img class="icons" id="paste" src="style/svg/pasteIcon.svg">
+								<img class="icons" id="undo" src="style/svg/undo.svg">
+								<img class="icons" id="redo" src="style/svg/redo.svg">
 							</div>
 							
-							<div class="controlmenu" id="zoomControl">
-								<img class="icons" id="zoomout" src="style/svg/zoomoutIcon.svg">
-								<img class="icons" id="zoomin" src="style/svg/zoominIcon.svg">
+							<div class="controlmenu" id="colorControl">
+								<img class="icons" id="color" src="style/svg/color.svg">
+								<img class="icons" id="high" src="style/svg/high.svg">
 							</div>
 							<div class="controlmenu" id="formatControl">
-								<img class="icons ql-bold" id="bold" src="style/svg/boldIcon.svg">
-								<img class="icons ql-underline" id="underline" src="style/svg/underlineIcon.svg">
-								<img class="icons ql-italic" id="italic" src="style/svg/italicIcon.svg">
-								<img class="icons ql-strike" id="strike" src="style/svg/strikeIcon.svg">
+								<img class="icons" id="bold" src="style/svg/bold.svg">
+								<img class="icons" id="underline" src="style/svg/underline.svg">
+								<img class="icons" id="italic" src="style/svg/italic.svg">
+								<img class="icons" id="strike" src="style/svg/strike.svg">
 							</div>
 							<div class="controlmenu" id="fontselector">
 								<select class="ql-font">
@@ -58,18 +53,20 @@
 <!-- 								ADD ql-color and ql-backround -->
 							</div>
 							<div class="controlmenu" id="paragraphControls">
-								<img class="icons" id="rightjus" src="style/svg/rightjusIcon.svg">
-								<img class="icons" id="centerjus" src="style/svg/centerjusIcon.svg">
-								<img class="icons" id="leftjus" src="style/svg/leftjusIcon.svg">
-								<img class="icons" id="justjus" src="style/svg/justjusIcon.svg">
+								<img class="icons" id="rightjus" src="style/svg/a-rig.svg">
+								<img class="icons" id="centerjus" src="style/svg/a-cen.svg">
+								<img class="icons" id="leftjus" src="style/svg/a-left.svg">
+								<img class="icons" id="justjus" src="style/svg/a-jus.svg">
 							</div>
 							<div class="controlmenu"  id="indentControl">
-								<img class="icons" id="inindent" src="style/svg/inindentIcon.svg">
-								<img class="icons" id="deindent" src="style/svg/deindentIcon.svg">
+								<img class="icons" id="deindent" src="style/svg/in-de.svg">
 							</div>
 							<div class="controlmenu" id="listControl">
-								<img class="icons" id="numlist" src="style/svg/numlistIcon.svg">
-								<img class="icons" id="bullist" src="style/svg/bullistIcon.svg">
+								<img class="icons" id="numlist" src="style/svg/li-num.svg">
+								<img class="icons" id="bullist" src="style/svg/li-bul.svg">
+							</div>
+							<div class="controlmenu" id="sizeControl">
+								<img class="icons" id="expand" src="style/svg/size-large.svg">
 							</div>	
 							
 						</div>
@@ -207,9 +204,5 @@
 		$("#qLengthTF").val(0);
 		$("#qLengthFB").val(0);
 		$("#qLength").val(0);
-	});
-	
-	$( "#open" ).click(function() {
-	  $( "#note-menu" ).toggleClass( "note-menu-open" );
 	});
 	</script>

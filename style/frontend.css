@@ -12,123 +12,21 @@ body {
 	height: 40px;
 	padding-top: 10px;
 	padding-bottom: 15px;
+	padding-left: 15px; 
 	text-align: left;
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
 	position: absolute;
 	z-index: 5;
 }
-.right-nav{
+.right-nav {
 	float: right;
-	position: relative;
-	padding-right: 50px;
-	bottom: 0;
-}
-
-.note-menu {
-	z-index: 3;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 0;
-	border-width: 0px;
-	border-style: solid;
-	border-color: #333;
-	background-color: rgba(0,0,0,0);
-	-webkit-backface-visibility: hidden;
-	-webkit-transition: border-width 0.3s, background-color 0.3s, height 0s 0.3s;
-	transition: border-width 0.3s, background-color 0.3s, height 0s 0.3s;
-}
-.note-menu.note-menu-open {
-	height: 100%;
-	border-width: 0px 0px 0px 90px;
-	background-color: rgba(0,0,0,0);
-	-webkit-transition: border-width 0.3s, background-color 0.3s;
-	transition: border-width 0.3s, background-color 0.3s;
-}
-.bt-overlay {
 	position: absolute;
+	padding-left: 80%;
+	bottom: 0;
 	width: 100%;
 }
-
-.note-menu-open .bt-overlay {
-	height: 100%;
-}
-
-.menu-trigger {
-	position: fixed;
-	top: 15px;
-	left: 20px;
-	display: block;
-	width: 50px;
-	height: 50px;
-}
-.note-menu ul {
-	position: fixed;
-	top: 75px;
-	left: 0;
-	margin: 0;
-	padding: 0;
-	width: 90px;
-	list-style: none;
-	-webkit-backface-visibility: hidden;
-	backface-visibility: hidden;
-}
-.note-menu ul li,
-.note-menu ul li a {
-	display: block;
-	width: 100%;
-	text-align: center;
-}
-
-.note-menu ul li {
-	padding: 16px 0;
-	opacity: 0;
-	visibility: hidden;
-	-webkit-transition: -webkit-transform 0.3s, opacity 0.2s, visibility 0s 0.3s;
-	transition: transform 0.3s, opacity 0.2s, visibility 0s 0.3s;
-}
-
-.note-menu ul li:first-child { 
-	-webkit-transform: translate3d(-100%,200%,0);
-	transform: translate3d(-100%,200%,0);
-}
-
-.note-menu ul li:nth-child(2) { 
-	-webkit-transform: translate3d(-100%,100%,0);
-	transform: translate3d(-100%,100%,0);
-}
-
-.note-menu ul li:nth-child(3) { 
-	-webkit-transform: translate3d(-100%,0,0);
-	transform: translate3d(-100%,0,0);
-}
-
-.note-menu ul li:nth-child(4) { 
-	-webkit-transform: translate3d(-100%,-100%,0);
-	transform: translate3d(-100%,-100%,0);
-}
-
-.note-menu ul li:nth-child(5) { 
-	-webkit-transform: translate3d(-100%,-200%,0);
-	transform: translate3d(-100%,-200%,0);
-}
-
-.note-menu.note-menu-open ul li {
-	visibility: visible;
-	opacity: 1;
-	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s 0.1s;
-	transition: transform 0.3s, opacity 0.3s;
-	-webkit-transform: translate3d(0,0,0);
-	transform: translate3d(0,0,0);
-}
-
-.note-menu ul li a {
-	display: block;
-	outline: none;
-	color: #FFF;
-	text-decoration: none;
-	font-size: 20px;
+.nav-buttons {
+	display: inline;
 }
 #wrapper {
 	padding: 50px;
@@ -149,6 +47,7 @@ body {
 	margin-top: 10px;
 	width: 100%;
 	height: 100%;
+	top: 55px;
 }
 .md-class {
 	float: right;
@@ -242,14 +141,17 @@ body {
 	right: 0;
 	z-index: -5;
 }
+#toolbar-title {
+	text-align: center;
+	font-size: 10px;
+}
 #editorToolbar{
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
-	height: 50px;
+	height: 52px;
 	overflow: hidden;
 	width:210mm;
 }
 #toolbar{
-	padding: 10px;
 	text-align: center;
 	vertical-align: middle;
 }
@@ -282,6 +184,12 @@ body {
 }
 .controlmenu{
 	display: inline-block;
+}
+.editor-button {
+	background-color: #000;
+}
+.editor-button:active {
+	background-color: #fff;
 }
 h3 {
 	clear: left; 
