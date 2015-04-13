@@ -139,7 +139,7 @@ function parseInput() {
 	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
 
-	var elements = reductiveSplit(html, "<br>");
+	var elements = reductiveSplit(html, "<br />");
 
 	// [temp?] fix for issue of mid-list <br>s being inserted
 	// essentially, re-merge erroneously separated lists
