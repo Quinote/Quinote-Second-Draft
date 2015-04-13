@@ -278,22 +278,30 @@ var buildList = function(parseResult) {
      */
     list = $('#notes-list ol');
     list.empty();
+	
+	var representedIdentifiers = [];
 
     for (i=0; i<parseResult.parsedElements.length; i++) {
         var nextElement = parseResult.parsedElements[i];
-
+		
+		
+		
         var listItem = '<li class=' + classString(nextElement) + '>' + nextElement.getIdentifier() + '</li>';
         //listItem.addClass(classString(nextElement));
-        list.append(listItem);
+		if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
+        	list.append(listItem);
+			representedIdentifiers.push(nextElement.getIdentifier());
+		}
 
         if (nextElement.subelements.length > 0) {
             // call recursive function on any subelements
-            list.append(buildSublist(nextElement.subelements, 1));
+            list.append(buildSublist(nextElement.subelements, 1, representedIdentifiers));
         }
+		
     }
 };
 
-function buildSublist(elements, indentLevel) {
+function buildSublist(elements, indentLevel, representedIdentifiers) {
     // recursively build sublists within the sidebar to reflect tab organization
 
     var newList = "<ol>";
@@ -306,11 +314,17 @@ function buildSublist(elements, indentLevel) {
 
     for (i=0; i<elements.length; i++) {
         var nextElement = elements[i];
-        newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "</li>";
+		
+		if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
+	        newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "</li>";
+			representedIdentifiers.push(nextElement.getIdentifier());
+		}
+		
         if (nextElement.subelements.length > 0) {
             // recurse on sublists
-            newList += buildSublist(nextElement.subelements, indentLevel+1);
+            newList += buildSublist(nextElement.subelements, indentLevel+1, representedIdentifiers);
         }
+		
     }
     newList += "</ol>";
 

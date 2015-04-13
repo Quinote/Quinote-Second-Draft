@@ -34,7 +34,7 @@ $(document).ready(function() {
 		
 		//retrieve and parse text
 		// NOTE: new text editor = NEW API CALL
-		parseResult = parseInput(getEditorHtml().split("<br>"));
+		parseResult = parseInput();
 		
 		// check to make sure notes are of sufficient size
 		if (parseResult.identifiers.length < 4) {

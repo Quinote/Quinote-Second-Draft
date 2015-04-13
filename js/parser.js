@@ -5,13 +5,12 @@ Contains methods for parsing textual input.
 
 Access is via calls to parseInput(html), where html is a string of raw HTML consistent 
 with the text editor formatting, and returns a ParseResult object, which consists
-of arrays of (possibly nested) objects. 
+of arrays of objects. 
 
 TODO: 
 	- ordered lists (?)
 
-	- Creating a list and then deleting the contents of the first point introduces an unexpected <br>!
-	- Empty newlines create a single unprintable character?
+	- Anonymous labels not incrementing
 */
 
 //**************************************
@@ -71,6 +70,7 @@ function ParseResult(parsedElements, identifiers, definitions, aliases, nameSet,
 		if (typeof ret === "undefined") {
 			console.log("Element not found in call to getElementByKey: " + key);
 		}
+		
 		return ret;
 	}
 }
@@ -79,10 +79,10 @@ function ParseResult(parsedElements, identifiers, definitions, aliases, nameSet,
 
 function RawElement(value) {
 	/* A RawElement is an unparsed line. The structure of a 
-		RawElement reflects only indentation level organization
-	*/
-	this.value = value; // Identifier and possibly definition
-	this.parent; // Parent RawElement, if applicable
+		RawElement reflects only indentation level organization */
+	
+	this.value = value; 
+	this.parent; 
 	this.subelements = [];
 }
 
@@ -91,13 +91,13 @@ function IdentifierElement (identifier) {
 		an identifier. It may also contain a DefinitionElement 
 		(making it a definition type) and any number of nested
 		subelements (making it a list).
-	
 	*/
+	
 	this.identifier = identifier;
-	this.aliases = []; // a list of other names by which this element may be known
-	this.definitions = []; // to be set if applicable
+	this.aliases = []; 
+	this.definitions = []; 
 	this.parent;
-	this.subelements = []; // to be appended to if applicable
+	this.subelements = []; 
 	
 	this.setIdentifier = function(identifier) {
 		this.identifier = identifier;
@@ -107,34 +107,8 @@ function IdentifierElement (identifier) {
 	}
 }
 
-function DateElement (date) {
-	/* ******************************************************
-	   AS OF 4-5-15, THIS CLASS IS DEPRECATED, TO BE REPLACED
-	   BY THE UNIVERSAL "IDENTIFIER : DEFINITION" MODEL
-	   ******************************************************
-	
-	/* Like an IdentifierElement, a DateElement contains at
-		least a date and possibly a definition and/or list.
-	
-		As a class of identifier, date fields are a special 
-		subset of normal identifiers.
-	*/
-	this.date = date;
-	this.aliases = []; // a list of other names by which this element may be known
-	this.definitions = [];
-	this.subelements = [];
-	
-	this.setIdentifier = function(identifier) {
-		if (!dateRegex.test(identifier)) {
-			console.log("WARNING: setting DateElement identifier " + this.identifier + " to non-date " + identifier);
-		}
-		this.date = identifier;
-	}
-	this.getIdentifier = function(identifier) {
-		return this.date;
-	}
-	
-}
+// deprecated; currently here to avoid breaking code in other locations
+function DateElement () {}
 
 
 //*************************************
@@ -145,7 +119,7 @@ function DateElement (date) {
 //  Main access method //
 /////////////////////////
 
-function parseInput(html) {
+function parseInput() {
 	/* Given the html input, first assign hierarchy based on indent
 	levels then parse according to parse rules. Returns a ParseResult
 	object containing the results of the final parsing function
@@ -162,17 +136,18 @@ function parseInput(html) {
 	
 	var html = getEditorHtml();
 	
-	// going friggin' nuclear on \u200B
+	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
 
 	var elements = reductiveSplit(html, "<br>");
 
-	// temp fix for issue of mid-list <br>s being inserted
+	// [temp?] fix for issue of mid-list <br>s being inserted
+	// essentially, re-merge erroneously separated lists
 	var numElements = elements.length-1;
 	for (var i=0; i<numElements; i++) {
 		if (elements[i].length > 3 && elements[i+1].length > 4) {
 			if (elements[i].substring(elements[i].length-4, elements[i].length) === "<li>" &&
-					elements[i+1].substring(0, 5) === "</li>") {
+				elements[i+1].substring(0, 5) === "</li>") {
 						
 				elements[i] = elements[i] + elements[i + 1];
 				elements.splice(i+1, 1);
@@ -184,8 +159,7 @@ function parseInput(html) {
 	// get list of top-level elements containing their subelements
 	var rawElements = [];
 	
-	
-	for (var i in elements) {
+	for (var i=0; i<elements.length; i++) {
 		// recursively parse if element contains a list
 		if (elements[i].indexOf("<ul>") !== -1 ) {
 			
@@ -212,77 +186,27 @@ function parseInput(html) {
 		// parse indent-organized RawElements
 		var parsedElement = parseRawElement(rawElements[i]);
 		
-		// check if element already contained
+		// check if element already contained in sidebar representation		
 		if (parser_representedElements.indexOf(parsedElement.getIdentifier()) === -1) {
 			parser_parsedElements.push(parsedElement);
-			updateRepresentedElements(parsedElement);
 		}
+		
+		updateRepresentedElements(parsedElement);
 	}
 	
+	// set identifiers for "anonymous" elements
 	for (var i=0; i<parser_parsedElements.length; i++) {
 		setAnons(parser_parsedElements[i]);
 	}
 	
 	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_nameSet, parser_other);
 		
+	//console.log(parser_representedElements, parseResult);
+			
 	return parseResult;
 }
 
 /////////////////////////
-
-function readIndentLevels (elements, index, indentationLevel) {
-	/* TO BE DEPRECATED WITH INTRODUCTION OF HTML LIST ORDERING
-	   (4-5-15); NO LONGER SERVES A PURPOSE (replaced by readLists()
-	   and processListElements() )
-	*/
-	
-	/* given line-by-line input array elements, 
-		recursively parse those lines (in-order)
-		and their subelements
-	*/
-	var indentLevelElements = [];
-	
-	while (index < elements.length) {
-		
-		// note: format of element depends on surrounding API
-		var val = elements[index];
-		
-		// get indentation level of current element
-		var currentIndentation = getIndentationLevel(val); 
-		
-		// if indent level is less, then current hierarchy is done
-		if (currentIndentation < indentationLevel) return indentLevelElements;
-		
-		var currentElement = new RawElement(val);
-		indentLevelElements.push(currentElement);
-		index++;
-		
-		// if has subelements, recurse on them
-		if (index < elements.length) {
-			var nextIndentation = getIndentationLevel(elements[index]);
-			
-			if (nextIndentation < indentationLevel) {
-				// current hierarchy is complete; return 
-				return indentLevelElements;
-			} else if (nextIndentation === indentationLevel) {
-				// non-subordinate element follows
-				continue;
-			} else {
-				// otherwise, current element is a list; make recursive call
-				currentElement.subelements = readIndentLevels(elements, index, nextIndentation);
-				
-				// assign currentElement to parent field of subelements
-				for (var i in currentElement.subelements) {
-					currentElement.subelements[i].parent = currentElement;
-				}
-				
-				// increase index by size of list (recursive call)
-				index += countSubelements(currentElement);
-			}
-		}
-	}
-	return indentLevelElements;
-}
 
 function readLists(element) {
 	// recursively process subordinate elements in a list
@@ -318,19 +242,22 @@ function processListElements(contents) {
 	var subelements = [];
 	
 	for (var i in listElements) {
+		
+		var current = listElements[i];
+		
 		// recurse on further sublists, if present
 		if (listElements[i].indexOf("<ul>") !== -1 ) {
-			var proceedingElement = listElements[i].substring(listElements[i].lastIndexOf("</ul>") + 5);
+			var proceedingElement = current.substring(current.lastIndexOf("</ul>") + 5);
 			
-			subelements.push(readLists(listElements[i].substring(0, listElements[i].lastIndexOf("</ul>"))));
+			subelements.push(readLists(current.substring(0, current.lastIndexOf("</ul>"))));
 			
 			if (proceedingElement.length > 0) {
 				subelements.push(new RawElement(proceedingElement));
 			}
 			
 		// otherwise, just add a new RawElement
-		} else if (!isWhitespace(listElements[i])) {
-			subelements.push(new RawElement(listElements[i]));
+		} else if (!isWhitespace(current)) {
+			subelements.push(new RawElement(current));
 		}
 	}
 	
@@ -348,8 +275,7 @@ function countSubelements(rawElement) {
 
 function parseRawElement(rawElement) {
 	/* recursively turn RawElements into their respective 
-	IdentifierElement forms 
-	*/
+	IdentifierElement forms */
 	
 	var newElement;
 	var aliases;
@@ -360,7 +286,8 @@ function parseRawElement(rawElement) {
 		// strip leading/following whitespace
 		components[i] = components[i].trim();
 	}
-
+	
+	// assign a temp name to anonymous identifiers
 	if ((components[0].length === 0 || components[0] === "\u200B") && components.length > 1) {
 		components[0] = "[";
 	}
@@ -370,21 +297,26 @@ function parseRawElement(rawElement) {
 		// extract aliases
 		var aliasExec = aliasRegex.exec(components[0]);
 		aliases = aliasExec[0];
+		
 		// strip brackets
 		aliases = aliases.substring(1, aliases.length-1);
+		
 		// split apart list by semicolon or comma
 		aliases = aliases.split(aliasSeparatorRegex);
-		for (i in aliases) {
+		for (var i=0; i<aliases.length; i++) {
 			// trim whitespace
 			aliases[i] = aliases[i].trim();
 		}
+		
 		// set components[0] (the identifier) to itself less alias construction
 		components[0] = components[0].substring(0, aliasExec.index);
+		
 		// trim any new whitespace
 		components[0] = components[0].trim();
 	}
 	
-	
+	// if identifier previously defined, it will be in nameSet;
+	// else newElement remains undefined
 	newElement = parser_nameSet[components[0]];	
 	
 	// define newElement if no identifier/alias matches are found
@@ -395,7 +327,6 @@ function parseRawElement(rawElement) {
 		if (components.length > 1) {
 			parser_identifiers.push(newElement);
 		}
-		
 	}
 	
 	// set/add aliases if applicable
@@ -438,7 +369,7 @@ function parseRawElement(rawElement) {
 		parser_other.push(newElement);
 	}
 	
-	// HELPFUL COMMENT GOES HERE
+	// set new entries in nameSet from identifiers/aliases to Element object
 	parser_nameSet[newElement.getIdentifier()] = newElement;
 	
 	for (var i=0; i<newElement.aliases.length; i++) {
@@ -447,39 +378,23 @@ function parseRawElement(rawElement) {
 		}
 	}
 	
-	for (var i in rawElement.subelements) {
-		// recurse on subelements
+	// recurse on subelements
+	for (var i=0; i<rawElement.subelements.length; i++) {
 		var subelement = parseRawElement(rawElement.subelements[i]);
 		
 		// avoid ugly philosophical (and practical--endless recursion)
-		// self-containment issues
+		// self-containment issues, elements cannot contain themselves
 		if (subelement !== newElement) {
 			newElement.subelements.push(subelement);
 		}
 	}
 	
 	// update parent pointers, if applicable
-	for (var i in newElement.subelements) {
+	for (var i=0; i<newElement.subelements.length; i++) {
 		newElement.subelements[i].parent = newElement;
 	}
 
 	return newElement;
-}
-
-function getIndentationLevel(str) {
-	/* AS OF 4-5-15, THIS FUNCTION HAS NO PURPOSE
-	 */ 
-	
-	// count the indentation level of the given string
-	
-	var count = 0;
-	
-	// test for tabs (\t) at the beginning of the string
-	while (/^\t/.test(str)) {
-		str = str.replace("\t", "");
-		count++;
-	}
-	return count;
 }
 
 function setAnons(parseElement) {
@@ -490,17 +405,22 @@ function setAnons(parseElement) {
 		parser_anonCount++;
 	}
 	
+	// recurse 
 	for (var i=0; i<parseElement.subelements.length; i++) {
 		setAnons(parseElement.subelements[i]);
 	}
 }
 
 function updateRepresentedElements(parseElement) {
-	parser_representedElements.push(parseElement.getIdentifier());
+	// update list of elements represented in sidebare
+	
+	if (parser_representedElements.indexOf(parseElement.getIdentifier()) === -1) {
+		parser_representedElements.push(parseElement.getIdentifier());
+	}
+	
+	// recurse on subelements
 	for (var i=0; i<parseElement.subelements.length; i++) {
-		
 		updateRepresentedElements(parseElement.subelements[i]);
-		
 	}
 }
 
@@ -513,12 +433,15 @@ function resetState() {
 	parser_definitions = [];
 	parser_other = [];
 	
+	// reset other procedural variables
 	parser_anonCount = 1;
 	parser_nameSet = {};
 	parser_representedElements = [];
 }
 
 function isWhitespace(string) {
+	// test to see if a string consists *entirely* of whitespace and/or U+200B
+	
 	return /^(\s|\u200B)+$/.test(string);
 }
 
