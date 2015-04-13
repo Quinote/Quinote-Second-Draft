@@ -5,102 +5,88 @@
  *
  *
  * TODO:
- *    • Find meaningful way to handle user's text formatting
- *    • Take more efficient approach to rebuilding list on text input
- *    • Build more logical and aesthetically pleasing list
- *    • Adapt handlers for new UI (and subsequently uncomment them)
- *    • Get font stuff working
- *      – Use selected font from get-go
- *      – Keep it on "enter" input
+ *    - Update parser on paste, undo, redo, general entry
  *
  */
 
-var editor, editorFocusManager;
+var editor;
 
 var editorMain = function() {
-    //editor = CKEDITOR.replace('editor');
+    tinymce.EditorManager.init({
+        selector: 'textarea',
+        menubar: false,
+        statusbar: false,
+        //toolbar: false,
+        forced_root_block: false,
+        setup: function(ed) {
+            ed.on('keydown', function(event) {
+                //console.log('<br /><ul>blah'.substring(0, 10));
+                //console.log("EDITOR_HTML");
+                //console.log(getEditorHtml());
+                //console.log("SPLIT_HTML");
+                var testHtml = getEditorHtml();
+                //testHtml = testHtml.replace(/\u200B+/g, "");
+                console.log(reductiveSplit(testHtml, "<br />"));
+                //console.log(event);
+                if (event.keyCode == 9) { // tab pressed
+                    if (event.shiftKey) {
+                        handleOutdent(ed);
+                    } else {
+                        handleIndent(ed);
+                    }
 
-    //editor = CKEDITOR.replace('editor_div', {
-    //    removePlugins: 'toolbar, ckeditor-gwf-plugin, resize',
-
-    editor = CKEDITOR.replace('editor_div', {
-        removePlugins: 'ckeditor-gwf-plugin, resize, tab',
-        allowedContent: 'strong em u s ul ol li; a[!href]; img[!src,width,height];'
-    } );
-    editorFocusManager = new CKEDITOR.focusManager( editor );
-
-
-    // TODO: Conditional list/indent, cancel other events, handle ranges (instead of just carets)
-    ///*************************************
-    // * Tab Key Handling
-    // *************************************/
-
-    //$('#editorspace').on('keydown', function(e) {
-    //    var keyCode = e.keyCode || e.which;
-    //    console.log(e);
-    //    if (keyCode === 2228233) {
-    //        e.preventDefault();
-    //        editor.execCommand('outdent');
-    //    } else if (keyCode === 9) {
-    //        e.preventDefault();
-    //        editor.execCommand('bulletedlist');
-    //    }
-    //});
-
-    //editor.addCommand( 'handleTab', new CKEDITOR.command(editor, function() {
-    //        editor.execCommand('bulletedlist');
-    //    })
-    //);
-    //editor.setKeystroke( 9, 'handleTab' );
-
-    //editor.on( 'key', function( evt ) {
-    //    if (evt.data.keyCode === 2228233 /* SHIFT+TAB */) {
-    //        evt.cancel();
-    //        editor.execCommand('outdent');
-    //    } else if (evt.data.keyCode === 9 /* TAB */) {
-    //        evt.cancel();
-    //        editor.execCommand('bulletedlist');
-    //    }
-    //    //console.log(evt);
-    //});
-
-    editor.on('key', function(e) {
-        var key = e.data.keyCode;
-        //console.log(key);
-        if (key === 9 /* TAB */) {
-            var r = editor.getSelection()._.cache.nativeSel;
-            console.log(r);
-            if (r.type === "Caret") {
-                console.log( {html: getEditorHtml() } );
-                if (r.extentNode.parentElement.nodeName === "LI") {
-                    //$('#inindent').click();
-                } else {
-                    //$('#bullist').click();
+                    buildList(parseEditorText());
+                    event.preventDefault();
+                    return false;
                 }
-            } else if (r.type === "Range") {
-                if (r.extentNode === r.baseNode) {
-                    //console.log("SAME LINE");
-                } else {
-
-                }
-            } else {
-                console.log("Type '" + r.type + "' not handled.");
-            }
-
-            //.getRanges()[0]);
-            //var r = editor.getSelection().getRanges()[0];
-            //if (r.startContainer.$ == r.endContainer.$) {
-            //    console.log("Same!");
-            //} else {
-            //    console.log("Diff!");
-            //}
-            //editor.execCommand('bulletedlist');
-            return false;
-        } else if (key === 2228233 /* SHIFT+TAB */) {
-            editor.execCommand('outdent');
-            return false;
+                buildList(parseEditorText());
+            });
+            ed.on('keypress', function(event) {
+                //console.log( {html: ed.getContent({format: 'raw'})} );
+                //console.log( {html: ed.getContent()} );
+            });
         }
     });
+
+    var handleIndent = function(editorInstance) {
+        var node = editorInstance.selection.getSel().baseNode;
+        console.log("NEW TAB");
+        console.log(editorInstance.selection.getSel());
+        if (node.nodeName === "#text" && node.parentNode.nodeName === "LI") {
+            node = node.parentNode;
+        }
+        if (node.nodeName === "LI") { // If list item
+            if (node.previousSibling === null) { // If first item
+                // Do nothing.
+                console.log("First item in list")
+            } else {
+                console.log("Not first item, so Indent");
+                editorInstance.execCommand('Indent');
+            }
+        } else { // body item
+            console.log("Not in a list");
+            var prev = node.previousSibling;
+            if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
+                console.log(node.nodeName);
+                console.log(prev.nodeName);
+                editorInstance.execCommand('InsertUnorderedList');
+            } else {
+                //console.log(editorInstance.getContent());
+                //console.log(editorInstance.selection.getSel());
+                // Do nothing.
+            }
+        }
+        //ed.execCommand('Indent');
+        //ed.execCommand('InsertUnorderedList');
+        //console.log( {html: ed.getContent()} );  REMEMBER TO TURN THIS BACK ON
+    };
+
+    var handleOutdent = function(editorInstance) {
+        editorInstance.execCommand('Outdent');
+    }
+
+    //console.log(editor);
+    //tinyMCE.activeEditor.getContent();
 
 
     // TODO: Font, Maximize?
@@ -109,58 +95,58 @@ var editorMain = function() {
     // *************************************/
     //console.log(editor.commands);
     //console.log(editor.config.plugins);
-    $('#bold')
-        .click(function() {
-            editor.execCommand('bold');
-        })
-    ;
-    $('#underline')
-        .click(function() {
-            editor.execCommand('underline');
-        })
-    ;
-    $('#italic')
-        .click(function() {
-            editor.execCommand('italic');
-        })
-    ;
-    $('#strike')
-        .click(function() {
-            editor.execCommand('strike');
-        })
-    ;
-    $('#numlist')
-        .click(function() {
-            if (editorFocusManager.hasFocus) {
-                editor.execCommand('numberedlist');
-                editorFocusManager.focus();
-            }
-        })
-    ;
-    $('#bullist')
-        .click(function() {
-            if (editorFocusManager.hasFocus) {
-                editor.execCommand('bulletedlist');
-                editorFocusManager.focus();
-            }
-        })
-    ;
-    $('#inindent')
-        .click(function() {
-            if (editorFocusManager.hasFocus) {
-                editor.execCommand('indent');
-                editorFocusManager.focus();
-            }
-        })
-    ;
-    $('#deindent')
-        .click(function() {
-            if (editorFocusManager.hasFocus) {
-                editor.execCommand('outdent');
-                editorFocusManager.focus();
-            }
-        })
-    ;
+    //$('#bold')
+    //    .click(function() {
+    //        editor.execCommand('bold');
+    //    })
+    //;
+    //$('#underline')
+    //    .click(function() {
+    //        editor.execCommand('underline');
+    //    })
+    //;
+    //$('#italic')
+    //    .click(function() {
+    //        editor.execCommand('italic');
+    //    })
+    //;
+    //$('#strike')
+    //    .click(function() {
+    //        editor.execCommand('strike');
+    //    })
+    //;
+    //$('#numlist')
+    //    .click(function() {
+    //        if (editorFocusManager.hasFocus) {
+    //            editor.execCommand('numberedlist');
+    //            editorFocusManager.focus();
+    //        }
+    //    })
+    //;
+    //$('#bullist')
+    //    .click(function() {
+    //        if (editorFocusManager.hasFocus) {
+    //            editor.execCommand('bulletedlist');
+    //            editorFocusManager.focus();
+    //        }
+    //    })
+    //;
+    //$('#inindent')
+    //    .click(function() {
+    //        if (editorFocusManager.hasFocus) {
+    //            editor.execCommand('indent');
+    //            editorFocusManager.focus();
+    //        }
+    //    })
+    //;
+    //$('#deindent')
+    //    .click(function() {
+    //        if (editorFocusManager.hasFocus) {
+    //            editor.execCommand('outdent');
+    //            editorFocusManager.focus();
+    //        }
+    //    })
+    //;
     //$('#zoomin')
     //    .click(function() {
     //        editor.execCommand('maximize');
@@ -173,11 +159,11 @@ var editorMain = function() {
     ///*************************************
     // * Event Handlers
     // *************************************/
-    editor
-        .on('change', function() {
-            buildList(parseEditorText());
-        })
-    ;
+    //editor
+    //    .on('change', function() {
+    //        buildList(parseEditorText());
+    //    })
+    //;
 
 
     // Set up initial environment
@@ -203,17 +189,30 @@ $(document).ready(editorMain);
 var getEditorHtml = function() {
     /* Returns the Html from the editor.
      */
-    var data = editor.document.getBody().getHtml();
+    var data = tinyMCE.activeEditor.getContent();
+    var i = 0;
+    while (i < data.length) {
+        var c = data.charAt(i);
+        if (c === '\n') {
+            data = data.slice(0, i) + data.slice(i+1);
+        } else if (c === '<' && data.length >= i+10 && data.substring(i, i+11) === '<br />\n<ul>') {
+            //console.log(data.substring(i, i+10));
+            data = data.slice(0, i) + data.slice(i+7);
+        } else {
+            i++;
+        }
+    }
+    //i = data.indexOf('<br />')
     //console.log(data);
     return data;
 };
-
-var setEditorHtml = function(html) {
-    editor.document.getBody().setHtml(html);
-};
+//
+//var setEditorHtml = function(html) {
+//    editor.document.getBody().setHtml(html);
+//};
 
 //console.log(editor);
-	
+
 
 var reductiveSplit = function(data, separator) {
     data = data.split(separator);
@@ -224,24 +223,12 @@ var reductiveSplit = function(data, separator) {
     while (i < data.length) {
         if (data[i] === "" || data[i] === "&nbsp;" || data[i] === "<br />") {
             data.splice(i, 1);
-            i--;
+        } else {
+            i++;
         }
-        i++;
     }
-    return data;
-};
 
-var resizeEditor = function() {
-    /* Resizes the editor box based on window height,
-     * top margin size, and toolbar height.
-     *
-     */
-    var spaceLeft = $(window).height()
-        - ($('.editor-wrapper').height() - $('#editor').height())
-        - (2 * parseInt($('#container-fluid').css('margin-top')))
-        - 2;
-    $('#editor').height(spaceLeft);
-    console.log($('#editor').height());
+    return data;
 };
 
 
@@ -278,26 +265,25 @@ var buildList = function(parseResult) {
      */
     list = $('#notes-list ol');
     list.empty();
-	
-	var representedIdentifiers = [];
+
+    var representedIdentifiers = [];
 
     for (i=0; i<parseResult.parsedElements.length; i++) {
         var nextElement = parseResult.parsedElements[i];
-		
-		
-		
+
+
+
         var listItem = '<li class=' + classString(nextElement) + '>' + nextElement.getIdentifier() + '</li>';
-        //listItem.addClass(classString(nextElement));
-		if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
-        	list.append(listItem);
-			representedIdentifiers.push(nextElement.getIdentifier());
-		}
+
+        if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
+            list.append(listItem);
+            representedIdentifiers.push(nextElement.getIdentifier());
+        }
 
         if (nextElement.subelements.length > 0) {
             // call recursive function on any subelements
             list.append(buildSublist(nextElement.subelements, 1, representedIdentifiers));
         }
-		
     }
 };
 
@@ -314,17 +300,17 @@ function buildSublist(elements, indentLevel, representedIdentifiers) {
 
     for (i=0; i<elements.length; i++) {
         var nextElement = elements[i];
-		
-		if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
-	        newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "</li>";
-			representedIdentifiers.push(nextElement.getIdentifier());
-		}
-		
+
+        if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
+            newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "</li>";
+            representedIdentifiers.push(nextElement.getIdentifier());
+        }
+
         if (nextElement.subelements.length > 0) {
             // recurse on sublists
             newList += buildSublist(nextElement.subelements, indentLevel+1, representedIdentifiers);
         }
-		
+
     }
     newList += "</ol>";
 
