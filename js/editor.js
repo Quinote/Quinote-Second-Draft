@@ -5,8 +5,11 @@
  *
  *
  * TODO:
+ *    - Hook up toolbar buttons
  *    - Update parser on paste, undo, redo, general entry
- *
+ *      • Make sure update is AFTER the entry
+ *    - Fix quirky tab behavior
+ *    - Fix quirky delete behavior (when deleting a range including list items)
  */
 
 var editor;
@@ -87,65 +90,24 @@ var editorMain = function() {
     ///*************************************
     // * Toolbar Functionality
     // *************************************/
-    //console.log(editor.commands);
-    //console.log(editor.config.plugins);
     //$('#bold')
-    //    .click(function() {
-    //        editor.execCommand('bold');
-    //    })
-    //;
+    //        ('bold');
     //$('#underline')
-    //    .click(function() {
-    //        editor.execCommand('underline');
-    //    })
-    //;
+    //        ('underline');
     //$('#italic')
-    //    .click(function() {
-    //        editor.execCommand('italic');
-    //    })
-    //;
+    //        ('italic');
     //$('#strike')
-    //    .click(function() {
-    //        editor.execCommand('strike');
-    //    })
-    //;
+    //        ('strike');
     //$('#numlist')
-    //    .click(function() {
-    //        if (editorFocusManager.hasFocus) {
-    //            editor.execCommand('numberedlist');
-    //            editorFocusManager.focus();
-    //        }
-    //    })
-    //;
+    //        ('numberedlist');
     //$('#bullist')
-    //    .click(function() {
-    //        if (editorFocusManager.hasFocus) {
-    //            editor.execCommand('bulletedlist');
-    //            editorFocusManager.focus();
-    //        }
-    //    })
-    //;
+    //        ('bulletedlist');
     //$('#inindent')
-    //    .click(function() {
-    //        if (editorFocusManager.hasFocus) {
-    //            editor.execCommand('indent');
-    //            editorFocusManager.focus();
-    //        }
-    //    })
-    //;
+    //        ('indent');
     //$('#deindent')
-    //    .click(function() {
-    //        if (editorFocusManager.hasFocus) {
-    //            editor.execCommand('outdent');
-    //            editorFocusManager.focus();
-    //        }
-    //    })
-    //;
+    //        ('outdent');
     //$('#zoomin')
-    //    .click(function() {
-    //        editor.execCommand('maximize');
-    //    })
-    //;
+    //        ('maximize');
 
 
 
@@ -153,24 +115,7 @@ var editorMain = function() {
     ///*************************************
     // * Event Handlers
     // *************************************/
-    //editor
-    //    .on('change', function() {
-    //        buildList(parseEditorText());
-    //    })
-    //;
 
-
-    // Set up initial environment
-    //resizeEditor();
-    //editor.focus();
-    //$.each([8, 10, 12, 14, 16, 18, 24, 30, 36, 48, 72, 96], function(index, value) {
-    //    var fSize = $('.ql-size');
-    //    fSize.append($('<option value=' + this.value + '>' + value + '</option>'));
-    //            //.val(value + "px")
-    //            //.label(value));
-    //});
-    //fSize.val('12px').prop('selected', true);
-    //fSize.change();
 
 };
 
@@ -181,29 +126,13 @@ $(document).ready(editorMain);
  *************************************/
 
 var getEditorHtml = function() {
-    /* Returns Html from the editor after
-     * formatting it in a parser-friendly
-     * format.
+    /* Returns editor's contents in a parser-friendly format.
+     *
+     * The loop serves to both get rid of unnecessary line breaks
+     * and to move nested <ul> elements to the end of the previous <li>s,
+     * as this is proper HTML formatting and the parser's expected format.
      */
     var data = tinyMCE.activeEditor.getContent();
-    /* This loop serves to both get rid of unnecessary line-break info
-     * and to insert <li> elements where nested <ul> elements occur, as this
-     * is proper HTML formatting and the parser's expected format.
-     *
-     */
-    //var i = 0;
-    //while (i < data.length) {
-    //    var c = data.charAt(i);
-    //    if (c === '\n') {
-    //        data = data.slice(0, i) + data.slice(i+1);
-    //    } else if (c === '<' && data.length >= i+10 && data.substring(i, i+11) === '<br />\n<ul>') {
-    //        //console.log(data.substring(i, i+10));
-    //        data = data.slice(0, i) + data.slice(i+7);
-    //    } else {
-    //        i++;
-    //    }
-    //}
-
     var i = 0;
     var listLevel = 0;
     var formatted = '';
@@ -237,17 +166,8 @@ var getEditorHtml = function() {
         }
     }
     return formatted;
-
-    //i = data.indexOf('<br />')
-    //console.log(data);
-    //return data;
 };
-//
-//var setEditorHtml = function(html) {
-//    editor.document.getBody().setHtml(html);
-//};
 
-//console.log(editor);
 
 
 var reductiveSplit = function(data, separator) {
@@ -270,16 +190,7 @@ var reductiveSplit = function(data, separator) {
 
 
 
-var parseEditorText = function() {
-    /* Parses the text inside of the editor
-     * after first formatting it appropriately.
-     *
-     * TODO:
-     *    • Parse results from getHTML() rather that getText()
-     */
-    //var textArray = reductiveSplit(getEditorHtml(), "<br>");
-    return parseInput(getEditorHtml());
-};
+
 
 var classString = function(element) {
     if (element instanceof DateElement) {
