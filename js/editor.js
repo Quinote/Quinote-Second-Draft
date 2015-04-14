@@ -20,13 +20,7 @@ var editorMain = function() {
         forced_root_block: false,
         setup: function(ed) {
             ed.on('keydown', function(event) {
-                //console.log('<br /><ul>blah'.substring(0, 10));
-                //console.log("EDITOR_HTML");
-                //console.log(getEditorHtml());
-                //console.log("SPLIT_HTML");
-                var testHtml = getEditorHtml();
-                //testHtml = testHtml.replace(/\u200B+/g, "");
-                console.log(reductiveSplit(testHtml, "<br />"));
+                console.log([getEditorHtml()]);
                 //console.log(event);
                 if (event.keyCode == 9) { // tab pressed
                     if (event.shiftKey) {
@@ -50,25 +44,25 @@ var editorMain = function() {
 
     var handleIndent = function(editorInstance) {
         var node = editorInstance.selection.getSel().baseNode;
-        console.log("NEW TAB");
-        console.log(editorInstance.selection.getSel());
+        //console.log("NEW TAB");
+        //console.log(editorInstance.selection.getSel());
         if (node.nodeName === "#text" && node.parentNode.nodeName === "LI") {
             node = node.parentNode;
         }
         if (node.nodeName === "LI") { // If list item
             if (node.previousSibling === null) { // If first item
                 // Do nothing.
-                console.log("First item in list")
+                //console.log("First item in list")
             } else {
-                console.log("Not first item, so Indent");
+                //console.log("Not first item, so Indent");
                 editorInstance.execCommand('Indent');
             }
         } else { // body item
-            console.log("Not in a list");
+            //console.log("Not in a list");
             var prev = node.previousSibling;
             if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
-                console.log(node.nodeName);
-                console.log(prev.nodeName);
+                //console.log(node.nodeName);
+                //console.log(prev.nodeName);
                 editorInstance.execCommand('InsertUnorderedList');
             } else {
                 //console.log(editorInstance.getContent());
@@ -187,24 +181,66 @@ $(document).ready(editorMain);
  *************************************/
 
 var getEditorHtml = function() {
-    /* Returns the Html from the editor.
+    /* Returns Html from the editor after
+     * formatting it in a parser-friendly
+     * format.
      */
     var data = tinyMCE.activeEditor.getContent();
+    /* This loop serves to both get rid of unnecessary line-break info
+     * and to insert <li> elements where nested <ul> elements occur, as this
+     * is proper HTML formatting and the parser's expected format.
+     *
+     */
+    //var i = 0;
+    //while (i < data.length) {
+    //    var c = data.charAt(i);
+    //    if (c === '\n') {
+    //        data = data.slice(0, i) + data.slice(i+1);
+    //    } else if (c === '<' && data.length >= i+10 && data.substring(i, i+11) === '<br />\n<ul>') {
+    //        //console.log(data.substring(i, i+10));
+    //        data = data.slice(0, i) + data.slice(i+7);
+    //    } else {
+    //        i++;
+    //    }
+    //}
+
     var i = 0;
+    var listLevel = 0;
+    var formatted = '';
     while (i < data.length) {
         var c = data.charAt(i);
         if (c === '\n') {
-            data = data.slice(0, i) + data.slice(i+1);
-        } else if (c === '<' && data.length >= i+10 && data.substring(i, i+11) === '<br />\n<ul>') {
-            //console.log(data.substring(i, i+10));
-            data = data.slice(0, i) + data.slice(i+7);
+            i++;
+        } else if (c === '<') {
+            if (i+10 < data.length && data.substring(i, i+11) === '<br />\n<ul>') {
+                formatted += '<ul>';
+                listLevel++;
+                i += 11;
+            } else if (i+9 < data.length && data.substring(i, i+10) === '</li>\n<ul>') {
+                formatted += '<ul>';
+                listLevel++;
+                i += 10;
+            } else if (i+5 < data.length && data.substring(i, i+5) === '</ul>') {
+                formatted += '</ul>';
+                if (listLevel > 1) {
+                    formatted += '</li>';
+                }
+                listLevel--;
+                i += 5;
+            } else {
+                formatted += c;
+                i++;
+            }
         } else {
+            formatted += c;
             i++;
         }
     }
+    return formatted;
+
     //i = data.indexOf('<br />')
     //console.log(data);
-    return data;
+    //return data;
 };
 //
 //var setEditorHtml = function(html) {
