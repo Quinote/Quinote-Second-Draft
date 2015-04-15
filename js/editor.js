@@ -187,7 +187,16 @@ var reductiveSplit = function(data, separator) {
     return data;
 };
 
-
+var parseEditorText = function() {
+    /* Parses the text inside of the editor
+     * after first formatting it appropriately.
+     *
+     * TODO:
+     *    • Parse results from getHTML() rather that getText()
+     */
+    //var textArray = reductiveSplit(getEditorHtml(), "<br>");
+    return parseInput(getEditorHtml());
+};
 
 
 
