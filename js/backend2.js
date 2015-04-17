@@ -33,14 +33,14 @@ $(function() {
     		success: function(data) {
       			if(data == 1) {
       				console.log('update successful');
-      				$('#save-message').html('Save successful');
+      				$('#save-message').html(' - Save successful');
       				setTimeout(function(){
       					$('#save-message').html('');
       					},3000);
       			}
       			else if(data == 0) {
       				console.log('Then an error occured');
-      				$('#save-message').html('Save error occured');
+      				$('#save-message').html(' - Save error occured');
       				setTimeout(function(){
       					$('#save-message').html('');
       					},3000);

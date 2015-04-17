@@ -22,6 +22,7 @@ if($_POST['actionType'] == 'make') {
 else if($_POST['actionType'] == 'open') {
 	$fileid = $_POST['id'];
 	$content = getFileContent($fileid);
+	$title = $_POST['title'];
 }
 
 
@@ -48,6 +49,7 @@ $page = file_get_contents('frontend.html');
 $page = str_replace("<!--CONTENT GOES HERE-->",$content,$page);
 $page = str_replace("<!--USER ID GOES HERE-->",$_SESSION['userid'],$page);
 $page = str_replace("<!--FILE ID GOES HERE-->",$fileid,$page);
+$page = str_replace("<!--TiTLE GOES HERE-->",$title,$page);
 echo $page;
 
 /*echo "<textarea id='editor_div' name='editor_div'>$content</textarea>";

@@ -102,6 +102,7 @@ else {
 		$link = "<form action='editor.php' method='post' class='openFileLink'>
 			<input type='hidden' name='actionType' value='open' />
 			<input type='hidden' name='id' value='$id' />
+			<input type='hidden' name='title' value='$filemeta' />
 			<input type='submit' value='$filemeta' />
 			</form>";
 		echo $link;
