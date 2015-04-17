@@ -21,24 +21,25 @@ var editorMain = function() {
         statusbar: false,
         //toolbar: false,
         forced_root_block: false,
+        invalid_elements: 'div',
         setup: function(ed) {
             ed.on('keydown', function(event) {
-                console.log([getEditorHtml()]);
+                //console.log([getEditorHtml()]);
                 //console.log(event);
-                if (event.keyCode == 9) { // tab pressed
+                if (event.keyCode === 9) { // tab pressed
                     if (event.shiftKey) {
                         handleOutdent(ed);
                     } else {
                         handleIndent(ed);
                     }
 
-                    buildList(parseEditorText());
                     event.preventDefault();
                     return false;
                 }
-                buildList(parseEditorText());
+                //buildList(parseEditorText());
             });
-            ed.on('keypress', function(event) {
+            ed.on('keyup', function(event) {
+                buildList(parseEditorText());
                 //console.log( {html: ed.getContent({format: 'raw'})} );
                 //console.log( {html: ed.getContent()} );
             });
@@ -46,28 +47,46 @@ var editorMain = function() {
     });
 
     var handleIndent = function(editorInstance) {
-        var node = editorInstance.selection.getSel().baseNode;
-        //console.log("NEW TAB");
-        //console.log(editorInstance.selection.getSel());
-        if (node.nodeName === "#text" && node.parentNode.nodeName === "LI") {
-            node = node.parentNode;
-        }
-        if (node.nodeName === "LI") { // If list item
-            if (node.previousSibling === null) { // If first item
-                // Do nothing.
-                //console.log("First item in list")
-            } else {
-                //console.log("Not first item, so Indent");
-                editorInstance.execCommand('Indent');
+        var sel = editorInstance.selection.getSel();
+        var node = sel.baseNode;
+
+        if (node.nodeName === "#text") {
+            if (node.parentNode.nodeName === "LI"/* || node.parentNode.nodeName === 'DIV'*/) {
+                node = node.parentNode;
             }
-        } else { // body item
-            //console.log("Not in a list");
+        }// else if (node.nodeName === '')
+
+        if (node.nodeName === "LI" && node.previousSibling !== null) { // list item (and not first)
+            editorInstance.execCommand('Indent');
+        } else { // body item, time for magic
             var prev = node.previousSibling;
+            console.log(sel);
             if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
-                //console.log(node.nodeName);
-                //console.log(prev.nodeName);
                 editorInstance.execCommand('InsertUnorderedList');
+            } else if (node.nodeName === '#text' && node.previousSibling.nodeName === 'UL') {
+                editorInstance.execCommand('InsertUnorderedList');
+            } else if (node.nodeName === 'BODY' && sel.baseOffset > 1) {
+                // make sure cursor is below an actual entry (via some DOM parsing magic)
+                var i = 0;
+                var c = 0;
+                var text = node.parentNode.innerText;
+                while (i < sel.baseOffset - 1) {
+                    var char = text.charAt(c);
+                    if (char === '\n') {
+                        c++;
+                    } else { // TODO HANDLE LISTS CORRECTLY
+                        while (text.charAt(c) !== '\n') {
+                            c++;
+                        }
+                    }
+                    i++;
+                }
+                //console.log([text.charAt(c-1), text.charAt(c)]);
+                if (text.charAt(c-1) !== '\n') {
+                    editorInstance.execCommand('InsertUnorderedList');
+                }
             } else {
+
                 //console.log(editorInstance.getContent());
                 //console.log(editorInstance.selection.getSel());
                 // Do nothing.
