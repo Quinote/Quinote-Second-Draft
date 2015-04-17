@@ -94,7 +94,7 @@ else {
 	echo $pieces[1];
 	
 	//Get the user files and list them:
-	echo "<form action='quizme.php' method='post' class='backend_FileLib'><table>";
+	echo "<form action='quizme.php' method='post' class='backend_FileLib' name='FileLibForm' onsubmit='return validateFileLibForm()'><table>";
 	$result = getFiles($userid);
 	foreach($result as $row) {
 		$id=$row['file_id'];
@@ -107,7 +107,6 @@ else {
 	echo "</table>
 	<input type='submit' name='submitType' value='Make Quiz' class='libSubmit' />
 	<!--<input type='submit' name='submitType' value='Delete' class='libSubmit' />-->
-	<input type='submit' name='submitType' value='Open File' class='libSubmit' />
 	</form>";
 
 	//echo end of HTML doc

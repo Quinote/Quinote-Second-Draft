@@ -22,11 +22,8 @@ if(!isset($_POST)){
 }
 
 
-if($_POST['submitType']=='Open File'){
-	$id = $_POST['ids'];
-	header("Location: editor.php?id=$id");
-}
-else if($_POST['submitType']=='Delete'){
+
+if($_POST['submitType']=='Delete'){
 	echo "user selected delete";
 }
 else if($_POST['submitType']=='Make Quiz'){

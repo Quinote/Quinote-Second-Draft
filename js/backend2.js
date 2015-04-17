@@ -52,25 +52,27 @@ $(function() {
       	});
 });
 
-$(document).ready( function() {
-	//grabs file data from data-* object and puts it into the editor
-	/*var container = $('#service-container');
-	var filetext = container.data('content');
-	$('#filecontent').html(filetext);
-	setEditorHtml(filetext);
-	
-	console.log(getEditorHtml());*/
-	
-	
-});
+console.log("I exist and people are listening to me");
 
 /**************************************/
-/*takes document content and displays it*/
+/*makes sure File Lib Form is valid before bothering PHP*/
 /**************************************/
-function useContent(text) {
-	//cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
-	//will use &lt; and &gt;
-	//document.getElementById('display').innerHTML = cleanText;
-	
-	editor.setText(text);
+function validateFileLibForm() {
+	var checkboxes = document.forms["FileLibForm"]["ids[]"];
+	var count=0;
+	for(var x in checkboxes) {
+		if(checkboxes[x].checked) {
+			count++;
+		}
+	}
+	if(count==0) {
+		alert("Please select an item");
+		console.log("count is 0");
+		return false;
+	}
+	return true;
 }
+    
+/*$(document).ready( function() {
+
+});*/
