@@ -148,13 +148,9 @@ function parseInput() {
 	// replace newlines with <br> tags
 	html = html.replace(/\n+/g, "<br>");
 
-<<<<<<< Updated upstream
 	var elements = reductiveSplit(html, "<br />");
-=======
 	console.log(html);
 	
-	var elements = reductiveSplit(html, "<br>");
->>>>>>> Stashed changes
 
 	// [temp?] fix for issue of mid-list <br>s being inserted
 	// essentially, re-merge erroneously separated lists
