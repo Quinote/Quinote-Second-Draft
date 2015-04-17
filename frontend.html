@@ -6,11 +6,15 @@
 		<img width="12%" height="50px"  id="logo" src="style/svg/typeQuinoteWhite.svg">
 		<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
 		<div class="right-nav">
-			<form class="nav-buttons">
-				<img width="5%" height="50px"  src="style/svg/home.svg">
-				<img width="5%" height="50px"  src="style/svg/new.svg">
-				<input type='image' width="5%" height="50px" src="style/svg/save.svg" name='submit' id='save_btn' value='Save'>
-			</form>
+			<div class="nav-buttons">
+					<img width="5%" height="50px"  src="style/svg/home.svg">
+				<form class="nav-buttons">
+					<img width="5%" height="50px"  src="style/svg/new.svg">
+				</form>
+				<form class="nav-buttons">
+					<input type='image' width="5%" height="50px" src="style/svg/save.svg" name='submit' id='save_btn' value='Save'>
+				</form>
+			</div>
 		</div>
 	</div>
 			<div id="pagecontainer">
@@ -19,7 +23,6 @@
 						<div id="toolbar-title">
 							<form>
 								<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
-								FILE ID
 							</form>
 						</div>
 						<div id="toolbar">
@@ -39,13 +42,13 @@
 								<img class="icons" id="strike" src="style/svg/strike.svg">
 							</div>
 							<div class="controlmenu" id="fontselector">
-								<select class="ql-font">
+								<select class="text-font">
 								  <option value="timesnewroman">Times New Roman</option>
 								  <option value="comicsans">Comic Sans</option>
 								  <option value="cambria">Cambria</option>
 								  <option value="arial" selected="">Arial</option>
 								</select>
-								<select class="ql-size">
+								<select class="text-size">
 								  <option value="small">Small</option>
 								  <option value="normal" selected>Normal</option>
 								  <option value="large">Large</option>
