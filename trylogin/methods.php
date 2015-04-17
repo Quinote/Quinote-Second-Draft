@@ -108,7 +108,7 @@ function newFile($title,$parent_id) {
 
 //////////////////////////////////////
 /*
-  @param: fileId
+  @param: file_id
   @param: new content
   updates database with file's new content
 */
@@ -118,4 +118,19 @@ function saveFile($file_id,$content) {
 	$success = mysql_query("UPDATE `files` SET `content`='$content', `last_modified`=now() WHERE `file_id`='$file_id'");
 	return $success;
 }
+
+
+//////////////////////////////////////
+/*
+  @param: fileid
+  returns boolean: whether logged in user is the file author or not
+*/
+//////////////////////////////////////
+function userOwnsFile($fileid) {
+	$fileid = mysql_real_escape_string($fileid);
+	$query = mysql_fetch_array(mysql_query("SELECT `owner_id` FROM `files` WHERE `file_id`='$fileid'"));
+	return ($query['owner_id'] == $_SESSION['userid']);
+	//return $query;
+}
+
 ?>

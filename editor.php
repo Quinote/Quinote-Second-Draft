@@ -6,7 +6,7 @@ require('trylogin/methods.php');
 if(!islogged()) {
 	header( 'Location: index.php' );
 }
-if(! $_POST['actionType']) {
+if(!$_POST && !$_GET['id']) {
 	//means the user is logged in, but navigated straight to the editor
 	//redirect user to their file management system
 	header( 'Location: filebrowser.php' );
@@ -19,10 +19,17 @@ if($_POST['actionType'] == 'make') {
 	$fileid = newFile($title,0);
 	$content = 'brand new file';
 }
-else if($_POST['actionType'] == 'open') {
-	$fileid = $_POST['id'];
-	$content = getFileContent($fileid);
-	$title = $_POST['title'];
+else if($_GET['id']) {
+	$fileid = $_GET['id'];
+	if(!userOwnsFile($fileid)){
+		$content = "You aren't the author of this file";
+		$fileid = -1;
+		$title = "Error: Someone else's file";
+	}
+	else{
+		$content = getFileContent($fileid);
+		$title = ($_GET['title'] ? $_GET['title'] : '');
+	}
 }
 
 
@@ -49,7 +56,7 @@ $page = file_get_contents('frontend.html');
 $page = str_replace("<!--CONTENT GOES HERE-->",$content,$page);
 $page = str_replace("<!--USER ID GOES HERE-->",$_SESSION['userid'],$page);
 $page = str_replace("<!--FILE ID GOES HERE-->",$fileid,$page);
-$page = str_replace("<!--TiTLE GOES HERE-->",$title,$page);
+$page = str_replace("<!--TITLE GOES HERE-->",$title,$page);
 echo $page;
 
 /*echo "<textarea id='editor_div' name='editor_div'>$content</textarea>";
