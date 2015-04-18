@@ -46,6 +46,11 @@ if ($_POST['register']){
 /*HTML page*/
 /*********************/
 
+$header = "<HTML><HEAD>
+  <link rel='stylesheet' type="text/css" href="../style/index.css" />
+  </HEAD>";
+  echo $header;
+
 $page="<BODY>
 
 <div>
@@ -79,7 +84,7 @@ $page="<BODY>
 	</form>
 </div>
 
-</BODY>";
+</BODY></HTML>";
 
 echo $page;
 
