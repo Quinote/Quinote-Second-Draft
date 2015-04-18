@@ -4,7 +4,7 @@ require('trylogin/methods.php');
 
 //If user is not logged in, redirect to index.php
 if(!islogged()) {
-	header( 'Location: index.php' );
+	header( 'Location: index.html' );
 }
 if(!$_POST && !$_GET['id']) {
 	//means the user is logged in, but navigated straight to the editor

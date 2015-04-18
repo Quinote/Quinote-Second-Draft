@@ -73,6 +73,8 @@ function validateFileLibForm() {
 	return true;
 }
     
-/*$(document).ready( function() {
-
-});*/
+$(document).ready( function() {
+	$( "#newFileLink" ).click(function() {
+              $( "#newFileMakerDiv" ).slideToggle( "slow" );
+            });
+});
