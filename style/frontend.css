@@ -346,6 +346,27 @@ h3 {
 	box-shadow: 0 0 160px #000;
 	top: 65px;
 }
+#quiz-wrap {
+	min-height: 500px;
+	text-align: center;
+	width: 95%;
+	position: relative;
+	margin: 0 auto;
+	background-color: #FFF;
+	box-shadow: 0 0 160px #000;
+	top: 65px;
+} 
+#quiz-detail {
+	padding: 5%;
+	text-align: left;
+	font-size: 20px;
+}
+#quiz-container {
+	padding: 5px;
+}
+.svg-link {
+	text-decoration: none;
+}
 footer {
 	text-align: center;
 	background-color: #FFF;

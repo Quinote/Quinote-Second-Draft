@@ -10,6 +10,7 @@ a Quiz object containing a number of questions.
 TODO:
 	- Avoid making undefined into identifier elements?
 	- when receiving null results, readd elements to pool?
+	- What about identical definitions?
 
 */
 

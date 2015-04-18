@@ -368,10 +368,12 @@ h2 {
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
 	padding: 15px;
 	display: none;
-
 }
 .nav-buttons-landing {
 	text-align: right;
+}
+.svg-link {
+	text-decoration: none;
 }
 footer {
 	text-align: center;
