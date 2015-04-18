@@ -323,6 +323,9 @@ h3 {
 .identifier-element {
     background-color: #a2ff9d
 }
+.parent-element {
+	background-color: #80E6FF
+}
 .date-element {
     background-color: #7791ff
 }
@@ -348,4 +351,7 @@ footer {
 	background-color: #FFF;
 	padding-bottom: 10px;
 	font-size: 10px;
+}
+ol {
+	padding-left: 14px;
 }
