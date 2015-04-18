@@ -224,6 +224,7 @@ function readLists(element) {
 	
 	// strip off top-level identifier/definition
 	var contents = element.split(/<ul>(.+)/);
+	console.log(contents);
 	
 	var newElement = new RawElement(contents[0]);
 	
@@ -247,28 +248,43 @@ function processListElements(contents) {
 	 // string leading and trailing <li> and </li>
 	contents = contents.substring(4, contents.length-5);
 	
-	// split by list element breaks
-	var listElements = contents.split("</li><li>");
 	
+	var startIndex = 0;
+	var stopIndex = 0;
 	var subelements = [];
-	
-	for (var i in listElements) {
+	while (stopIndex < contents.length) {
 		
-		var current = listElements[i];
-		
-		// recurse on further sublists, if present
-		if (listElements[i].indexOf("<ul>") !== -1 ) {
-			var proceedingElement = current.substring(current.lastIndexOf("</ul>") + 5);
+		while (contents.charAt(stopIndex) !== "<" && stopIndex < contents.length) stopIndex++;
+		if (contents.substring(stopIndex, stopIndex + 4) === "<ul>") {
 			
-			subelements.push(readLists(current.substring(0, current.lastIndexOf("</ul>"))));
+			var pointer = stopIndex + 1;
+			var openLists = 1;
+			var closedLists = 0;
 			
-			if (proceedingElement.length > 0) {
-				subelements.push(new RawElement(proceedingElement));
+			while (openLists > closedLists) {
+				pointer++;
+				if (contents.substring(pointer, pointer + 4) === "<ul>") {
+					openLists++;
+				} else if (contents.substring(pointer, pointer + 5) === "</ul>") {
+					closedLists++;
+				}
 			}
 			
-		// otherwise, just add a new RawElement
-		} else if (!isWhitespace(current)) {
-			subelements.push(new RawElement(current));
+			
+			subelements.push(readLists(contents.substring(startIndex, pointer)));
+			startIndex = pointer;
+			stopIndex = pointer;
+			
+		} else if (contents.substring(stopIndex, stopIndex + 4) === "<li>") {
+			startIndex = stopIndex + 4;
+			stopIndex = stopIndex + 4;
+		} else if (contents.substring(stopIndex, stopIndex + 5 === "</li>")) {
+			var current = contents.substring(startIndex, stopIndex);
+			if (!isWhitespace(current)) {
+				subelements.push(new RawElement(contents.substring(startIndex, stopIndex)));
+			}
+			startIndex = stopIndex + 5;
+			stopIndex = stopIndex + 5;
 		}
 	}
 	
