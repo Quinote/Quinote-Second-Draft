@@ -24,6 +24,42 @@ body {
 	background-repeat: no-repeat;
 	background-size: contain;
 }
+#landingContent {
+	min-height: 400px;
+}
+#main-content_about{
+ min-height: 525px;
+}
+#main_about {
+	width: 50%;
+	float: left;
+	position: absolute;
+}
+#side_about {
+	display: inline-block;
+	float: right;
+}
+.social {
+	width: 32px;
+	height: 32px;
+	display: block;
+}
+.social-links {
+	display: inline-block;
+}
+.profile {
+	width: 85px;
+	height: 85px;
+	display: inline-block;
+}
+#leaf-help {
+	float: left;
+	padding-top: 20px;
+}
+#bugs-info {
+	left: 210px;
+	width: 70%;
+}
 #header-home {
 	width: 100%;
 	padding-top: 20px;
@@ -41,8 +77,9 @@ body {
 	padding-left: 40px;
 	color: #FFF;
 	line-height: 1.3em;
-	font-size: 20px;
-	text-align: left;
+	font-size: 25px;
+	text-align: center;	
+	text-shadow: 2px 2px #000;
 }
 .left-nav{
 	padding-left: 20px;
@@ -233,12 +270,19 @@ table {
 .feature {
 	width: 400px;
 	display: inline-block;
-	margin-top: 20px;
 	min-height: 75px;
+	color: #3A0808;
+	font-style: oblique;
 }
 .icon{
 	width: 50px;
 	padding: 10px;
+}
+h3 {
+	color: #000;
+}
+h2 {
+	color: #000;
 }
 #homeContainer {
 	width: 100%;
@@ -256,7 +300,10 @@ table {
 }
 #openQuinote {
 	float: right;
-	padding-right: 75px; 
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 .break {
 	height: 2px;
@@ -264,16 +311,15 @@ table {
 	display: block;
 	background-color: #E4E4E4;
 }
-
 .button {
 	border: none;
-	background: #fff;
+	background: #4fa542;
 	color: inherit;
 	vertical-align: middle;
 	font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
 	font-size: 14px;
-	padding-right: 2px;
-	padding-left: 2px;
+	padding-right: 4px;
+	padding-left: 4px;
 	font-weight: 100;
 	position: relative;
 	z-index: 1;
@@ -284,21 +330,12 @@ table {
 	outline: none;
 }
 .button.quiButton {
-	color: #000;
+	color: #FFF;
 	-webkit-transition: color 0.3s;
 	transition: color 0.3s;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px;
-	-webkit-box-shadow:
-	0 6px 0 #fff,
-	0 10px 15px rgba(0,0,0,.35);
-	-moz-box-shadow:
-	0 6px 0 #fff,
-	0 10px 15px rgba(0,0,0,.35);
-	box-shadow:
-	0 6px 0 #fff,
-	0 10px 15px rgba(0,0,0,.35);
+	border-radius: 11px;
 }
 .quiButton::before {
 	content: '';
@@ -317,22 +354,24 @@ table {
 }
 .quiButton:hover {
 	color: #4fa542;
+	background: #fff;
 }
-.quiButton:hover::before {
-	box-shadow: inset 0 0 0 2px #edf6ec;
-	-webkit-transform: scale3d(1, 1, 1);
-	transform: scale3d(1, 1, 1);
+#newfile {
+	right: 82px;
+	position: fixed;
+	top: 140px;
+	width: 243px;
 }
-.quiButton:active {	
-  -webkit-box-shadow: 
-    0 6px 0 #fff,
-    0 8px 6px rgba(0,0,0,.3);
-  -moz-box-shadow: 
-    0 6px 0 #fff,
-    0 8px 6px rgba(0,0,0,.3);
-  box-shadow: 
-    0 6px 0 #fff,
-    0 8px 6px rgba(0,0,0,.3);
+#newfile-icon {
+	width: 202px;
+	height: 100px;
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
+	padding: 15px;
+	display: none;
+
+}
+.nav-buttons-landing {
+	text-align: right;
 }
 footer {
 	text-align: center;

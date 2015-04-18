@@ -250,8 +250,10 @@ h3 {
 	outline: none;
 }
 .button.quiButton {
-	width: 90px;
-	height: 40px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 	min-width: 0;
 	color: #000000;
 	-webkit-transition: color 0.3s;

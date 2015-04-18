@@ -14,7 +14,7 @@
     				<div class="right-nav">
     					<a id="home" class="nav" href="index_home.html">Home</a>
     					<a id="help" class="nav" href="index_about.html">About</a>
-    					<input type='submit' id="login" class="nav-home" value="Login" />
+    					<input type='submit' id="login" class="nav-home button quiButton" value="Login" />
     				</div>
     			</div>
                 <div class="head-login">
@@ -29,7 +29,7 @@
                             </tr>
                             <tr>
                                 <td><b></b></td>
-                                <td><input style="float: right" type='submit' value='Login' name='login' /></td>
+                                <td><input style="float: right" type='submit' value='Go' class="button quiButton" name='login' /></td>
                             </tr>
                         </table>
                     </form>
@@ -39,14 +39,34 @@
                 </div>
     			<div id="content">
 
-    				<div id="main-content">
+    				<div id="main-content-help">
 	    				<div class="section" id="help">
 	    				    <div id="main_help">
-	    				        <h2>Version</h2>
-	    				        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec est diam, congue non efficitur non, interdum ut nibh. Integer a ipsum porta, blandit libero sit amet, imperdiet erat. Cras vulputate enim erat, eget maximus ex rhoncus non. Curabitur laoreet est sit amet augue tempus mollis et vel nisl.</p>
-	    				        
-                                <h2>Known Bugs</h2>
-	    				        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec est diam, congue non efficitur non, interdum ut nibh. Integer a ipsum porta, blandit libero sit amet, imperdiet erat. Cras vulputate enim erat, eget maximus ex rhoncus non. Curabitur laoreet est sit amet augue tempus mollis et vel nisl.</p>
+                            <h2>User Guide</h2>
+                                <ol>
+                                    <li>Create an account and login</li>
+                                    <li>When on the internal home screen, enter a title in the text box -> click the make new file button.</li>
+                                    <li>This will take you to the QuiNote text editor. QuiNote understands your notes through placing of line breaks, colons, and semi-colons:
+                                        <ul>
+                                        <li>term 1: definition</li>
+                                        <li>term 2: definition 1; optional definition 2; optional definition 3 </li>
+                                        <li>You can check out an example note file <a href="http://www.quinote.com/example.txt">HERE</a></i> Try copy-pasting that file if you want to see what quizzes look like right away</li>
+                                        </ul>
+                                    <li>To generate a quiz, enter what number of each type of question you'd like in the floating sidebar and click Generate Quiz</li>
+                                </ol>
+                                <br>
+	    				        <div class="break"></div>
+                                <div id="leaf-help">
+                                    <img width="125px" height="125px" src="style/svg/leafLight.svg">
+                                </div>
+                                <div id="bugs-info">
+                                    <h2>Known Bugs</h2>
+                                    <p> If you happen happen across any bugs while using QuiNote, please let us know via email quinoted@gmail.com</p>
+    	    				        <ul style="padding-left:155px">
+                                        <li>When parsing dates, white space matters in most places but not all</li>
+                                        <li>Editor - Not all toolbar buttons linked</li>
+                                    </ul>
+                                </div>
 	    				    </div>
 	    				</div>
 	    				<div class="break"></div>
