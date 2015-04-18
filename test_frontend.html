@@ -1,211 +1,210 @@
+<!DOCTYPE html>
 <html>
+<head lang="en">
 
-<HEAD>
-  
-  <title>QuiNote</title>
-  
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  
-  <!--visual-->
-  <link rel="stylesheet" type="text/css" href="style/index.css" />
-  <link rel="stylesheet" type="text/css" href="style/frontend.css" />
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-  <link rel="stylesheet" type="text/css" href="style/landing.css" />
-  <link rel="icon" 
-      type="image/png" 
-      href="style/favicon.png" />
-  
-  <!--scripts-->
-  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script src="https://apis.google.com/js/client.js"></script>
-  <!--<script type="text/javascript" src="js/backend2.js"></script>-->
-  
-</HEAD>
+	<title>QuiNote</title>
 
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!--visual-->
+	<link rel="stylesheet" type="text/css" href="style/index.css" />
+	<link rel="stylesheet" type="text/css" href="style/frontend.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="style/landing.css" />
+	<link rel="icon"
+				type="image/png"
+				href="style/favicon.png" />
+
+	<!--scripts-->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="https://apis.google.com/js/client.js"></script>
+</head>
 <body>
-
-<!--READ: -->
-<!--When you copy your stuff to frontend.html, ONLY copy over stuff between the <body> tags
-aka from <div id=page> to the last <script> tag-->
- 
 <div id="page">
-	<nav id="note-menu" class="note-menu">
-		<img src="style/svg/pageMainShadow.svg" id="open" class="menu-trigger" />
-		<ul>
-			<li><a href="#" class="">New File</a></li>
-			<li><a href="#" class="">Save</a></li>
-			<li><a href="#" class="">Help</a></li>
-			<li><a href="#" class="">Close</a></li>
-		</ul>
-	</nav>
-			<div id="pagecontainer">
-				<div id="editorspace">
-					<div id="editorToolbar">
-						<div id="toolbar">
-							<div class="controlmenu" id="control1">
-<!-- 							<img class="icons" id="print" src="style/svg/printIcon.svg">
-								<img class="icons" id="undo" src="style/svg/undoIcon.svg">
-								<img class="icons" id="redo" src="style/svg/redoIcon.svg"> -->
-								<img class="icons" id="format" src="style/svg/formatIcon.svg">
-								<img class="icons" id="removeFormat" src="style/svg/removeformatIcon.svg">
-							</div>
-							<div class="controlmenu" id="copypaste">
-								<img class="icons" id="cut" src="style/svg/cutIcon.svg">
-								<img class="icons" id="copy" src="style/svg/copyIcon.svg">
-								<img class="icons" id="paste" src="style/svg/pasteIcon.svg">
-							</div>
-							
-							<div class="controlmenu" id="zoomControl">
-								<img class="icons" id="zoomout" src="style/svg/zoomoutIcon.svg">
-								<img class="icons" id="zoomin" src="style/svg/zoominIcon.svg">
-							</div>
-							<div class="controlmenu" id="formatControl">
-								<img class="icons ql-bold" id="bold" src="style/svg/boldIcon.svg">
-								<img class="icons ql-underline" id="underline" src="style/svg/underlineIcon.svg">
-								<img class="icons ql-italic" id="italic" src="style/svg/italicIcon.svg">
-								<img class="icons ql-strike" id="strike" src="style/svg/strikeIcon.svg">
-							</div>
-							<div class="controlmenu" id="fontselector">
-								<select class="ql-font">
-								  <option value="timesnewroman">Times New Roman</option>
-								  <option value="comicsans">Comic Sans</option>
-								  <option value="cambria">Cambria</option>
-								  <option value="arial" selected="">Arial</option>
-								</select>
-								<select class="ql-size">
-								  <option value="small">Small</option>
-								  <option value="normal" selected>Normal</option>
-								  <option value="large">Large</option>
-								  <option value="huge">Huge</option>
-								</select>
-<!-- 								ADD ql-color and ql-backround -->
-							</div>
-							<div class="controlmenu" id="paragraphControls">
-								<img class="icons" id="rightjus" src="style/svg/rightjusIcon.svg">
-								<img class="icons" id="centerjus" src="style/svg/centerjusIcon.svg">
-								<img class="icons" id="leftjus" src="style/svg/leftjusIcon.svg">
-								<img class="icons" id="justjus" src="style/svg/justjusIcon.svg">
-							</div>
-							<div class="controlmenu"  id="indentControl">
-								<img class="icons" id="inindent" src="style/svg/inindentIcon.svg">
-								<img class="icons" id="deindent" src="style/svg/deindentIcon.svg">
-							</div>
-							<div class="controlmenu" id="listControl">
-								<img class="icons" id="numlist" src="style/svg/numlistIcon.svg">
-								<img class="icons" id="bullist" src="style/svg/bullistIcon.svg">
-							</div>	
-						</div>
+	<div id="header">
+		<!-- 		<img width="5%" height="50px"  src="style/svg/menu.svg"> -->
+		<img width="12%" height="50px"  id="logo" src="style/svg/typeQuinoteWhite.svg">
+		<div class="right-nav">
+			<form class= "nav-buttons">
+				<a href='filebrowser.php'><img width="5%" height="50px"  src="style/svg/home.svg"></a>
+			</form>
+			<form class="nav-buttons">
+				<img width="5%" height="50px"  src="style/svg/new.svg">
+			</form>
+			<form class="nav-buttons">
+				<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+				<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
+				<input type='image' width="5%" height="50px" src="style/svg/save.svg" name='submit' id='save_btn' value='Save'>
+			</form>
+		</div>
+	</div>
+	<div id="pagecontainer">
+		<div id="editorspace">
+			<div id="editorToolbar">
+				<div id="toolbar-title">
+					<form>
+						<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+						<!--TITLE GOES HERE--><span id='save-message'></span>
+					</form>
+				</div>
+				<div id="toolbar">
+					<div class="controlmenu" id="control1">
+						<img class="icons" id="undo" src="style/svg/undo.svg">
+						<img class="icons" id="redo" src="style/svg/redo.svg">
 					</div>
-					
-<textarea id='editor_div' name='editor_div'>starter text</textarea>
+
+					<div class="controlmenu" id="colorControl">
+						<img class="icons" id="color" src="style/svg/color.svg">
+						<img class="icons" id="high" src="style/svg/high.svg">
+					</div>
+					<div class="controlmenu" id="formatControl">
+						<img class="icons" id="bold" src="style/svg/bold.svg">
+						<img class="icons" id="underline" src="style/svg/underline.svg">
+						<img class="icons" id="italic" src="style/svg/italic.svg">
+						<img class="icons" id="strike" src="style/svg/strike.svg">
+					</div>
+					<div class="controlmenu" id="fontselector">
+						<select class="text-font">
+							<option value="timesnewroman">Times New Roman</option>
+							<option value="comicsans">Comic Sans</option>
+							<option value="cambria">Cambria</option>
+							<option value="arial" selected="">Arial</option>
+						</select>
+						<select class="text-size">
+							<option value="small">Small</option>
+							<option value="normal" selected>Normal</option>
+							<option value="large">Large</option>
+							<option value="huge">Huge</option>
+						</select>
+					</div>
+					<!-- 							<div class="controlmenu" id="paragraphControls">
+                          <img class="icons" id="rightjus" src="style/svg/a-rig.svg">
+                          <img class="icons" id="centerjus" src="style/svg/a-cen.svg">
+                          <img class="icons" id="leftjus" src="style/svg/a-left.svg">
+                          <img class="icons" id="justjus" src="style/svg/a-jus.svg">
+                        </div> -->
+					<div class="controlmenu"  id="indentControl">
+						<img class="icons" id="deindent" src="style/svg/in-de.svg">
+					</div>
+					<div class="controlmenu" id="listControl">
+						<img class="icons" id="numlist" src="style/svg/li-num.svg">
+						<img class="icons" id="bullist" src="style/svg/li-bul.svg">
+					</div>
+					<div class="controlmenu" id="sizeControl">
+						<img class="icons" id="expand" src="style/svg/size-large.svg">
+					</div>
 
 				</div>
-				<div id="sidebar">
-					<div id="sideheader">
-						<h1>Parsed Notes</h1>
-            <div class="summary-wrapper"> <!--List of keys-->
-              <div id="notes-list">
-                <ol class="topnoteslist">
-                  <li>Once you enter notes, the keys will be shown here.</li>
-                </ol>
-              </div>
-            </div>
-						<h2>Quiz Options</h2>
-						<h3>Length:</h3>
-						<input size="3" type="text" id="qLengthMC" name="numeric" value="" class='numberonly'/> Multiple Choice
-						<br>
-						<input size="3" type="text" id="qLengthTF" name="numeric" value="" class='numberonly'/> Fill in the Blank
-						<br>
-						<input size="3" type="text" id="qLengthFB" name="numeric" value="" class='numberonly'/> True/False
-						<br>
-						<input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
-						<br><br>
-						<div id="generateQuizHolder">
-							<input class="dialogTrigger button quiButton" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
-						</div>
+			</div>
+
+			<textarea id='editor_div' name='editor_div'><!--CONTENT GOES HERE--></textarea>
+
+		</div>
+		<div id="sidebar">
+			<div id="sideheader">
+				<h1>Parsed Notes</h1>
+				<div class="summary-wrapper"> <!--List of keys-->
+					<div id="notes-list">
+						<ol class="topnoteslist">
+							<li>Once you enter notes, the keys will be shown here.</li>
+						</ol>
 					</div>
 				</div>
+				<h2>Quiz Options</h2>
+				<h3>Length:</h3>
+				<input size="3" type="text" id="qLengthMC" name="numeric" value="" class='numberonly'/> Multiple Choice
+				<br>
+				<input size="3" type="text" id="qLengthTF" name="numeric" value="" class='numberonly'/> Fill in the Blank
+				<br>
+				<input size="3" type="text" id="qLengthFB" name="numeric" value="" class='numberonly'/> True/False
+				<br>
+				<input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
+				<br><br>
+				<div id="generateQuizHolder">
+					<input class="dialogTrigger button quiButton" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
+				</div>
+			</div>
 		</div>
-			<div class="dialog dialogEffect" id="quizDialog">
-				<div class="quizContent">
-					<div id="thequiz">
-						<div id="quizHead">
-							<button id="buttonCloseQuiz" class="dialogClose button">Quit</button>
-						</div>
-					<div id="wrapper">
-						<div id="quiz.container">
-							<div id="quizopener">
-								<div id="openText">
+	</div>
+	<div class="dialog dialogEffect" id="quizDialog">
+		<div class="quizContent">
+			<div id="thequiz">
+				<div id="quizHead">
+					<button id="buttonCloseQuiz" class="dialogClose button">Quit</button>
+				</div>
+				<div id="wrapper">
+					<div id="quiz.container">
+						<div id="quizopener">
+							<div id="openText">
 								Your quiz is ready! Click start to begin!
-								</div>
-								<img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
-								<input class="button quiButton" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
 							</div>
-							<div id="quizframe">
-								<div id="question">
-								</div>
-								<div id="checkCon">
-									<div id="check">
-										<div id="one">
-											<h3>Correct</h3>
-										</div>
-										<div id="two">
-											<h3>Incorrect</h3>
-										</div>
+							<img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
+							<input class="button quiButton" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
+						</div>
+						<div id="quizframe">
+							<div id="question">
+							</div>
+							<div id="checkCon">
+								<div id="check">
+									<div id="one">
+										<h3>Correct</h3>
+									</div>
+									<div id="two">
+										<h3>Incorrect</h3>
 									</div>
 								</div>
-								<div id="answerSelections">
-									<div id="answer_choice">
-										<form id="form1" action="">
+							</div>
+							<div id="answerSelections">
+								<div id="answer_choice">
+									<form id="form1" action="">
 										<input type="radio" id="a1" name="rd" value="" /><label id="rad1"></label><br/>
 										<input type="radio" id="a2" name="rd" value="" /><label id="rad2"></label><br/>
 										<input type="radio" id="a3" name="rd" value="" /><label id="rad3"></label><br/>
 										<input type="radio" id="a4" name="rd" value="" /><label id="rad4"></label><br/>
-										</form>
-									</div>
-									<div id="answer_text">
-										<form id="form2" action="">
+									</form>
+								</div>
+								<div id="answer_text">
+									<form id="form2" action="">
 										fill in the blank: <input type="text" id="ansText" size="20" />
-										</form>
-									</div>
-									<div id="answer_check">
-										<form id="form3" action="">
+									</form>
+								</div>
+								<div id="answer_check">
+									<form id="form3" action="">
 										<input type="radio" id="true" name="ch" value="" /><label id="che1">True</label><br/>
 										<input type="radio" id="false" name="ch" value="" /><label id="che1">False</label>
-										</form>
-									</div>
+									</form>
 								</div>
-								<ul id="quizButtons">
-									<input class="button quiButton" type="button" id="buttonNext" value="Next Question" onclick="randomizeQuiz();" />
-									<input class="button quiButton" type="button" id="buttonCheck" value="Check Answer" onclick="checkAnswer();" />
-								</ul>
 							</div>
-							<div id="scorepage">
-								<div id="scoreKeeper">
-									<input type="text" id="scr"  size="4" />
-								</div>
-								<div id="leafHolder">
-									<div id="scorepageTitle">
-										<svg width="200" height="250" viewBox="0 0 200 300"
-											xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-											<defs>
-												<path id="MyPath" d="M10 80 Q 95 10 180 80" />
-											</defs>
-											<text text-anchor="start" font-size="32">
-												<textPath xlink:href="#MyPath">
+							<ul id="quizButtons">
+								<input class="button quiButton" type="button" id="buttonNext" value="Next Question" onclick="randomizeQuiz();" />
+								<input class="button quiButton" type="button" id="buttonCheck" value="Check Answer" onclick="checkAnswer();" />
+							</ul>
+						</div>
+						<div id="scorepage">
+							<div id="scoreKeeper">
+								<input type="text" id="scr"  size="4" />
+							</div>
+							<div id="leafHolder">
+								<div id="scorepageTitle">
+									<svg width="200" height="250" viewBox="0 0 200 300"
+											 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+										<defs>
+											<path id="MyPath" d="M10 80 Q 95 10 180 80" />
+										</defs>
+										<text text-anchor="start" font-size="32">
+											<textPath xlink:href="#MyPath">
 												You Scored:
-												</textPath>
-											</text>
-										</svg>
-									</div>
-									<div id="leaf">
-										<img width="200px" height="200px" src="style/svg/leafLight.svg">
-									</div>
-									<div id="scoreDisplay">
-										Score Place Holder
-									</div>
+											</textPath>
+										</text>
+									</svg>
+								</div>
+								<div id="leaf">
+									<img width="200px" height="200px" src="style/svg/leafLight.svg">
+								</div>
+								<div id="scoreDisplay">
+									Score Place Holder
 								</div>
 							</div>
 						</div>
@@ -213,28 +212,28 @@ aka from <div id=page> to the last <script> tag-->
 				</div>
 			</div>
 		</div>
+	</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>	
-			
-		    <!--Editor scripts-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+	<!--Editor scripts-->
 	<script type="text/javascript" src="tinymce/tinymce.min.js"></script>
 	<script type="text/javascript" src="js/editor.js"></script>
 	<script type="text/javascript" src="js/sidebar.js"></script>
 	<script type="text/javascript" src="js/parser.js"></script>
 	<script type="text/javascript" src="js/quizmaker.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
-	
+
 	<script>
-	$(document).ready( function () {
-		// set initial values of question quantity fields to 0 (instead of "")
-		$("#qLengthMC").val(0);
-		$("#qLengthTF").val(0);
-		$("#qLengthFB").val(0);
-		$("#qLength").val(0);
-	});
-	$( "#open" ).click(function() {
-	  $( "#note-menu" ).toggleClass( "note-menu-open" );
-	});
+		$(document).ready( function () {
+			// set initial values of question quantity fields to 0 (instead of "")
+			$("#qLengthMC").val(0);
+			$("#qLengthTF").val(0);
+			$("#qLengthFB").val(0);
+			$("#qLength").val(0);
+		});
 	</script>
-	
-	</BODY></HTML>
+
+
+</body>
+</html>

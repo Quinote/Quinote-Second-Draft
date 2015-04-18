@@ -19,6 +19,14 @@ var editorMain = function() {
         selector: 'textarea',
         menubar: false,
         statusbar: false,
+        paste_text_sticky_default: true,
+        paste_text_sticky: true,
+
+        // TESTING ----
+        //force_br_newlines: false,
+        //convert_newlines_to_brs: true,
+        // ------------
+
         //toolbar: false,
         forced_root_block: false,
         invalid_elements: 'div',
@@ -60,29 +68,38 @@ var editorMain = function() {
             editorInstance.execCommand('Indent');
         } else { // body item, time for magic
             var prev = node.previousSibling;
-            console.log(sel);
+            //console.log(sel);
             if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
                 editorInstance.execCommand('InsertUnorderedList');
             } else if (node.nodeName === '#text' && node.previousSibling.nodeName === 'UL') {
                 editorInstance.execCommand('InsertUnorderedList');
             } else if (node.nodeName === 'BODY' && sel.baseOffset > 1) {
                 // make sure cursor is below an actual entry (via some DOM parsing magic)
+                var offset = 0;
                 var i = 0;
-                var c = 0;
-                var text = node.parentNode.innerText;
-                while (i < sel.baseOffset - 1) {
-                    var char = text.charAt(c);
-                    if (char === '\n') {
-                        c++;
-                    } else { // TODO HANDLE LISTS CORRECTLY
-                        while (text.charAt(c) !== '\n') {
-                            c++;
+                var innerHTML = node.innerHTML;
+                while (offset < sel.baseOffset - 2) {
+                    if (innerHTML.substring(i, i+4) === '<br>') {
+                        offset++;
+                        i += 4;
+                    } else if (innerHTML.substring(i, i+4) === '<ul>') {
+                        i += 4;
+                        while (innerHTML.substring(i, i+5) !== '</ul>') {
+                            i++;
                         }
+                        offset++;
+                    } else {
+                        while (innerHTML.substring(i, i+4) !== '<br>' && innerHTML.substring(i, i+4) !== '<ul>' && i < innerHTML.length) {
+                            //console.log(innerHTML.substring(i, i+4));
+                            i++;
+                        }
+                        offset++;
                     }
-                    i++;
                 }
-                //console.log([text.charAt(c-1), text.charAt(c)]);
-                if (text.charAt(c-1) !== '\n') {
+
+                console.log(sel);
+                console.log(['Offset = ' + offset, innerHTML.substring(i, i+4)]);
+                if (innerHTML.substring(i, i+4) !== '<br>') {
                     editorInstance.execCommand('InsertUnorderedList');
                 }
             } else {
@@ -99,7 +116,7 @@ var editorMain = function() {
 
     var handleOutdent = function(editorInstance) {
         editorInstance.execCommand('Outdent');
-    }
+    };
 
     //console.log(editor);
     //tinyMCE.activeEditor.getContent();
@@ -109,14 +126,26 @@ var editorMain = function() {
     ///*************************************
     // * Toolbar Functionality
     // *************************************/
-    //$('#bold')
-    //        ('bold');
-    //$('#underline')
-    //        ('underline');
-    //$('#italic')
-    //        ('italic');
-    //$('#strike')
-    //        ('strike');
+
+    // Font, Font Size, Color
+
+
+    var toolbarHookups = {
+        '#bold' : 'bold',
+        '#underline' : 'underline',
+        '#italic' : 'italic',
+        '#strike' : 'strikethrough',
+        //'#numlist' : 'numlist',
+        //'#bullist' : 'Bullist',
+        //'#deindent' : 'Outdent'
+    };
+    $.each(toolbarHookups, function(key, value) {
+        $(key).click(function() {
+            tinyMCE.activeEditor.execCommand(value);
+        });
+    });
+
+
     //$('#numlist')
     //        ('numberedlist');
     //$('#bullist')
