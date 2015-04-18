@@ -14,7 +14,6 @@ TODO:
 	- Whitespace definitions (?) 
 	- post-list identifiers not being recognized
 	- copy-paste issues (format from outside input?)
-	- parent items green if contain children
 	- newlines in copy/paste: not being split (because not <br>s)
 	- shorten notes in sidebar (part of editor.js)
 */
