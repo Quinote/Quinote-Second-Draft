@@ -47,13 +47,16 @@ if ($_POST['register']){
 /*********************/
 
 $header = "<HTML><HEAD>
-  <link rel='stylesheet' type="text/css" href="../style/index.css" />
+  <link rel='stylesheet' type='text/css' href='../style/index.css' />
+    <link rel='icon'
+      type='image/png' 
+      href='style/favicon.png' />
   </HEAD>";
   echo $header;
 
 $page="<BODY>
 
-<div>
+<div style='padding:50px;'>
 	<h1>Register</h1>
 	
 	<form action='' method='post'>

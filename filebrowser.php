@@ -93,21 +93,26 @@ else {
 	echo $username;
 	echo $pieces[1];
 	
-	//Get the user files and list them:
-	echo "<form action='quizme.php' method='post' class='backend_FileLib' name='FileLibForm' onsubmit='return validateFileLibForm()'><table>";
+	//Get the user files and list them. Don't show form/submits if user has no files
 	$result = getFiles($userid);
-	foreach($result as $row) {
-		$id=$row['file_id'];
-		//$filemeta = $id .', '. $row['parent_id'].', ' . $row['title'];
-		$title = $row['title'];
-		$link = "<a href='editor.php?id=$id&title=$title'>$title</a>";
-		$checkbox = "<input type='checkbox' name='ids[]' value='$id' />";
-		echo "<tr><td>$checkbox</td><td>$link</td></tr>";
+	if(count($result)!=0) {
+		echo "<form action='quizme.php' method='post' class='backend_FileLib' name='FileLibForm' onsubmit='return validateFileLibForm()'><table>";
+		foreach($result as $row) {
+			$id=$row['file_id'];
+			//$filemeta = $id .', '. $row['parent_id'].', ' . $row['title'];
+			$title = $row['title'];
+			$link = "<a href='editor.php?id=$id&title=$title'>$title</a>";
+			$checkbox = "<input type='checkbox' name='ids[]' value='$id' />";
+			echo "<tr><td>$checkbox</td><td>$link</td></tr>";
 		}
-	echo "</table>
-	<input type='submit' name='submitType' value='Make Quiz' class='libSubmit' />
-	<!--<input type='submit' name='submitType' value='Delete' class='libSubmit' />-->
-	</form>";
+		echo "</table>
+		<input type='submit' name='submitType' value='Make Quiz' class='libSubmit' />
+		<!--<input type='submit' name='submitType' value='Delete' class='libSubmit' />-->
+		</form>";
+	}
+	else {
+		echo "You don't have any files yet";
+	}
 
 	//echo end of HTML doc
 	echo $pieces[2];

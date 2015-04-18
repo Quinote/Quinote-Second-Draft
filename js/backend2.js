@@ -15,8 +15,8 @@ $(function() {
     	
     	var userid = $('input#userid').val();
     	var fileid = $('input#fileid').val();
-    	/*var content = $('#filecontent').val();*/
-    	var content = getEditorHtml();
+    	//var content = getEditorHtml();
+    	var content = tinyMCE.activeEditor.getContent();
     	
     	console.log(fileid);
     	console.log(userid);
@@ -51,8 +51,6 @@ $(function() {
       	return false;
       	});
 });
-
-console.log("I exist and people are listening to me");
 
 /**************************************/
 /*makes sure File Lib Form is valid before bothering PHP*/
