@@ -10,7 +10,8 @@ Javascript methods for save
 $(function() {
     $("#save_btn").click(function() {
     	/*Enter form validation stuff*/
-    	console.log('save button pressed')
+    	console.log('save button pressed');
+    	clearTimeout();
     	
     	var userid = $('input#userid').val();
     	var fileid = $('input#fileid').val();
@@ -32,9 +33,17 @@ $(function() {
     		success: function(data) {
       			if(data == 1) {
       				console.log('update successful');
+      				$('#save-message').html(' - Save successful');
+      				setTimeout(function(){
+      					$('#save-message').html('');
+      					},3000);
       			}
       			else if(data == 0) {
       				console.log('Then an error occured');
+      				$('#save-message').html(' - Save error occured');
+      				setTimeout(function(){
+      					$('#save-message').html('');
+      					},3000);
       			}
       		}
       	});
@@ -43,25 +52,27 @@ $(function() {
       	});
 });
 
-$(document).ready( function() {
-	//grabs file data from data-* object and puts it into the editor
-	/*var container = $('#service-container');
-	var filetext = container.data('content');
-	$('#filecontent').html(filetext);
-	setEditorHtml(filetext);
-	
-	console.log(getEditorHtml());*/
-	
-	
-});
+console.log("I exist and people are listening to me");
 
 /**************************************/
-/*takes document content and displays it*/
+/*makes sure File Lib Form is valid before bothering PHP*/
 /**************************************/
-function useContent(text) {
-	//cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
-	//will use &lt; and &gt;
-	//document.getElementById('display').innerHTML = cleanText;
-	
-	editor.setText(text);
+function validateFileLibForm() {
+	var checkboxes = document.forms["FileLibForm"]["ids[]"];
+	var count=0;
+	for(var x in checkboxes) {
+		if(checkboxes[x].checked) {
+			count++;
+		}
+	}
+	if(count==0) {
+		alert("Please select an item");
+		console.log("count is 0");
+		return false;
+	}
+	return true;
 }
+    
+/*$(document).ready( function() {
+
+});*/

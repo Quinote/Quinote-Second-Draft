@@ -5,19 +5,25 @@ Contains methods for parsing textual input.
 
 Access is via calls to parseInput(html), where html is a string of raw HTML consistent 
 with the text editor formatting, and returns a ParseResult object, which consists
-of arrays of objects. 
+of arrays of objects.
 
 TODO: 
 	- ordered lists (?)
 
 	- Anonymous labels not incrementing
+	- Whitespace definitions (?) 
+	- post-list identifiers not being recognized
+	- copy-paste issues (format from outside input?)
+	- parent items green if contain children
+	- newlines in copy/paste: not being split (because not <br>s)
+	- shorten notes in sidebar (part of editor.js)
 */
 
 //**************************************
 // GLOBAL VARIABLES
 //**************************************
 
-var aliasRegex = /\[.*\]/;
+var aliasRegex = /\[.*\]/; 
 var aliasSeparatorRegex = /;|,/;
 var ideaRegex = /([^:])+/;
 var equalityRegex = /:/; // currently unused; may be expanded
@@ -138,8 +144,13 @@ function parseInput() {
 	
 	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
+	
+	// replace newlines with <br> tags
+	html = html.replace(/\n+/g, "<br>");
 
 	var elements = reductiveSplit(html, "<br />");
+	console.log(html);
+	
 
 	// [temp?] fix for issue of mid-list <br>s being inserted
 	// essentially, re-merge erroneously separated lists
@@ -289,7 +300,7 @@ function parseRawElement(rawElement) {
 	
 	// assign a temp name to anonymous identifiers
 	if ((components[0].length === 0 || components[0] === "\u200B") && components.length > 1) {
-		components[0] = "[";
+		components[0] = "["; 
 	}
 	
 	// test for presence of aliases
@@ -457,3 +468,4 @@ function mergeArrays(arr1, arr2) {
 	}
 	return ret;
 }
+
