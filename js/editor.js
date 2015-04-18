@@ -250,10 +250,10 @@ var parseEditorText = function() {
 
 
 var classString = function(element) {
-    if (element instanceof DateElement) {
-        return "date-element";
-    } else if (element.definitions.length > 0) {
+    if (element.definitions.length > 0) {
         return "identifier-element";
+	} else if (element.definitions.length === 0 && element.subelements.length > 0) {
+		return "parent-element";
     } else {
         return "unknown-element";
     }
@@ -275,13 +275,14 @@ var buildList = function(parseResult) {
     for (i=0; i<parseResult.parsedElements.length; i++) {
         var nextElement = parseResult.parsedElements[i];
 
+		var identifier = nextElement.getIdentifier();
+		
 
+        var listItem = '<li class=' + classString(nextElement) + '>' + shorten(identifier) + '</li>';
 
-        var listItem = '<li class=' + classString(nextElement) + '>' + nextElement.getIdentifier() + '</li>';
-
-        if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
+        if (representedIdentifiers.indexOf(identifier) === -1) {
             list.append(listItem);
-            representedIdentifiers.push(nextElement.getIdentifier());
+            representedIdentifiers.push(identifier);
         }
 
         if (nextElement.subelements.length > 0) {
@@ -304,10 +305,12 @@ function buildSublist(elements, indentLevel, representedIdentifiers) {
 
     for (i=0; i<elements.length; i++) {
         var nextElement = elements[i];
+		
+		var identifier = nextElement.getIdentifier();
 
-        if (representedIdentifiers.indexOf(nextElement.getIdentifier()) === -1) {
-            newList += indents + "<li class=" + classString(nextElement) + ">" + nextElement.getIdentifier() + "</li>";
-            representedIdentifiers.push(nextElement.getIdentifier());
+        if (representedIdentifiers.indexOf(identifier) === -1) {
+            newList += indents + "<li class=" + classString(nextElement) + ">" + shorten(identifier) + "</li>";
+            representedIdentifiers.push(identifier);
         }
 
         if (nextElement.subelements.length > 0) {
@@ -319,4 +322,13 @@ function buildSublist(elements, indentLevel, representedIdentifiers) {
     newList += "</ol>";
 
     return newList;
+}
+
+function shorten(identifier) {
+	// ellipsis-truncate an identifier if it exceeds 20 chars
+	if (identifier.length > 30) {
+		contents = identifier.split(" ");
+		identifier = contents[0] + " " + contents[1] + " ... " + contents[contents.length-1];
+	}
+	return identifier;
 }
