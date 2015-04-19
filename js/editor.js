@@ -12,13 +12,12 @@
  *    - Fix quirky delete behavior (when deleting a range including list items)
  */
 
-var editor;
-
 var editorMain = function() {
     tinymce.EditorManager.init({
         selector: 'textarea',
         menubar: false,
         statusbar: false,
+        auto_focus : 'editor_div',
         paste_text_sticky_default: true,
         paste_text_sticky: true,
 
@@ -46,11 +45,11 @@ var editorMain = function() {
                 }
                 //buildList(parseEditorText());
             });
-            ed.on('keyup', function(event) {
-                buildList(parseEditorText());
+            //ed.on('keyup', function(event) {
+                //buildList(parseEditorText());
                 //console.log( {html: ed.getContent({format: 'raw'})} );
                 //console.log( {html: ed.getContent()} );
-            });
+            //});
         }
     });
 
@@ -59,7 +58,7 @@ var editorMain = function() {
         var node = sel.baseNode;
 
         if (node.nodeName === "#text") {
-            if (node.parentNode.nodeName === "LI"/* || node.parentNode.nodeName === 'DIV'*/) {
+            if (node.parentNode.nodeName === "LI") {
                 node = node.parentNode;
             }
         }// else if (node.nodeName === '')
@@ -78,13 +77,13 @@ var editorMain = function() {
                 var offset = 0;
                 var i = 0;
                 var innerHTML = node.innerHTML;
-                while (offset < sel.baseOffset - 2) {
+                while (offset < sel.baseOffset - 2 && i < innerHTML.length) {
                     if (innerHTML.substring(i, i+4) === '<br>') {
                         offset++;
                         i += 4;
                     } else if (innerHTML.substring(i, i+4) === '<ul>') {
                         i += 4;
-                        while (innerHTML.substring(i, i+5) !== '</ul>') {
+                        while (innerHTML.substring(i, i+5) !== '</ul>' && i < innerHTML.length) {
                             i++;
                         }
                         offset++;
@@ -135,6 +134,8 @@ var editorMain = function() {
         '#underline' : 'underline',
         '#italic' : 'italic',
         '#strike' : 'strikethrough',
+        '#undo' : 'undo',
+        '#redo' : 'redo'
         //'#numlist' : 'numlist',
         //'#bullist' : 'Bullist',
         //'#deindent' : 'Outdent'
@@ -158,16 +159,41 @@ var editorMain = function() {
     //        ('maximize');
 
 
-
-    //
-    ///*************************************
-    // * Event Handlers
-    // *************************************/
-
-
+    //$('#expand').click(attachRandomListener);
+    //$('#deindent').click(detachRandomListener);
 };
 
 $(document).ready(editorMain);
+
+////var
+//
+//clearTimeout();
+//$('#save-message').html(' - Edited');
+//
+////stop listening for keystrokes
+
+var attachContentChangedListener = function(callbackFunction) {
+    $.each(['paste', 'cut', 'keyup', 'undo', 'redo'], function(index, value) {
+        tinyMCE.activeEditor.on(value, callbackFunction);
+    });
+};
+var detachContentChangedListener = function(callbackFunction) {
+    $.each(['paste', 'cut', 'keyup', 'undo', 'redo'], function(index, value) {
+        tinyMCE.activeEditor.off(value, callbackFunction);
+    });
+};
+
+var changedListener = function() {
+    clearTimeout();
+    $('#save-message').html(' - Edited');
+    detachChangedListener();
+};
+var attachChangedListener = function() {
+    attachContentChangedListener(changedListener);
+};
+var detachChangedListener = function() {
+    detachContentChangedListener(changedListener);
+};
 
 /*************************************
  * Helper functions
