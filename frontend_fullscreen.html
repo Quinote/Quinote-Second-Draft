@@ -1,0 +1,193 @@
+<!--
+Quinote Software Group 2015
+Author: Kat Glover
+
+User fullscreen quiz frontend
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Quinote-Fullscreen</title>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style/frontend.css" />
+        <link rel="stylesheet" type="text/css" href="style/index.css" />
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+
+    </head>
+
+    <body>
+       <div id="wrap-fullscreen">
+            <div id="container">
+                <div id="header-quiz">
+                        <a class="svg-link" href="index.html">
+                            <img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
+                        </a>
+                        <a class="svg-link" href="index.html">
+                            <img width="12%" height="50px"  src="style/svg/typeQuinoteWhite.svg">
+                        </a>
+                    <div class="right-nav-quiz">
+                        <form>
+                            <a href='filebrowser.php'><img width="100%" height="50px"  src="style/svg/home.svg"></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        	<div id="homeContainer">
+    			<div id="landingContent-full">
+    				<div id="main-content">
+                        <div id="landing-welcome">
+                            <h2>Multiple File Quiz</h2>
+                            <h3>This quiz will be generated from:</h3>
+                            <form>
+                               <input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+                                    <!--TITLE GOES HERE--><span id='save-message'></span>
+                            </form>
+                            <br><br><br>  
+                        </div>
+                       <div id="newquiz">
+                            <h2>Quiz Options</h2>
+                             <div id="newquiz-icon">
+                                    <h3>Length:</h3>
+                                    <input size="3" type="text" id="qLengthMC" name="numeric" value="" class='numberonly'/> Multiple Choice
+                                    <br>
+                                    <input size="3" type="text" id="qLengthTF" name="numeric" value="" class='numberonly'/> Fill in the Blank
+                                    <br>
+                                    <input size="3" type="text" id="qLengthFB" name="numeric" value="" class='numberonly'/> True/False
+                                    <br>
+                                    <input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
+                                    <br><br>
+       					    </div>
+    				    </div>
+                        <div id="generateQuizHolder-full">
+                            <input font-size="20px" class="dialogTrigger qbutton quiButton-quiz" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
+                        </div>
+
+                    <footer id="footer-full">
+                    <div class="nav-footer">
+                        <a id="home" class="nav-home" href="index.html">Home</a>
+                        <a id="about" class="nav-home" href="index_about.html">About</a>
+                        <a id="help" class="nav-home" href="index_help.html">Help</a>
+                    </div>
+                    Quinote 2015
+                </footer>
+            </div>
+    			</div>
+            </div>
+        </div>
+        
+            <div class="dialog dialogEffect" id="quizDialog">
+                <div class="quizContent">
+                    <div id="thequiz">
+                        <div id="quizHead">
+                            <button id="buttonCloseQuiz" class="dialogClose qbutton">Quit</button>
+                        </div>
+                    <div id="wrapper">
+                        <div id="quiz.container">
+                            <div id="quizopener">
+                                <div id="openText">
+                                Your quiz is ready! Click start to begin!
+                                </div>
+                                <img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
+                                <input class="qbutton quiButton-quiz" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
+                            </div>
+                            <div id="quizframe">
+                                <div id="question">
+                                </div>
+                                <div id="checkCon">
+                                    <div id="check">
+                                        <div id="one">
+                                            <h3>Correct</h3>
+                                        </div>
+                                        <div id="two">
+                                            <h3>Incorrect</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="answerSelections">
+                                    <div id="answer_choice">
+                                        <form id="form1" action="">
+                                        <input type="radio" id="a1" name="rd" value="" /><label id="rad1"></label><br/>
+                                        <input type="radio" id="a2" name="rd" value="" /><label id="rad2"></label><br/>
+                                        <input type="radio" id="a3" name="rd" value="" /><label id="rad3"></label><br/>
+                                        <input type="radio" id="a4" name="rd" value="" /><label id="rad4"></label><br/>
+                                        </form>
+                                    </div>
+                                    <div id="answer_text">
+                                        <form id="form2" action="">
+                                        fill in the blank: <input type="text" id="ansText" size="20" />
+                                        </form>
+                                    </div>
+                                    <div id="answer_check">
+                                        <form id="form3" action="">
+                                        <input type="radio" id="true" name="ch" value="" /><label id="che1">True</label><br/>
+                                        <input type="radio" id="false" name="ch" value="" /><label id="che1">False</label>
+                                        </form>
+                                    </div>
+                                </div>
+                                <ul id="quizButtons">
+                                    <input class="qbutton quiButton-quiz" type="button" id="buttonNext" value="Next Question" onclick="randomizeQuiz();" />
+                                    <input class="qbutton quiButton-quiz" type="button" id="buttonCheck" value="Check Answer" onclick="checkAnswer();" />
+                                </ul>
+                            </div>
+                            <div id="scorepage">
+                                <div id="scoreKeeper">
+                                    <input type="text" id="scr"  size="4" />
+                                </div>
+                                <div id="leafHolder">
+                                    <div id="scorepageTitle">
+                                        <svg width="200" height="250" viewBox="0 0 200 300"
+                                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <defs>
+                                                <path id="MyPath" d="M10 80 Q 95 10 180 80" />
+                                            </defs>
+                                            <text text-anchor="start" font-size="32">
+                                                <textPath xlink:href="#MyPath">
+                                                You Scored:
+                                                </textPath>
+                                            </text>
+                                        </svg>
+                                    </div>
+                                    <div id="leaf">
+                                        <img width="200px" height="200px" src="style/svg/leafLight.svg">
+                                    </div>
+                                    <div id="scoreDisplay">
+                                        Score Place Holder
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>  
+            
+            <!--Editor scripts-->
+    <script type="text/javascript" src="tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="js/editor.js"></script>
+    <script type="text/javascript" src="js/sidebar.js"></script>
+    <script type="text/javascript" src="js/parser.js"></script>
+    <script type="text/javascript" src="js/quizmaker.js"></script>
+    <script type="text/javascript" src="js/frontend.js"></script>
+    
+    <script>
+    $(document).ready( function () {
+        // set initial values of question quantity fields to 0 (instead of "")
+        $("#qLengthMC").val(0);
+        $("#qLengthTF").val(0);
+        $("#qLengthFB").val(0);
+        $("#qLength").val(0);
+    });
+    </script>
+	</body>
+
+
+</html>

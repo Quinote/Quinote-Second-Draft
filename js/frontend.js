@@ -1,5 +1,5 @@
 /* QuiNote Software Group 2015
-Authors: Katherine Glover, Elliott Warkus, Cameron Basham
+Authors: Kathryn Glover, Elliott Warkus, Cameron Basham
 
 Contains code responsible for managing interaction between 
 UI elements and hidden user-side functions (parsing, quiz

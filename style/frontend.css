@@ -8,7 +8,7 @@ body {
 	font-weight: 100;
 }
 #header {
-	width: 100%;
+	width: 99%;
 	height: 40px;
 	padding-top: 10px;
 	padding-bottom: 15px;
@@ -22,14 +22,15 @@ body {
 	fill: #000;
 }
 .right-nav {
-	float: right;
 	position: absolute;
-	padding-left: 80%;
+	right: 10px;
 	bottom: 0;
-	width: 100%;
+	width: 200px;
+
 }
 .nav-buttons {
 	display: inline;
+	padding-left: 10px;
 }
 #wrapper {
 	padding: 50px;
@@ -77,7 +78,7 @@ body {
 	visibility: visible;
 }
 .quizContent {
-	background: #4FA542;
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
 	position: relative;
 	border-radius: 3px;
 	margin: 0 auto;
@@ -174,8 +175,7 @@ body {
 #thequiz {
 	padding: 10px;
 	overflow: hidden;
-	border: 1px solid #000000;
-	border-width: 1px;
+	border: 1px solid #4aa90e;
 }
 .icons {
 	height: 23px;
@@ -200,6 +200,7 @@ h3 {
 #leaf{
 	position: inherit;
 	z-index: 2;
+	padding-bottom: 15px;
 }
 #scorepageTitle{
 	z-index: 6;
@@ -233,7 +234,7 @@ h3 {
 	text-align: center;
 }
 
-.button {
+.qbutton {
 	border: none;
 	background: none;
 	color: inherit;
@@ -246,10 +247,10 @@ h3 {
 	-webkit-backface-visibility: hidden;
 	-moz-osx-font-smoothing: grayscale;
 }
-.button:focus {
+.qbutton:focus {
 	outline: none;
 }
-.button.quiButton {
+.qbutton.quiButton-quiz {
 	padding-left: 8px;
 	padding-right: 8px;
 	padding-top: 3px;
@@ -271,7 +272,7 @@ h3 {
 	0 6px 0 #fff,
 	0 10px 15px rgba(0,0,0,.35);
 }
-.quiButton::before {
+.quiButton-quiz::before {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -286,15 +287,15 @@ h3 {
 	-webkit-transition: box-shadow 0.3s, -webkit-transform 0.3;
 	transition: box-shadow 0.3s, transform 0.3s;
 }
-.quiButton:hover {
+.quiButton-quiz:hover {
 	color: #4fa542;
 }
-.quiButton:hover::before {
+.quiButton-quiz:hover::before {
 	box-shadow: inset 0 0 0 2px #edf6ec;
 	-webkit-transform: scale3d(1, 1, 1);
 	transform: scale3d(1, 1, 1);
 }
-.quiButton:active {	
+.quiButton-quiz:active {	
   -webkit-box-shadow: 
     0 6px 0 #fff,
     0 8px 6px rgba(0,0,0,.3);
@@ -307,6 +308,12 @@ h3 {
 }
 #generateQuizHolder{
 	text-align: center;
+}
+#generateQuizHolder-full{
+	text-align: center;
+	float: left;
+	width: 100%;
+	padding-top: 50px;
 }
 #notes-list ol {
     /*list-style-type: circle;*/

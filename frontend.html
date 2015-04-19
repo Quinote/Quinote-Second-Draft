@@ -7,15 +7,15 @@
 		</a>
 		<div class="right-nav">
 			<form class= "nav-buttons">
-				<a href='filebrowser.php'><img width="5%" height="50px"  src="style/svg/home.svg"></a>
+				<a href='filebrowser.php'><img width="25%" height="50px"  src="style/svg/home.svg"></a>
 			</form>
 			<form class="nav-buttons">
-				<img width="5%" height="50px"  src="style/svg/new.svg">
+				<img width="25%" height="50px"  src="style/svg/new.svg">
 			</form>
 			<form class="nav-buttons">
 				<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
 				<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
-				<input type='image' width="5%" height="50px" src="style/svg/save.svg" name='submit' id='save_btn' value='Save'>
+				<input type='image' width="25%" height="50px" src="style/svg/save.svg" name='submit' id='save_btn' value='Save'>
 			</form>
 		</div>
 	</div>
@@ -102,7 +102,7 @@
 						<input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
 						<br><br>
 						<div id="generateQuizHolder">
-							<input class="dialogTrigger button quiButton" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
+							<input class="dialogTrigger qbutton quiButton-quiz" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
 						</div>
 					</div>
 				</div>
@@ -111,7 +111,7 @@
 				<div class="quizContent">
 					<div id="thequiz">
 						<div id="quizHead">
-							<button id="buttonCloseQuiz" class="dialogClose button">Quit</button>
+							<button id="buttonCloseQuiz" class="dialogClose qbutton">Quit</button>
 						</div>
 					<div id="wrapper">
 						<div id="quiz.container">
@@ -120,7 +120,7 @@
 								Your quiz is ready! Click start to begin!
 								</div>
 								<img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
-								<input class="button quiButton" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
+								<input class="qbutton quiButton-quiz" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
 							</div>
 							<div id="quizframe">
 								<div id="question">
@@ -157,8 +157,8 @@
 									</div>
 								</div>
 								<ul id="quizButtons">
-									<input class="button quiButton" type="button" id="buttonNext" value="Next Question" onclick="randomizeQuiz();" />
-									<input class="button quiButton" type="button" id="buttonCheck" value="Check Answer" onclick="checkAnswer();" />
+									<input class="qbutton quiButton-quiz" type="button" id="buttonNext" value="Next Question" onclick="randomizeQuiz();" />
+									<input class="qbutton quiButton-quiz" type="button" id="buttonCheck" value="Check Answer" onclick="checkAnswer();" />
 								</ul>
 							</div>
 							<div id="scorepage">

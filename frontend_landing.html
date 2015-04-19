@@ -34,32 +34,36 @@ Displays user file library
 			<div id="landingContent">
 				<div id="main-content">
     				<div class="section" id="welcome">
-    				        <h2>Welcome <!--SPLIT HERE--></h2>
-					           <p>Welcome to QuiNote! Get started!</p>
-                           <div id="newfile">
-                                <form class="nav-buttons-landing">
-                                    <img width="25%" id="create" height="50px"  src="style/svg/new.svg">
-                                 </form>
-                                 <div id="newfile-icon">
-                    				<h3>Make new file:</h3>
-                    				<form id='filemaker' action='editor.php' method='post'>
-                                        <b>Title: </b><input type='text' name='title' value='Untitled' />
-                                        <input type='hidden' name='actionType' value='make' />
-                            			<input class='button quiButton' id='openQuinote' type='submit' value='Go' />
-                                    </form>
-                                </div>
-           					</div>
-                            <br>
-                            
-                            <h3>File Library</h3>
+                        <h2>Hello <!--SPLIT HERE-->,</h2>
+                        <div id="landing-welcome">
+                            <p><h3>Welcome to QuiNote!</h3>
+                            To get started, either create a new file or browse your file library below. From the file libary you can select a file in order to it and generate quizzes in the QuiNote workspace or you can select multiple files in order to generate a quiz that encompasses the selected notes! 
+                            </p>
+                        <br><br><br>  
+                        </div>
+                       <div id="newfile">
+                             
+                             <div id="newfile-icon">
+                				<div id="heading1">Create a new file:</div>
+                				<form id='filemaker' action='editor.php' method='post'>
+                                    <b>Title: </b><input type='text' name='title' value='Untitled' />
+                                    <input type='hidden' name='actionType' value='make' />
+                        			<input class='button quiButton' id='openQuinote' type='submit' value='Go' />
+                                </form>
+                            </div>
+       					</div>
+                        <div id="landing-file">
                             <div class="break"></div>
-                            <!--SPLIT HERE-->
-
+                            <h2>File Library</h2>
+                                <div id="file-holder">
+                                    <!--SPLIT HERE-->
+                                </div>
+                        </div>
     				</div>
-    				<div class="break"></div>
 				</div>
 			</div>
         </div>
+        
     			<footer>
                     <div class="nav-footer">
                         <a id="home" class="nav-home" href="index.html">Home</a>
@@ -68,15 +72,10 @@ Displays user file library
                     </div>
         			Quinote 2015
     			</footer>
-    		</div>
+    	</div>
     	</div>
 
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script>
-        $( "#create" ).click(function() {
-          $( "#newfile-icon" ).slideToggle( "slow" );
-        });
-    </script>
 	</body>
 
 
