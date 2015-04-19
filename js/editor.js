@@ -30,6 +30,9 @@ var editorMain = function() {
         forced_root_block: false,
         invalid_elements: 'div',
         setup: function(ed) {
+            //$.each(['paste', 'cut', 'keyup', 'undo', 'redo'], function(index, value) {
+            //    ed.on(value, buildList(parseEditorText()));
+            //});
             ed.on('keydown', function(event) {
                 //console.log([getEditorHtml()]);
                 //console.log(event);
@@ -45,11 +48,11 @@ var editorMain = function() {
                 }
                 //buildList(parseEditorText());
             });
-            //ed.on('keyup', function(event) {
-                //buildList(parseEditorText());
+            ed.on('keyup', function(event) {
+                buildList(parseEditorText());
                 //console.log( {html: ed.getContent({format: 'raw'})} );
                 //console.log( {html: ed.getContent()} );
-            //});
+            });
         }
     });
 
