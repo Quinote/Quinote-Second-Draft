@@ -146,7 +146,7 @@ function DateElement () {}
 //  Main access method //
 /////////////////////////
 
-function parseInput() {
+function parseInput(html) {
 	/* Given the html input, first assign hierarchy based on indent
 	levels then parse according to parse rules. Returns a ParseResult
 	object containing the results of the final parsing function
@@ -160,8 +160,8 @@ function parseInput() {
 	 * reductiveSplit() is currently located in editor.js
 	 */
 	
-	
-	var html = getEditorHtml();
+	// now externally defined
+	//var html = getEditorHtml();
 	
 	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
@@ -175,8 +175,8 @@ function parseInput() {
 	// quick-fix for endlist/linebreak issue?
 	// this causes nested-list issues
 	//html = html.replace(/<\/ul>/g, "</ul><br />");
-	
 	html = fixLists(html);
+	// This should NOT make it into production code
 
 	var elements = reductiveSplit(html, "<br />");	
 	
