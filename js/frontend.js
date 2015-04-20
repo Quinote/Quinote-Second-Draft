@@ -403,7 +403,10 @@ function showIncorrect(){
 	$('#two').toggle;
 	var twoAns=document.getElementById("two");
 	var a2Text="Incorrect! The answer is: ";
-	twoAns.innerHTML= a2Text + currentQuestion.answer;
+	var answer = currentQuestion.answer;
+	if (answer.charAt(answer.length-1) !== "\"") { answer = answer + "\""; }
+	if (answer.charAt(0) !== "\"") { answer = "\"" + answer; }
+	twoAns.innerHTML= a2Text + answer;
 	document.getElementById("buttonNext").style.display="";	
 }
 
