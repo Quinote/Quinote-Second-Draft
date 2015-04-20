@@ -196,7 +196,7 @@ var editorMain = function() {
     //        ('maximize');
 
 
-    $('#save_btn').on('click', attachChangedListener);
+    //$('#save_btn').on('click', attachChangedListener);
     //$('#expand').click(attachRandomListener);
     //$('#deindent').click(detachRandomListener);
 };
