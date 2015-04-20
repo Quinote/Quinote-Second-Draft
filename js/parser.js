@@ -162,12 +162,15 @@ function parseInput(html) {
 	
 	// now externally defined
 	//var html = getEditorHtml();
+	console.log(html);
 	
 	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
 	
-	// replace newlines with <br> tags
-	html = html.replace(/\n+/g, "<br />");
+	// replace newlines with <br /> tags
+	//html = html.replace(/\n+/g, "<br />");
+	html = html.replace(/\n+/g, "");
+	console.log(html);
 	
 	// replace &nbsp;s with " "
 	html = html.replace(/&nbsp;/g, " ");
@@ -179,6 +182,7 @@ function parseInput(html) {
 	// This should NOT make it into production code
 
 	var elements = reductiveSplit(html, "<br />");	
+	
 	
 	// [temp?] fix for issue of mid-list <br>s being inserted
 	// essentially, re-merge erroneously separated lists
@@ -193,6 +197,14 @@ function parseInput(html) {
 				numElements--;
 			}
 		}
+		if (elements[i+1].length > 4) {
+			if (elements[i+1].substring(0, 4) === "<ul>") {
+				elements[i] = elements[i] + elements[i+1];
+				elements.splice(i+1, 1);
+				numElements--;
+			}
+		}
+			
 	}	
 	
 	// get list of top-level elements containing their subelements
