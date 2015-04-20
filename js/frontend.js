@@ -85,6 +85,7 @@ $(document).ready(function() {
 		$('#scorepage').toggle();
 		$('#quizDialog').css("z-index", "4");
 		$('#pagecontainer').css({"-webkit-filter" : "blur(3px)"});
+		$('#homeContainer').css({"-webkit-filter" : "blur(3px)"});
 		
 		// FOR PURPOSES OF TESTING
 		// This is the current fix for the quiz reset problem.
@@ -106,6 +107,7 @@ $(document).ready(function() {
 	$('#buttonCloseQuiz').click(function(){
 		$('#quizDialog').css("z-index", "-10");
 		$('#pagecontainer').css({"-webkit-filter" : "blur(0px)"});
+		$('#homeContainer').css({"-webkit-filter" : "blur(0px)"});
 	});
 
 	$('#buttonStartQuiz').click(function(){
