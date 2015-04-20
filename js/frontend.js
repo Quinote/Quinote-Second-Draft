@@ -392,7 +392,10 @@ function showCorrect(){
 	$('#one').toggle;
 	var oneAns=document.getElementById("one");
 	var aText=" is correct!";
-	oneAns.innerHTML= "\"" + currentQuestion.answer + "\"" + aText;
+	var answer = currentQuestion.answer;
+	if (answer.charAt(answer.length-1) !== "\"") { answer = answer + "\""; }
+	if (answer.charAt(0) !== "\"") { answer = "\"" + answer; }
+	oneAns.innerHTML= answer + aText;
 	document.getElementById("buttonNext").style.display="";
 }
 function showIncorrect(){
