@@ -79,6 +79,18 @@ function getFileContent($fileid) {
 	return mysql_fetch_array(mysql_query("SELECT `content` FROM `files` WHERE `file_id`=$fileid"))[0];
 }
 
+//////////////////////////////////////
+/*
+  @param: file_id
+  Returns title
+  To do: do by arrays (more efficient)
+*/
+//////////////////////////////////////
+function getTitle($fileid) {
+	$fileid = mysql_real_escape_string($fileid);
+	return mysql_fetch_array(mysql_query("SELECT `title` FROM `files` WHERE `file_id`=$fileid"))[0];
+}
+
 
 
 //////////////////////////////////////
@@ -119,6 +131,18 @@ function saveFile($file_id,$content) {
 	return $success;
 }
 
+
+//////////////////////////////////////
+/*
+  creates an initial demo file to start the user off with
+*/
+//////////////////////////////////////
+/*function giveDemoFile() {
+	$userid = $_SESSION['userid'];
+	"INSERT INTO `files` (`owner_id`,`parent_id`,`title`,`created_date`,`content`)
+	(SELECT '$userid',0,'Demo file',now(),files.content)
+  	WHERE file_id = n";	
+}*/
 
 //////////////////////////////////////
 /*

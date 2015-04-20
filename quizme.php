@@ -30,13 +30,16 @@ else if($_POST['submitType']=='Make Quiz'){
 	//user selected make quiz
 	
 	$contentString = [count($POST['ids'])];
+	$titleString = [count($POST['ids'])];
 	$i = 0;
 	foreach ($_POST['ids'] as $id) {
 		$contentString[$i] = getFileContent($id)."<br />";
+		$titleString[$i] = getTitle($id)."<br />";
 		$i++;
 	}
 	//echo implode($contentString);
 	$output = htmlspecialchars(implode($contentString),ENT_QUOTES);
+	$titles = htmlspecialchars(implode($titleString),ENT_QUOTES);
 	
 	/*Build HTML page*/
 	echo "<!DOCTYPE html><HTML>";
@@ -46,7 +49,8 @@ else if($_POST['submitType']=='Make Quiz'){
 	  <link rel='stylesheet' type='text/css' href='style/frontend.css' /></HEAD>";
 	echo "<BODY>";
 	echo "<div id='multi-service-container' data-multicontent='$output'></div>";
-	echo file_get_contents('frontend_fullscreen.html');
+	$page = file_get_contents('frontend_fullscreen.html');
+	$page = str_replace("<!--TITLES GO HERE-->",$titles,$page);
 	echo "</BODY></HTML>";
 	
 }
