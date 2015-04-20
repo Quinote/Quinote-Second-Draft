@@ -79,6 +79,8 @@ if($login_error) {
 	//Display error page
 	echo "<HTML>";
 	echo file_get_contents('header.html');
+	echo "<HEAD>
+	  <link rel='stylesheet' type='text/css' href='style/index.css' /></HEAD>";
 	echo "<BODY>
 	<div style='width:80%; margin:10%;'><span style='color:#CD3333'>$message</span><br />";
 	echo file_get_contents('trylogin/login_error.html');

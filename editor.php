@@ -38,6 +38,8 @@ else if($_GET['id']) {
 //*******************
 echo "<HTML>";
 echo file_get_contents('header.html');
+echo "<HEAD>
+  <link rel='stylesheet' type='text/css' href='style/frontend.css' /></HEAD>";
 
 
 //echoes file info into data-* object

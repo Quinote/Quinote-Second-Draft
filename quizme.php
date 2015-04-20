@@ -41,6 +41,9 @@ else if($_POST['submitType']=='Make Quiz'){
 	/*Build HTML page*/
 	echo "<!DOCTYPE html><HTML>";
 	echo file_get_contents('header.html');
+	echo "<HEAD>
+	  <link rel='stylesheet' type='text/css' href='style/index.css' />
+	  <link rel='stylesheet' type='text/css' href='style/frontend.css' /></HEAD>";
 	echo "<BODY>";
 	echo "<div id='multi-service-container' data-multicontent='$output'></div>";
 	echo file_get_contents('frontend_fullscreen.html');
