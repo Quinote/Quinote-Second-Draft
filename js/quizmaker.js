@@ -94,15 +94,20 @@ function OptionList(numberMC, numberFITB, numberTF) {
 	};
 }
 
-function MultipleChoiceQuestion(identifier, answer, otherChoices) {
+function MultipleChoiceQuestion(element, identifier, answer, otherChoices, type) {
+	this.element = element;
 	this.identifier = identifier;
 	this.answer = answer;
 	this.otherChoices = otherChoices;
-	
+	this.type = type;
 
 	
 	this.getText = function() {
-		return "Which of the following is associated with \"" + this.identifier + "\"?";
+		if (type === "definition") {
+			return "Which of the following is associated with \"" + this.identifier + "\"?";
+		} else if (type === "list") {
+			return "Which of the following belongs to \"" + this.identifier + "\"?";
+		}
 	}
 	
 	this.getAllAnswers = function() {
@@ -115,7 +120,8 @@ function MultipleChoiceQuestion(identifier, answer, otherChoices) {
 	}
 }
 
-function TrueFalseQuestion(identifier, definition, answer) {
+function TrueFalseQuestion(element, identifier, definition, answer) {
+	this.element = element;
 	this.identifier = identifier;
 	this.definition = definition;
 	this.answer = answer;
@@ -131,7 +137,8 @@ function TrueFalseQuestion(identifier, definition, answer) {
 	this.text = "\"" + this.identifier + "\" is associated with " + "\"" + this.definition + "\"";
 }
 
-function FillInTheBlankQuestion(definitionString, startIndex, stopIndex, answer) {
+function FillInTheBlankQuestion(element, definitionString, startIndex, stopIndex, answer) {
+	this.element = element;
 	this.definitionString = definitionString;
 	this.answer = answer;
 	
@@ -169,26 +176,31 @@ function makeQuiz(parseResult, optionList) {
 	var numberOfQuestions = Math.min(parseResult.parsedElements.length, optionList.numberOfQuestions);
 	
 	var identifierPool = parseResult.getIdentifiers();
+	var mcIdentifierPool = mergeArrays(identifierPool, parseResult.getParents());
+	console.log(parseResult.getIdentifiers(), mergeArrays(parseResult.getIdentifiers(), parseResult.getParents()));
 	
 	if (identifierPool.length < numberOfQuestions) {
 		console.log("Error: not enough identifiers found to make " + numberOfQuestions + " questions");
 	}
-	
+	var count = 0;
 	for (var i = 0; i<optionList.numberMC; i++) {
 		var newQuestion = undefined;
 		
 		// call makeMultipleChoiceQuestion until non-null result is found
 		while (typeof newQuestion === "undefined") {
 			// abort if identifierPool becomes empty
-			if (identifierPool.length === 0) {
+			if (mcIdentifierPool.length === 0) {
 				console.log("Maximum questions fewer than requested");
 				return new Quiz(generatedQuestions);
 			}
 			
 			// set value of newQuestion
-			newQuestion = makeMultipleChoiceQuestion(identifierPool, parseResult);
+			newQuestion = makeMultipleChoiceQuestion(mcIdentifierPool, parseResult);
+			count++;
+			if (count > 1000) break;
 		}
 		generatedQuestions.push(newQuestion);
+		remove(identifierPool, newQuestion.element);
 	}
 	for (var i = 0; i<optionList.numberFITB; i++) {
 		var newQuestion = undefined;
@@ -203,6 +215,7 @@ function makeQuiz(parseResult, optionList) {
 			
 			// set value of newQuestion
 			newQuestion = makeFillInTheBlankQuestion(identifierPool, parseResult);
+			remove(mcIdentifierPool, newQuestion.element);
 		}
 		
 		generatedQuestions.push(newQuestion);
@@ -220,6 +233,7 @@ function makeQuiz(parseResult, optionList) {
 			
 			// set value of newQuestion
 			newQuestion = makeTrueFalseQuestion(identifierPool, parseResult);
+			remove(mcIdentifierPool, newQuestion.element);
 		}
 		
 		generatedQuestions.push(newQuestion);
@@ -235,7 +249,7 @@ function makeQuiz(parseResult, optionList) {
 /////////////////////////
 
 function makeMultipleChoiceQuestion(identifierPool, parseResult) {
-	var element, identifier, correctAnswer, otherChoices;
+	var element, identifier, correctAnswer, otherChoices, type;
 	
 	// remove one key or return if none remain
 	if (identifierPool.length === 0) {
@@ -243,33 +257,30 @@ function makeMultipleChoiceQuestion(identifierPool, parseResult) {
 		return undefined;
 	} else {
 		// select random element
-		element = removeRandomElement(identifierPool);
+		while (true) {
+			element = removeRandomElement(identifierPool);
+			if (element.definitions.length > 0) break;
+			if (element.subelements.length > 0) break;
+			if (identifierPool.length === 0) {
+				console.log("Error: out of keys from which to generate questions");
+				return undefined;
+			}
+		}
 		identifier = element.getIdentifier();
 	}
 
 	// select one correct answer from possible definitions
-	correctAnswer = randomElement(element.definitions);
+	if (element.definitions.length > 0) {
+		correctAnswer = randomElement(element.definitions);
+		type = "definition";
+	} else if (element.subelements.length > 0) {
+		correctAnswer = randomElement(element.subelements).getIdentifier();
+		type = "list";
+	}
 	
 	// select three incorrect answers from other possible definitions
 	otherChoices = [];
-	if (element instanceof DateElement) {
-		// copy events to new array
-		var eventPool = parseResult.events.slice();
-		// ensure no answer overlap
-		removeAll(eventPool, element.definitions);
-		
-		for (var i=0; i<3; i++) {
-			console.log(eventPool.length);
-			if (eventPool.length === 0) {
-				console.log("Insufficient input to produce date question.");
-				return undefined;
-			}
-			// select and remove random wrong answer (to avoid repeats)
-			var event = removeRandomElement(eventPool);
-			
-			otherChoices.push(event);
-		}
-	} else if (element instanceof IdentifierElement) {
+	if (type === "definition") {
 		// copy definitions to new array
 		var definitionPool = parseResult.definitions.slice();
 		// ensure no answer overlap
@@ -285,9 +296,27 @@ function makeMultipleChoiceQuestion(identifierPool, parseResult) {
 			
 			otherChoices.push(definition);
 		}
+	} else if (type === "list") {
+		var subelementPool = element.getSubelements();
+		subelementPool.push(element);
+		var elementPool = parseResult.parsedElements.slice();
+		console.log(elementPool, subelementPool);
+		
+		removeAll(elementPool, subelementPool);
+		
+		for (var i=0; i<3; i++) {
+			if (elementPool.length === 0) {
+				console.log("Insufficient input to produce identifier question.");
+				return undefined;
+			}
+			// select random wrong answer
+			var element = removeRandomElement(elementPool);
+			
+			otherChoices.push(element.getIdentifier());
+		}
 	}
 	
-	return new MultipleChoiceQuestion(identifier, correctAnswer, otherChoices);
+	return new MultipleChoiceQuestion(element, identifier, correctAnswer, otherChoices, type);
 }
 
 function makeTrueFalseQuestion(identifierPool, parseResult) {
@@ -321,7 +350,7 @@ function makeTrueFalseQuestion(identifierPool, parseResult) {
 		definition = randomElement(definitionPool);
 	}
 	
-	return new TrueFalseQuestion(identifier, definition, answer);
+	return new TrueFalseQuestion(element, identifier, definition, answer);
 }
 
 function makeFillInTheBlankQuestion(identifierPool, parseResult) {
@@ -364,7 +393,13 @@ function makeFillInTheBlankQuestion(identifierPool, parseResult) {
 	definitionString = definitionString.substring(0, startIndex) 
 		+ blankString + definitionString.substring(stopIndex);
 	
-	return new FillInTheBlankQuestion(definitionString, startIndex, stopIndex, answer);
+	return new FillInTheBlankQuestion(element, definitionString, startIndex, stopIndex, answer);
+}
+
+function remove(array, element) {
+	while (array.indexOf(element) > 0) {
+		array.splice(array.indexOf(element), 1);
+	}
 }
 
 function removeAll(targetArray, elementsToRemove) {
@@ -403,7 +438,18 @@ function removeRandomElement(array) {
 	return array.splice(randomIndex(array), 1)[0];
 }
 
-
+function mergeArrays(arr1, arr2) {
+	// merge the contents of two arrays, removing duplicates
+	
+	var ret = arr1.slice();
+	
+	for (var i in arr2) {
+		if (ret.indexOf(arr2[i]) === -1) {
+			ret.push(arr2[i]);
+		}
+	}
+	return ret;
+}
 
 
 
