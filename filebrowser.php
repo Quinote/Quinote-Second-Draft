@@ -103,7 +103,7 @@ else {
 			$id=$row['file_id'];
 			//$filemeta = $id .', '. $row['parent_id'].', ' . $row['title'];
 			$title = $row['title'];
-			$link = "<a href='editor.php?id=$id&title=$title'>$title</a>";
+			$link = "<a href='editor.php?id=$id&title=$title' class='user-file'>$title</a>";
 			$checkbox = "<input type='checkbox' name='ids[]' value='$id' />";
 			echo "<tr><td>$checkbox</td><td>$link</td></tr>";
 		}
