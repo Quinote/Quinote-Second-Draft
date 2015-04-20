@@ -55,6 +55,9 @@ var editorMain = function() {
                 //console.log( {html: ed.getContent({format: 'raw'})} );
                 //console.log( {html: ed.getContent()} );
             });
+            $.each(['paste', 'cut', 'keyup', 'undo', 'redo'], function(index, value) {
+                ed.on(value, changedListener);
+            });
         }
     });
 
@@ -195,8 +198,6 @@ var editorMain = function() {
     //$('#zoomin')
     //        ('maximize');
 
-    attachChangedListener();
-    $('#save_btn').on('click', attachChangedListener);
     //$('#expand').click(attachRandomListener);
     //$('#deindent').click(detachRandomListener);
 };
