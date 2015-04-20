@@ -60,13 +60,14 @@ var editorMain = function() {
 
     var handleIndent = function(editorInstance) {
         var sel = editorInstance.selection;
+        //console.log(sel.getSel());
         if (sel.isCollapsed()) {
             sel = sel.getSel();
         } else {
             var rng = sel.getRng();
-            sel = {baseNode: rng.startContainer, baseOffset: rng.startOffset};
+            sel = {anchorNode: rng.startContainer, baseOffset: rng.startOffset};
         }
-        var node = sel.baseNode;
+        var node = sel.anchorNode;
 
         if (node.nodeName === "#text") {
             if (node.parentNode.nodeName === "LI") {
@@ -95,7 +96,7 @@ var editorMain = function() {
                 var offset = 0;
                 var i = 0;
                 var innerHTML = node.innerHTML;
-                while (offset < sel.baseOffset - 1/* && i < innerHTML.length*/) {
+                while (offset < sel.anchorOffset - 1/* && i < innerHTML.length*/) {
                     if (innerHTML.substring(i, i+4) === '<br>') {
                         offset++;
                         i += 4;
@@ -121,7 +122,8 @@ var editorMain = function() {
                 //console.log(i);
                 //console.log(innerHTML);
                 //console.log(innerHTML.substring(i-1, i+4));
-                if (innerHTML.substring(i, i+4) !== '<br>' && innerHTML.substring(i, i+4) === '<ul>') {
+                console.log(innerHTML.substring(i-8, i+4));
+                if (innerHTML.substring(i, i+4) !== '<br>' && innerHTML.substring(i, i+5) !== '</ul>') {
                     editorInstance.execCommand('InsertUnorderedList');
                 } else if (innerHTML.substring(i, i+4) === '<br>' && innerHTML.substring(i-4, i) !== '<br>') {
                     editorInstance.execCommand('InsertUnorderedList');
@@ -240,8 +242,11 @@ var getEditorHtml = function() {
      * The loop serves to both get rid of unnecessary line breaks
      * and to move nested <ul> elements to the end of the previous <li>s,
      * as this is proper HTML formatting and the parser's expected format.
+     *
+     * It now also gets rid of other formatting stuff unnecessary for parsing.
      */
     var data = tinyMCE.activeEditor.getContent();
+    console.log(data);
     var i = 0;
     var listLevel = 0;
     var formatted = '';
@@ -250,23 +255,34 @@ var getEditorHtml = function() {
         if (c === '\n') {
             i++;
         } else if (c === '<') {
-            if (i+10 < data.length && data.substring(i, i+11) === '<br />\n<ul>') {
+            if (i + 11 <= data.length && data.substring(i, i + 11) === '<br />\n<ul>') {
                 formatted += '<ul>';
                 listLevel++;
                 i += 11;
-            } else if (i+9 < data.length && data.substring(i, i+10) === '</li>\n<ul>') {
+            } else if (i + 10 <= data.length && data.substring(i, i + 10) === '</li>\n<ul>') {
                 formatted += '<ul>';
                 listLevel++;
                 i += 10;
-            } else if (i+8 < data.length && data.substring(i, i+9) === '<li></li>') {
+            } else if (i + 9 <= data.length && data.substring(i, i + 9) === '<li></li>') {
                 i += 9;
-            } else if (i+5 < data.length && data.substring(i, i+5) === '</ul>') {
+            } else if (i + 5 <= data.length && data.substring(i, i + 5) === '</ul>') {
                 formatted += '</ul>';
                 if (listLevel > 1) {
                     formatted += '</li>';
                 }
                 listLevel--;
                 i += 5;
+            } else if (i + 4 <= data.length) { // tags to skip for parsing
+                var tag = data.substring(i, i+4);
+                if (-1 !== $.inArray(tag, ['<em>', '</em', '<spa', '</sp', '<str', '</st'])) {
+                    while (data.charAt(i) !== '>') {
+                        i++;
+                    }
+                    i++;
+                } else {
+                    formatted += c;
+                    i++;
+                }
             } else {
                 formatted += c;
                 i++;

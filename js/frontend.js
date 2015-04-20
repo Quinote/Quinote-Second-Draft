@@ -474,7 +474,7 @@ $(function(){
 	//	scroll: true
 	//});
 	$("#editorspace").draggable({
-		handle: "#mceu_8-body",
+		handle: "#mceu_8, #editorToolbar",
 		containment: "#pagecontainer",
 		scroll: true
 	});

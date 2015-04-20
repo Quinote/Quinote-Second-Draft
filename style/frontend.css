@@ -152,7 +152,8 @@ body {
 }
 #editorToolbar{
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
-	height: 52px;
+	height: 15px;
+	/*height: 52px;*/
 	overflow: hidden;
 	width:210mm;
 }
@@ -387,9 +388,10 @@ ol {
 
 /* EDITOR TOOLBAR STUFF ***TEMPORARY*** */
 
-#mceu_13 {
+#mceu_6 {
 	background-image: none !important;
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125) !important;
+	border: none !important;
 }
 .mce-toolbar-grp {
 	background-image: none !important;
