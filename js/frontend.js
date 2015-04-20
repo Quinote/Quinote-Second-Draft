@@ -33,8 +33,19 @@ $(document).ready(function() {
 	$('#buttonGenerateQuiz').click(function() { // GENERATE QUIZ
 		
 		//retrieve and parse text
-		// NOTE: new text editor = NEW API CALL
-		parseResult = parseInput();
+		// input depends on context (editor vs quiz-only)
+		if (typeof QUIZ_ONLY_FLAG === "undefined") {
+			parseResult = parseInput(getEditorHtml());
+		} else {
+			// TODO: SET the correct name of target here to get input?
+			var text = $("#target").html();
+			
+			// not sure why <br />s are becoming <br>s, but here's a fix
+			text = text.replace(/<br>/g, "<br />");
+			
+			parseResult = parseInput(text);
+			
+		}
 		
 		// check to make sure notes are of sufficient size
 		if (parseResult.identifiers.length < 4) {
@@ -378,7 +389,7 @@ function showCorrect(){
 	$('#one').toggle;
 	var oneAns=document.getElementById("one");
 	var aText=" is correct!";
-	oneAns.innerHTML= currentQuestion.answer + aText;
+	oneAns.innerHTML= "\"" + currentQuestion.answer + "\"" + aText;
 	document.getElementById("buttonNext").style.display="";
 }
 function showIncorrect(){

@@ -66,6 +66,17 @@ function ParseResult(parsedElements, identifiers, definitions, aliases, nameSet,
 		return identifierPool;
 	}
 	
+	this.getParents = function() {
+		var parentPool = [];
+		for (var i=0; i<this.parsedElements.length; i++) {
+			var element = this.parsedElements[i];
+			if (element.definitions.length === 0 && element.subelements.length > 0) {
+				parentPool.push(element);
+			}
+		}
+		return parentPool;
+	}
+	
 	this.getElementByKey = function (key) {
 		/* given an identifier string, try to return the Element 
 		   associated with that identifier */
@@ -110,6 +121,17 @@ function IdentifierElement (identifier) {
 	this.getIdentifier = function(identifier) {
 		return this.identifier;
 	}
+	this.getSubelements = function() {
+		if (this.subelements.length === 0) {
+			return [];
+		} else {
+			var ret = this.subelements;
+			for (var i=0; i<this.subelements.length; i++) {
+				ret = mergeArrays(ret, this.subelements[i].getSubelements());
+			}
+			return ret;
+		}
+	}
 }
 
 // deprecated; currently here to avoid breaking code in other locations
@@ -124,7 +146,7 @@ function DateElement () {}
 //  Main access method //
 /////////////////////////
 
-function parseInput() {
+function parseInput(html) {
 	/* Given the html input, first assign hierarchy based on indent
 	levels then parse according to parse rules. Returns a ParseResult
 	object containing the results of the final parsing function
@@ -138,8 +160,8 @@ function parseInput() {
 	 * reductiveSplit() is currently located in editor.js
 	 */
 	
-	
-	var html = getEditorHtml();
+	// now externally defined
+	//var html = getEditorHtml();
 	
 	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
@@ -147,14 +169,17 @@ function parseInput() {
 	// replace newlines with <br> tags
 	html = html.replace(/\n+/g, "<br>");
 	
+	// replace &nbsp;s with " "
+	html = html.replace(/&nbsp;/g, " ");
+	
 	// quick-fix for endlist/linebreak issue?
-	html = html.replace("<\/ul>", "<\/ul><br />");
+	// this causes nested-list issues
+	//html = html.replace(/<\/ul>/g, "</ul><br />");
+	html = fixLists(html);
+	// This should NOT make it into production code
 
-	var elements = reductiveSplit(html, "<br />");
+	var elements = reductiveSplit(html, "<br />");	
 	
-	console.log(elements);
-	
-
 	// [temp?] fix for issue of mid-list <br>s being inserted
 	// essentially, re-merge erroneously separated lists
 	var numElements = elements.length-1;
@@ -179,7 +204,7 @@ function parseInput() {
 			
 			var startIndex = elements[i].indexOf("<ul>");
 			
-			var listContents = getListContents( elements[i], startIndex);
+			//var listContents = getListContents( elements[i], startIndex);
 			
 			// TODO WHAT WAS I DOING HERE? ^^^^
 			
@@ -207,9 +232,11 @@ function parseInput() {
 		var parsedElement = parseRawElement(rawElements[i]);
 		
 		// check if element already contained in sidebar representation		
-		if (parser_representedElements.indexOf(parsedElement.getIdentifier()) === -1) {
-			parser_parsedElements.push(parsedElement);
-		}
+		//if (parser_representedElements.indexOf(parsedElement.getIdentifier()) === -1) {
+		parser_parsedElements.push(parsedElement);
+		
+		parser_parsedElements = mergeArrays(parser_parsedElements, parsedElement.getSubelements());
+		//}
 		
 		updateRepresentedElements(parsedElement);
 	}
@@ -221,6 +248,8 @@ function parseInput() {
 	
 	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_nameSet, parser_other);
 					
+	console.log(parseResult);
+	
 	return parseResult;
 }
 
@@ -231,7 +260,6 @@ function readLists(element) {
 	
 	// strip off top-level identifier/definition
 	var contents = element.split(/<ul>(.+)/);
-	console.log(contents);
 	
 	var newElement = new RawElement(contents[0]);
 	
@@ -257,10 +285,12 @@ function processListElements(contents) {
 	var startIndex = 0;
 	var stopIndex = 0;
 	var subelements = [];
+	var count = 0; 
 	while (stopIndex < contents.length) {
 		
-		console.log(stopIndex, contents.length);
-		
+		count++;
+		if (count > 1000) break;
+				
 		if (contents.substring(stopIndex, stopIndex + 4) === "<ul>") {
 			
 			var pointer = stopIndex + 1;
@@ -269,6 +299,8 @@ function processListElements(contents) {
 			
 			while (openLists > closedLists) {
 				pointer++;
+				count++;
+				if (count > 1000) break;
 				if (contents.substring(pointer, pointer + 4) === "<ul>") {
 					openLists++;
 				} else if (contents.substring(pointer, pointer + 5) === "</ul>") {
@@ -278,8 +310,8 @@ function processListElements(contents) {
 			
 			
 			subelements.push(readLists(contents.substring(startIndex, pointer)));
-			startIndex = pointer;
-			stopIndex = pointer;
+			startIndex = pointer + 5;
+			stopIndex = pointer + 5;
 			
 		} else if (contents.substring(stopIndex, stopIndex + 4) === "<li>") {
 			startIndex = stopIndex + 4;
@@ -288,12 +320,11 @@ function processListElements(contents) {
 			var current = contents.substring(startIndex, stopIndex);
 			if (!isWhitespace(current)) {
 				subelements.push(new RawElement(contents.substring(startIndex, stopIndex)));
-				console.log(subelements);
 			}
 			startIndex = stopIndex + 5;
 			stopIndex = stopIndex + 5;
 		} else if (contents.substring(stopIndex, stopIndex + 5) === "</ul>") {
-			break;
+			//break;
 		} else {
 			stopIndex++;
 		}
@@ -382,7 +413,7 @@ function parseRawElement(rawElement) {
 	}
 	
 	// test if definition present
-	if (components.length === 2 && components[1] != "") {
+	if (components.length === 2 && !isWhitespace(components[1])) {
 		// split definitions by semicolon
 		var elementDefinitions = components[1].split(";");
 		for (i in elementDefinitions) {
@@ -480,6 +511,8 @@ function resetState() {
 function isWhitespace(string) {
 	// test to see if a string consists *entirely* of whitespace and/or U+200B
 	
+	if (string.length === 0) return true;
+	
 	return /^(\s|\u200B)+$/.test(string);
 }
 
@@ -497,6 +530,25 @@ function getListContents(str, startIndex) {
 	}
 	return str.substring(startIndex, stopIndex);
 }
+
+function fixLists(str) {
+	var pointer = 0;
+	var openLists = 0;
+	var closedLists = 0;
+	while (pointer < str.length) {
+		if (str.substring(pointer, pointer + 4) === "<ul>") {
+			openLists++;
+		} else if (str.substring(pointer, pointer + 5) === "</ul>") {
+			closedLists++;
+			if (openLists === closedLists) {
+				str = str.substring(0, pointer+5) + "<br />" + str.substring(pointer+5);
+			}
+		}
+		pointer++;
+	}
+	return str;
+}
+			
 
 function mergeArrays(arr1, arr2) {
 	// merge the contents of two arrays, removing duplicates

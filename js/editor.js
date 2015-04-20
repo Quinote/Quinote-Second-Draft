@@ -408,9 +408,13 @@ function buildSublist(elements, indentLevel, representedIdentifiers) {
 
 function shorten(identifier) {
 	// ellipsis-truncate an identifier if it exceeds 20 chars
+	var ret = identifier;
 	if (identifier.length > 30) {
 		contents = identifier.split(" ");
-		identifier = contents[0] + " " + contents[1] + " ... " + contents[contents.length-1];
+		ret = contents[0] + " " + contents[1] + " ... " + contents[contents.length-1];
+	}
+	if (ret.length < identifier.length) {
+		return ret;
 	}
 	return identifier;
 }
