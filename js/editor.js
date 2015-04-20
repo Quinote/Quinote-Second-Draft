@@ -27,7 +27,7 @@ var editorMain = function() {
         //convert_newlines_to_brs: true,
         // ------------
 
-        toolbar: 'undo redo | bold underline italic strikethrough',
+        toolbar: 'undo redo | bold underline italic strikethrough', // | fontsizeselect |  backcolorpicker forecolorpicker | removeformat
         //toolbar: false,
         forced_root_block: false,
         invalid_elements: 'div',
@@ -72,18 +72,21 @@ var editorMain = function() {
         }
         var node = sel.anchorNode;
 
-        if (node.nodeName === "#text") {
-            if (node.parentNode.nodeName === "LI") {
-                node = node.parentNode;
-            }
-        }// else if (node.nodeName === '')
+
+        while (node.parentNode !== null && -1 !== $.inArray(node.parentNode.nodeName, ['EM', 'STRONG', 'SPAN', '#text'])) {
+            node = node.parentNode;
+        }
+        if (node.parentNode !== null && node.parentNode.nodeName === "LI") {
+            node = node.parentNode;
+        }
 
         if (node.nodeName === "LI" && node.previousSibling !== null) { // list item (and not first)
             editorInstance.execCommand('Indent');
         } else { // body item, time for magic
             var prev = node.previousSibling;
             console.log(sel);
-            if (node.nodeName === '#text' && prev === null) {
+            console.log(node.nodeName);
+            if ($.inArray(node.nodeName, ['EM', 'STRONG', 'SPAN', '#text']) && prev === null) {
                 console.log("OPTION 1");
                 //editorInstance.execCommand('InsertUnorderedList');
             } else if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
@@ -154,7 +157,23 @@ var editorMain = function() {
     };
 
     var handleOutdent = function(editorInstance) {
-        editorInstance.execCommand('Outdent');
+        var sel = editorInstance.selection;
+        if (sel.isCollapsed()) {
+            sel = sel.getSel();
+        } else {
+            var rng = sel.getRng();
+            sel = {anchorNode: rng.startContainer, baseOffset: rng.startOffset};
+        }
+        console.log(sel);
+        var node = sel.anchorNode;
+
+        if (node.nodeName === "#text" && node.parentNode.nodeName === "LI") {
+            node = node.parentNode;
+        };
+
+        if (node.nodeName === 'LI') {
+            editorInstance.execCommand('Outdent');
+        }
     };
 
     //console.log(editor);

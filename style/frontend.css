@@ -61,7 +61,7 @@ body {
 }
 .dialog {
 	position: fixed;
-	top: 10%;
+	top: 15%;
 	left: 25%;
 	width: 50%;
 	max-width: 630px;
@@ -148,7 +148,7 @@ body {
 }
 #toolbar-title {
 	text-align: center;
-	font-size: 10px;
+	font-size: 12px;
 }
 #editorToolbar{
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
