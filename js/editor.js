@@ -195,7 +195,7 @@ var editorMain = function() {
     //$('#zoomin')
     //        ('maximize');
 
-
+    attachChangedListener();
     $('#save_btn').on('click', attachChangedListener);
     //$('#expand').click(attachRandomListener);
     //$('#deindent').click(detachRandomListener);
