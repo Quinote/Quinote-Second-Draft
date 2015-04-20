@@ -167,7 +167,7 @@ function parseInput(html) {
 	html = html.replace(/\u200B+/g, "");
 	
 	// replace newlines with <br> tags
-	html = html.replace(/\n+/g, "<br>");
+	html = html.replace(/\n+/g, "<br />");
 	
 	// replace &nbsp;s with " "
 	html = html.replace(/&nbsp;/g, " ");
