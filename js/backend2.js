@@ -51,10 +51,12 @@ $(function() {
       	return false;
       	});
       	
-      	console.log('doc ready');
       	$("#newFileMaker").click(function() {
-      		console.log('new file clicked');
-      		$( "#newFileMakerDiv" ).slideToggle( "slow" );
+      			console.log('new file clicked');
+      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
+      	});
+      	$("#closeDiv").click(function() {
+      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
       	});
 });
 
