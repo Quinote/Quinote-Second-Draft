@@ -468,8 +468,13 @@ function completeQuiz(){
 
 
 $(function(){
+	//$("#editorspace").draggable({
+	//	handle: "#editorToolbar",
+	//	containment: "#pagecontainer",
+	//	scroll: true
+	//});
 	$("#editorspace").draggable({
-		handle: "#editorToolbar",
+		handle: "#mceu_8-body",
 		containment: "#pagecontainer",
 		scroll: true
 	});

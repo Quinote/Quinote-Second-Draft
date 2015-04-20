@@ -40,7 +40,7 @@ body {
 	min-height: 205px;
 }
 .summary-wrapper{
-	max-height: 300px;
+	max-height: 200px;
 	overflow-y: auto;
 }
 #notes-list{
@@ -108,7 +108,7 @@ body {
     background-color: #FFFFFF;
     border: 1px solid #dbedd9;
     left: 35px;
-    top: 65px;
+    top: 15px;
 }
 #sidebar:before {
 	box-shadow: 0 0 160px #000;
@@ -130,6 +130,7 @@ body {
 }
 #editorspace {
 	width:210mm;
+	/*height:350px;*/
 	float: right;
 	background-color: #FFFFFF;
 	right: 25px;
@@ -160,7 +161,7 @@ body {
 	vertical-align: middle;
 }
 #editor {
-	height:150mm; 
+	height:150mm;
 	margin-left:auto; 
 	margin-right:auto;
 	overflow-y: scroll;
@@ -382,4 +383,19 @@ footer {
 }
 ol {
 	padding-left: 14px;
+}
+
+/* EDITOR TOOLBAR STUFF ***TEMPORARY*** */
+
+#mceu_13 {
+	background-image: none !important;
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125) !important;
+}
+.mce-toolbar-grp {
+	background-image: none !important;
+	background: linear-gradient(to right, #4FA542, #84B92F, #94C125) !important;
+}
+
+.mce-path {
+	display: none !important;
 }

@@ -15,8 +15,9 @@
 var editorMain = function() {
     tinymce.EditorManager.init({
         selector: 'textarea',
+        height: 350,
         menubar: false,
-        statusbar: false,
+        statusbar: true,
         auto_focus : 'editor_div',
         paste_text_sticky_default: true,
         paste_text_sticky: true,
@@ -26,6 +27,7 @@ var editorMain = function() {
         //convert_newlines_to_brs: true,
         // ------------
 
+        toolbar: 'undo redo | bold underline italic strikethrough',
         //toolbar: false,
         forced_root_block: false,
         invalid_elements: 'div',
@@ -57,7 +59,13 @@ var editorMain = function() {
     });
 
     var handleIndent = function(editorInstance) {
-        var sel = editorInstance.selection.getSel();
+        var sel = editorInstance.selection;
+        if (sel.isCollapsed()) {
+            sel = sel.getSel();
+        } else {
+            var rng = sel.getRng();
+            sel = {baseNode: rng.startContainer, baseOffset: rng.startOffset};
+        }
         var node = sel.baseNode;
 
         if (node.nodeName === "#text") {
@@ -70,23 +78,31 @@ var editorMain = function() {
             editorInstance.execCommand('Indent');
         } else { // body item, time for magic
             var prev = node.previousSibling;
-            //console.log(sel);
-            if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
+            console.log(sel);
+            if (node.nodeName === '#text' && prev === null) {
+                console.log("OPTION 1");
+                //editorInstance.execCommand('InsertUnorderedList');
+            } else if (prev !== null && prev.previousSibling !== null && prev.previousSibling.nodeName !== "BR") {
+                console.log("OPTION 2");
                 editorInstance.execCommand('InsertUnorderedList');
             } else if (node.nodeName === '#text' && node.previousSibling.nodeName === 'UL') {
+                console.log("OPTION 3");
                 editorInstance.execCommand('InsertUnorderedList');
             } else if (node.nodeName === 'BODY' && sel.baseOffset > 1) {
+                console.log("OPTION 4");
                 // make sure cursor is below an actual entry (via some DOM parsing magic)
+                console.log(sel.baseOffset);
                 var offset = 0;
                 var i = 0;
                 var innerHTML = node.innerHTML;
-                while (offset < sel.baseOffset - 2 && i < innerHTML.length) {
+                while (offset < sel.baseOffset - 1/* && i < innerHTML.length*/) {
                     if (innerHTML.substring(i, i+4) === '<br>') {
                         offset++;
                         i += 4;
                     } else if (innerHTML.substring(i, i+4) === '<ul>') {
                         i += 4;
                         while (innerHTML.substring(i, i+5) !== '</ul>' && i < innerHTML.length) {
+                            console.log("LOOPING");
                             i++;
                         }
                         offset++;
@@ -99,12 +115,28 @@ var editorMain = function() {
                     }
                 }
 
-                console.log(sel);
-                console.log(['Offset = ' + offset, innerHTML.substring(i, i+4)]);
-                if (innerHTML.substring(i, i+4) !== '<br>') {
+                //console.log(sel);
+                //console.log(['Offset = ' + offset, innerHTML.substring(i, i+4)]);
+                //editorInstance.execCommand('InsertUnorderedList');
+                //console.log(i);
+                //console.log(innerHTML);
+                //console.log(innerHTML.substring(i-1, i+4));
+                if (innerHTML.substring(i, i+4) !== '<br>' && innerHTML.substring(i, i+4) === '<ul>') {
                     editorInstance.execCommand('InsertUnorderedList');
+                } else if (innerHTML.substring(i, i+4) === '<br>' && innerHTML.substring(i-4, i) !== '<br>') {
+                    editorInstance.execCommand('InsertUnorderedList');
+                } else if (i === innerHTML.length - 4
+                    && innerHTML.substring(i-4, i+4) === '<br><br>'
+                    && innerHTML.substring(i-8, i-4) !== '<br>') {
+                    editorInstance.execCommand('InsertUnorderedList');
+                } else {
+                    console.log(innerHTML);
+                    console.log('Previous substring = ' + innerHTML.substring(i-8, i));
+                    console.log(i);
+                    console.log(innerHTML.length);
                 }
             } else {
+                console.log("Do Nothing.");
 
                 //console.log(editorInstance.getContent());
                 //console.log(editorInstance.selection.getSel());
@@ -226,6 +258,8 @@ var getEditorHtml = function() {
                 formatted += '<ul>';
                 listLevel++;
                 i += 10;
+            } else if (i+8 < data.length && data.substring(i, i+9) === '<li></li>') {
+                i += 9;
             } else if (i+5 < data.length && data.substring(i, i+5) === '</ul>') {
                 formatted += '</ul>';
                 if (listLevel > 1) {
