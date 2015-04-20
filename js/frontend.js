@@ -38,7 +38,10 @@ $(document).ready(function() {
 			parseResult = parseInput(getEditorHtml());
 		} else {
 			// TODO: SET the correct name of target here to get input?
-			var text = $("#target").html();
+			var container = $('#multi-service-container');
+ 			var text = container.data('multicontent');
+			
+			//var text = $("#target").html();
 			
 			// not sure why <br />s are becoming <br>s, but here's a fix
 			text = text.replace(/<br>/g, "<br />");

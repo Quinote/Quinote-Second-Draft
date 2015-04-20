@@ -1,4 +1,3 @@
-
 <div id="page">
 	<div id="header">
 <!-- 		<img width="5%" height="50px"  src="style/svg/menu.svg"> -->
@@ -10,8 +9,18 @@
 				<a href='filebrowser.php'><img width="25%" height="50px"  src="style/svg/home.svg"></a>
 			</form>
 			<form class="nav-buttons">
-				<img width="25%" height="50px"  src="style/svg/new.svg">
+				<img width="25%" height="50px"  src="style/svg/new.svg" id="newFileMaker" style='cursor:copy'>
 			</form>
+			
+			<div id="newFileMakerDiv">
+                				<form id='filemaker' action='editor.php' method='post' target='_blank'>
+                                    <input type='button' class='button quiButton' id='closeDiv' value='X' style='float:right' /><br />
+                                    <b>Title: </b><input type='text' name='title' value='Untitled' />
+                                    <input type='hidden' name='actionType' value='make' />
+                        			<input class='button quiButton' id='openQuinote' type='submit' value='Go' />
+                                </form>
+                        </div>
+			
 			<form class="nav-buttons">
 				<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
 				<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
@@ -210,5 +219,13 @@
 		$("#qLengthTF").val(0);
 		$("#qLengthFB").val(0);
 		$("#qLength").val(0);
+		
+		$("#newFileMaker").click(function() {
+      			console.log('new file clicked');
+      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
+      		});
+      		$("#closeDiv").click(function() {
+      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
+      		});
 	});
 	</script>

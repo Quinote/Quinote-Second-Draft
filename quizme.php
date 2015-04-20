@@ -36,7 +36,7 @@ else if($_POST['submitType']=='Make Quiz'){
 		$i++;
 	}
 	//echo implode($contentString);
-	$output = implode($contentString);
+	$output = htmlspecialchars(implode($contentString),ENT_QUOTES);
 	
 	/*Build HTML page*/
 	echo "<!DOCTYPE html><HTML>";

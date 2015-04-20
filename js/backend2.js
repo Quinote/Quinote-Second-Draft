@@ -50,6 +50,12 @@ $(function() {
       	
       	return false;
       	});
+      	
+      	console.log('doc ready');
+      	$("#newFileMaker").click(function() {
+      		console.log('new file clicked');
+      		$( "#newFileMakerDiv" ).slideToggle( "slow" );
+      	});
 });
 
 /**************************************/
@@ -70,9 +76,3 @@ function validateFileLibForm() {
 	}
 	return true;
 }
-    
-$(document).ready( function() {
-	$( "#newFileLink" ).click(function() {
-              $( "#newFileMakerDiv" ).slideToggle( "slow" );
-            });
-});
