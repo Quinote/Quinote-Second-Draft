@@ -146,6 +146,9 @@ function parseInput() {
 	
 	// replace newlines with <br> tags
 	html = html.replace(/\n+/g, "<br>");
+	
+	// quick-fix for endlist/linebreak issue?
+	//html = html.replace("<\\ul>", "<\\ul><br />");
 
 	var elements = reductiveSplit(html, "<br />");
 	console.log(html);
@@ -172,6 +175,12 @@ function parseInput() {
 	for (var i=0; i<elements.length; i++) {
 		// recursively parse if element contains a list
 		if (elements[i].indexOf("<ul>") !== -1 ) {
+			
+			var startIndex = elements[i].indexOf("<ul>");
+			
+			var listContents = getListContents( elements[i], startIndex);
+			
+			// TODO WHAT WAS I DOING HERE? ^^^^
 			
 			// strip off proceeding element, if present
 			var proceedingElement = elements[i].substring(elements[i].lastIndexOf("</ul>") + 5);
@@ -244,7 +253,7 @@ function processListElements(contents) {
 	// given a string representing the contents of a list, recursively
 	// process the contents of that list as RawElements
 	
-	 // string leading and trailing <li> and </li>
+	 // strip leading and trailing <li> and </li>
 	contents = contents.substring(4, contents.length-5);
 	
 	
@@ -277,13 +286,17 @@ function processListElements(contents) {
 		} else if (contents.substring(stopIndex, stopIndex + 4) === "<li>") {
 			startIndex = stopIndex + 4;
 			stopIndex = stopIndex + 4;
-		} else if (contents.substring(stopIndex, stopIndex + 5 === "</li>")) {
+		} else if (contents.substring(stopIndex, stopIndex + 5) === "</li>") {
 			var current = contents.substring(startIndex, stopIndex);
 			if (!isWhitespace(current)) {
 				subelements.push(new RawElement(contents.substring(startIndex, stopIndex)));
 			}
 			startIndex = stopIndex + 5;
 			stopIndex = stopIndex + 5;
+		} else if (contents.substring(stopIndex, stopIndex + 5) === "</ul>") {
+			break;
+		} else {
+			stopIndex++;
 		}
 	}
 	
@@ -471,6 +484,21 @@ function isWhitespace(string) {
 	return /^(\s|\u200B)+$/.test(string);
 }
 
+function getListContents(str, startIndex) {
+	var stopIndex = startIndex;
+	var openLists = 1;
+	var closedLists = 0;
+	while (openLists > closedLists) {
+		stopIndex++;
+		if (str.substring(stopIndex, stopIndex + 4) === "<ul>") {
+			openLists++;
+		} else if (str.substring(stopIndex, stopIndex + 5) === "</ul>") {
+			closedLists++;
+		}
+	}
+	return str.substring(startIndex, stopIndex);
+}
+
 function mergeArrays(arr1, arr2) {
 	// merge the contents of two arrays, removing duplicates
 	
@@ -483,4 +511,3 @@ function mergeArrays(arr1, arr2) {
 	}
 	return ret;
 }
-
