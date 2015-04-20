@@ -87,8 +87,6 @@ $(document).ready(function() {
 		}
 		///////////////////////////////////////////////////////
 
-		$('#save_btn').on('click', attachChangedListener);
-
 	});
 	
 	$('#buttonCloseQuiz').click(function(){

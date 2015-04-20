@@ -226,6 +226,7 @@ var changedListener = function() {
     clearTimeout();
     $('#save-message').html(' - Edited');
     detachChangedListener();
+    $('#save_btn').on('click', attachChangedListener);
 };
 var attachChangedListener = function() {
     attachContentChangedListener(changedListener);
