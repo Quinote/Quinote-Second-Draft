@@ -166,22 +166,22 @@ var editorMain = function() {
     // Font, Font Size, Color
 
 
-    var toolbarHookups = {
-        '#bold' : 'bold',
-        '#underline' : 'underline',
-        '#italic' : 'italic',
-        '#strike' : 'strikethrough',
-        '#undo' : 'undo',
-        '#redo' : 'redo'
-        //'#numlist' : 'numlist',
-        //'#bullist' : 'Bullist',
-        //'#deindent' : 'Outdent'
-    };
-    $.each(toolbarHookups, function(key, value) {
-        $(key).click(function() {
-            tinyMCE.activeEditor.execCommand(value);
-        });
-    });
+    //var toolbarHookups = {
+    //    '#bold' : 'bold',
+    //    '#underline' : 'underline',
+    //    '#italic' : 'italic',
+    //    '#strike' : 'strikethrough',
+    //    '#undo' : 'undo',
+    //    '#redo' : 'redo'
+    //    //'#numlist' : 'numlist',
+    //    //'#bullist' : 'Bullist',
+    //    //'#deindent' : 'Outdent'
+    //};
+    //$.each(toolbarHookups, function(key, value) {
+    //    $(key).click(function() {
+    //        tinyMCE.activeEditor.execCommand(value);
+    //    });
+    //});
 
 
     //$('#numlist')
@@ -196,6 +196,7 @@ var editorMain = function() {
     //        ('maximize');
 
 
+    $('#save_btn').on('click', attachChangedListener);
     //$('#expand').click(attachRandomListener);
     //$('#deindent').click(detachRandomListener);
 };
