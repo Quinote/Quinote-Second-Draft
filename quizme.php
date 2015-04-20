@@ -32,10 +32,20 @@ else if($_POST['submitType']=='Make Quiz'){
 	$contentString = [count($POST['ids'])];
 	$i = 0;
 	foreach ($_POST['ids'] as $id) {
-		$contentString[$i] = getFileContent($id);
+		$contentString[$i] = getFileContent($id)."<br />";
 		$i++;
 	}
-	echo implode($contentString);
+	//echo implode($contentString);
+	$output = implode($contentString);
+	
+	/*Build HTML page*/
+	echo "<!DOCTYPE html><HTML>";
+	echo file_get_contents('header.html');
+	echo "<BODY>";
+	echo "<div id='multi-service-container' data-multicontent='$output'></div>";
+	echo file_get_contents('frontend_fullscreen.html');
+	echo "</BODY></HTML>";
+	
 }
 
 ?>
