@@ -148,10 +148,11 @@ function parseInput() {
 	html = html.replace(/\n+/g, "<br>");
 	
 	// quick-fix for endlist/linebreak issue?
-	//html = html.replace("<\\ul>", "<\\ul><br />");
+	html = html.replace("<\/ul>", "<\/ul><br />");
 
 	var elements = reductiveSplit(html, "<br />");
-	console.log(html);
+	
+	console.log(elements);
 	
 
 	// [temp?] fix for issue of mid-list <br>s being inserted
@@ -219,9 +220,7 @@ function parseInput() {
 	}
 	
 	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_nameSet, parser_other);
-		
-	//console.log(parser_representedElements, parseResult);
-			
+					
 	return parseResult;
 }
 
@@ -253,16 +252,15 @@ function processListElements(contents) {
 	// given a string representing the contents of a list, recursively
 	// process the contents of that list as RawElements
 	
-	 // strip leading and trailing <li> and </li>
-	contents = contents.substring(4, contents.length-5);
-	
+	// TODO: better documentation
 	
 	var startIndex = 0;
 	var stopIndex = 0;
 	var subelements = [];
 	while (stopIndex < contents.length) {
 		
-		while (contents.charAt(stopIndex) !== "<" && stopIndex < contents.length) stopIndex++;
+		console.log(stopIndex, contents.length);
+		
 		if (contents.substring(stopIndex, stopIndex + 4) === "<ul>") {
 			
 			var pointer = stopIndex + 1;
@@ -290,6 +288,7 @@ function processListElements(contents) {
 			var current = contents.substring(startIndex, stopIndex);
 			if (!isWhitespace(current)) {
 				subelements.push(new RawElement(contents.substring(startIndex, stopIndex)));
+				console.log(subelements);
 			}
 			startIndex = stopIndex + 5;
 			stopIndex = stopIndex + 5;
