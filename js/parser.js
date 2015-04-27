@@ -245,14 +245,16 @@ function parseInput(html) {
 		// parse indent-organized RawElements
 		var parsedElement = parseRawElement(rawElements[i]);
 		
-		// check if element already contained in sidebar representation		
-		//if (parser_representedElements.indexOf(parsedElement.getIdentifier()) === -1) {
-		parser_parsedElements.push(parsedElement);
+		if (typeof parsedElement !== "undefined") {
+			// check if element already contained in sidebar representation		
+			//if (parser_representedElements.indexOf(parsedElement.getIdentifier()) === -1) {
+			parser_parsedElements.push(parsedElement);
 		
-		parser_parsedElements = mergeArrays(parser_parsedElements, parsedElement.getSubelements());
-		//}
+			parser_parsedElements = mergeArrays(parser_parsedElements, parsedElement.getSubelements());
+			//}
 		
-		updateRepresentedElements(parsedElement);
+			updateRepresentedElements(parsedElement);
+		}
 	}
 	
 	// set identifiers for "anonymous" elements
@@ -359,6 +361,8 @@ function countSubelements(rawElement) {
 function parseRawElement(rawElement) {
 	/* recursively turn RawElements into their respective 
 	IdentifierElement forms */
+	
+	if (hasWrappingParentheses(rawElement.value)) return undefined;
 	
 	var newElement;
 	var aliases;
@@ -596,6 +600,24 @@ function abstractQuotes(string) {
 
 	return ret;
 }
+
+function hasWrappingParentheses(str) {
+	var index = 0;
+	if (str.charAt(index) === "(") {
+		index = 1;
+		var open_ = 0;
+		var closed_ = 0;
+		while (index < str.length-1) {
+			if (str.charAt(index) === "(") open_++;
+			else if (str.charAt(index) === ")") closed_++;
+			index++;
+		}
+		if (open_ === closed_ && str.charAt(index) === ")") {
+			return true;
+		}
+	}
+	return false;
+}		
 
 function mergeArrays(arr1, arr2) {
 	// merge the contents of two arrays, removing duplicates
