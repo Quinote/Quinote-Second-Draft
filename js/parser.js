@@ -610,6 +610,7 @@ function hasWrappingParentheses(str) {
 		while (index < str.length-1) {
 			if (str.charAt(index) === "(") open_++;
 			else if (str.charAt(index) === ")") closed_++;
+			if (closed_ > open_) return false;
 			index++;
 		}
 		if (open_ === closed_ && str.charAt(index) === ")") {
