@@ -25,7 +25,8 @@ TODO:
 var aliasRegex = /\[.*\]/; 
 var aliasSeparatorRegex = /;|,/;
 var ideaRegex = /([^:])+/;
-var equalityRegex = /:/; // currently unused; may be expanded
+var equalityRegex = /:/; // check for var qTerm = 
+var quoteLiteralHolder = "qtltrhldr";
 
 // these need to be global because of recursive scoping issues
 // alternative would be recursive construction of a ParseResult
@@ -40,6 +41,9 @@ var parser_aliases = [];
 var parser_anonCount = 1; // count of "nameless" identifiers
 var parser_nameSet = {}; // map of identifiers/aliases to parseElements
 var parser_representedElements = []; // list of identifiers already represented
+
+// global representation of most recent parse
+var parser_currentParse;
 
 
 
@@ -162,7 +166,6 @@ function parseInput(html) {
 	
 	// now externally defined
 	//var html = getEditorHtml();
-	console.log(html);
 	
 	// eliminate zero-width spaces (U+200B)
 	html = html.replace(/\u200B+/g, "");
@@ -170,7 +173,6 @@ function parseInput(html) {
 	// replace newlines with <br /> tags
 	//html = html.replace(/\n+/g, "<br />");
 	html = html.replace(/\n+/g, "");
-	console.log(html);
 	
 	// replace &nbsp;s with " "
 	html = html.replace(/&nbsp;/g, " ");
@@ -259,8 +261,8 @@ function parseInput(html) {
 	}
 	
 	var parseResult = new ParseResult(parser_parsedElements, parser_identifiers, parser_definitions, parser_nameSet, parser_other);
-					
-	console.log(parseResult);
+	
+	parser_currentParse = parseResult;
 	
 	return parseResult;
 }
@@ -361,6 +363,11 @@ function parseRawElement(rawElement) {
 	var newElement;
 	var aliases;
 	
+	var quoteHandler = abstractQuotes(rawElement.value);
+	rawElement.value = quoteHandler.value;
+	var quoteList = quoteHandler.quotes;
+	var quoteIndex = 0;
+	
 	// split by colon 
 	var components = rawElement.value.split(":");
 	for (i in components) {
@@ -430,6 +437,13 @@ function parseRawElement(rawElement) {
 		var elementDefinitions = components[1].split(";");
 		for (i in elementDefinitions) {
 			elementDefinitions[i] = elementDefinitions[i].trim();
+			var index = elementDefinitions[i].indexOf(quoteLiteralHolder);
+			var count = 0;
+			while (index !== -1) {
+				elementDefinitions[i] = elementDefinitions[i].replace(quoteLiteralHolder + quoteIndex, quoteList[quoteIndex]);
+				quoteIndex++;
+				index = elementDefinitions[i].indexOf(quoteLiteralHolder);
+			}
 		}
 		
 		// merge definitions of element
@@ -560,7 +574,28 @@ function fixLists(str) {
 	}
 	return str;
 }
-			
+
+function abstractQuotes(string) {
+	var quoteRegex = /"(.*?)"/g;
+	
+	var count = 0;
+	var quotes = [];
+	var match;
+	do {
+		match = quoteRegex.exec(string);
+		if (match) {
+			quotes.push(match[0]);
+			string = string.replace(match[0], quoteLiteralHolder + count);
+			count++;
+		}
+	} while (match);
+
+	var ret = {};
+	ret.value = string;
+	ret.quotes = quotes;
+
+	return ret;
+}
 
 function mergeArrays(arr1, arr2) {
 	// merge the contents of two arrays, removing duplicates

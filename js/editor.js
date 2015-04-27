@@ -268,7 +268,7 @@ var getEditorHtml = function() {
      * It now also gets rid of other formatting stuff unnecessary for parsing.
      */
     var data = tinyMCE.activeEditor.getContent();
-    console.log(data);
+
     var i = 0;
     var listLevel = 0;
     var formatted = '';
@@ -391,6 +391,7 @@ var buildList = function(parseResult) {
             list.append(buildSublist(nextElement.subelements, 1, representedIdentifiers));
         }
     }
+
 };
 
 function buildSublist(elements, indentLevel, representedIdentifiers) {
@@ -426,7 +427,7 @@ function buildSublist(elements, indentLevel, representedIdentifiers) {
 }
 
 function shorten(identifier) {
-	// ellipsis-truncate an identifier if it exceeds 20 chars
+	// ellipsis-truncate an identifier if it exceeds 30 chars
 	var ret = identifier;
 	if (identifier.length > 30) {
 		contents = identifier.split(" ");

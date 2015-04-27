@@ -26,7 +26,7 @@ var flag = true;
 var test_ = false;
 
 //**************************************
-// HANDLERS
+// HANDLERS / LISTENERS
 //**************************************
 
 $(document).ready(function() {
@@ -109,13 +109,14 @@ $(document).ready(function() {
 		$('#pagecontainer').css({"-webkit-filter" : "blur(0px)"});
 		$('#homeContainer').css({"-webkit-filter" : "blur(0px)"});
 	});
-
+	
 	$('#buttonStartQuiz').click(function(){
 		$('#quizframe').toggle();
 
 		nextQuestion();
 		flag = false;
 	});
+	
 	
 	
 	$("#buttonNext").click(function() { // NEXT button
@@ -126,6 +127,40 @@ $(document).ready(function() {
 	$("#buttonCheck").click(function() { // CHECK answer button
 		// currently unused
 	});
+	
+	
+	// Listener for Note Index
+	$("#sidebar").mouseenter( function() { // handlerIn
+		$("li.identifier-element").hover( 
+			function() { // handlerIn
+				var identifier = $(this).html();
+				if (identifier.indexOf(":") === -1) {
+					var element = parser_currentParse.getElementByKey(identifier);
+					showDefinitions(element, $(this));
+				}
+			},
+			function() { // handlerOut
+				$("#hoverDiv").toggle(false);
+				var contents = $(this).html();
+				$(this).html(contents.split(":")[0].trim());
+			}
+		).css({ "cursor" : "pointer"});
+	});
+	
+	function showDefinitions(element, container) {
+		var displayString = "<i style='color:#666'>";
+		var position = container.position();
+		var newTop = position.top;
+		var newLeft = position.left + container.width();
+		for (var i=0; i<element.definitions.length; i++) {
+			displayString += element.definitions[i];
+			if (i < element.definitions.length - 1) {
+				displayString += "; ";
+			}
+		}
+		displayString += "</i>";
+		container.html(element.getIdentifier() + ": " + displayString);
+	}
 	
 	// question number field listeners
 	$("#qLengthMC").change( function() {
