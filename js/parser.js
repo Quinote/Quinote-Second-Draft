@@ -177,6 +177,9 @@ function parseInput(html) {
 	// replace &nbsp;s with " "
 	html = html.replace(/&nbsp;/g, " ");
 	
+	// translate HTML Entities to Unicode
+	html = he.decode(html);
+	
 	// quick-fix for endlist/linebreak issue?
 	// this causes nested-list issues
 	//html = html.replace(/<\/ul>/g, "</ul><br />");
