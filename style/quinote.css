@@ -156,10 +156,11 @@ body {
 	background-size: contain;
 }
 #header {
-	width: 100%;
 	padding-top: 20px;
-	margin-bottom: 15px;
-	box-shadow: 0px 5px 5px #cae4c6; 
+	margin-bottom: 10px;
+	padding-left: 10px;
+	box-shadow: 0px 5px 5px #cae4c6;
+	overflow: hidden; 
 }
 .left-nav{
 	padding-left: 20px;
@@ -207,7 +208,8 @@ footer {
 #header-home {
 	width: 100%;
 	padding-top: 20px;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
+	padding-left: 10px;
 }
 .nav-home {
 	color: #4FA542;
@@ -439,7 +441,7 @@ h2 {
 /**************** REGISTRATION ****************/
 #main_register {
 	width: 50%;
-	top: 50%;
+	top: 20%;
 	left: 25%;
 	float: left;
 	position: fixed;
@@ -685,7 +687,7 @@ h2 {
 }
 #editorToolbar{
 	background: linear-gradient(to right, #4FA542, #84B92F, #94C125);
-	height: 113px;
+	height: 50px;
 	overflow: hidden;
 	width:210mm;
 }
