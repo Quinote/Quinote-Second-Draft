@@ -4,6 +4,21 @@ Author: Kat Glover
 
 QuiNote Main Workspace
 -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>test header</title>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/quinote.css" />
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+	</head>
+<body>
+
+
 <div id="page">
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  header  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<div id="quinote-header">
@@ -44,61 +59,93 @@ QuiNote Main Workspace
 						<!--TITLE GOES HERE--><span id='save-message'></span>
 					</form>
 				</div>
-				<!--<div id="toolbar">-->
-					<!--<div class="controlmenu" id="control1">-->
-						<!--<img class="icons" id="undo" src="style/svg/undo.svg">-->
-						<!--<img class="icons" id="redo" src="style/svg/redo.svg">-->
-					<!--</div>-->
-					<!-- -->
-					<!--<div class="controlmenu" id="colorControl">-->
-						<!--<img class="icons" id="color" src="style/svg/color.svg">-->
-						<!--<img class="icons" id="high" src="style/svg/high.svg">-->
-					<!--</div>-->
-					<!--<div class="controlmenu" id="formatControl">-->
-						<!--<img class="icons" id="bold" src="style/svg/bold.svg">-->
-						<!--<img class="icons" id="underline" src="style/svg/underline.svg">-->
-						<!--<img class="icons" id="italic" src="style/svg/italic.svg">-->
-						<!--<img class="icons" id="strike" src="style/svg/strike.svg">-->
-					<!--</div>-->
-					<!--<div class="controlmenu" id="fontselector">-->
-						<!--<select class="text-font">-->
-						  <!--<option value="timesnewroman">Times New Roman</option>-->
-						  <!--<option value="comicsans">Comic Sans</option>-->
-						  <!--<option value="cambria">Cambria</option>-->
-						  <!--<option value="arial" selected="">Arial</option>-->
-						<!--</select>-->
-						<!--<select class="text-size">-->
-						  <!--<option value="small">Small</option>-->
-						  <!--<option value="normal" selected>Normal</option>-->
-						  <!--<option value="large">Large</option>-->
-						  <!--<option value="huge">Huge</option>-->
-						<!--</select>-->
-					<!--</div>-->
-					<!--<div class="controlmenu" id="paragraphControls">-->
-						<!--<img class="icons" id="rightjus" src="style/svg/a-rig.svg">-->
-						<!--<img class="icons" id="centerjus" src="style/svg/a-cen.svg">-->
-						<!--<img class="icons" id="leftjus" src="style/svg/a-left.svg">-->
-						<!--<img class="icons" id="justjus" src="style/svg/a-jus.svg">-->
-					<!--</div>-->
-					<!--<div class="controlmenu"  id="indentControl">-->
-						<!--<img class="icons" id="deindent" src="style/svg/in-de.svg">-->
-					<!--</div>-->
-					<!--<div class="controlmenu" id="listControl">-->
-						<!--<img class="icons" id="numlist" src="style/svg/li-num.svg">-->
-						<!--<img class="icons" id="bullist" src="style/svg/li-bul.svg">-->
-					<!--</div>-->
-					<!--<div class="controlmenu" id="sizeControl">-->
-						<!--<img class="icons" id="expand" src="style/svg/size-large.svg">-->
-					<!--</div>	-->
-					<!-- -->
-				<!--</div>-->
+				<div id="editorToolbar">
+					<div id="toolbar-title">
+						<form>
+							<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+							TITLE GOES HERE<span id='save-message'></span>
+						</form>
+					</div>
+					<div id="toolbar">
+						<div class="toolbar-buttons">
+						      <a href='#'>
+						        <img class="icons" id="undo" src="style/svg/undo.svg">
+						      </a>
+						      <a class='active' href='#'>
+						        <img class="icons" id="redo" src="style/svg/redo.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="color" src="style/svg/color.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="high" src="style/svg/high.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" data-mce-command="bold" id="bold" src="style/svg/bold.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="underline" src="style/svg/underline.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="italic" src="style/svg/italic.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="strike" src="style/svg/strike.svg">
+						      </a>
+						      <a href='#'>
+						        <select class="text-font">
+						          <option value="timesnewroman">Times New Roman</option>
+						          <option value="comicsans">Comic Sans</option>
+						          <option value="cambria">Cambria</option>
+						          <option value="arial" selected="">Arial</option>
+						        </select>
+						      </a>
+						      <a href='#'>
+						        <select class="text-size">
+						          <option value="small">Small</option>
+						          <option value="normal" selected>Normal</option>
+						          <option value="large">Large</option>
+						          <option value="huge">Huge</option>
+						        </select>
+						      </a>
+						      <br><br>
+						      <a href='#'>
+						        <img class="icons" id="rightjus" src="style/svg/a-rig.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="centerjus" src="style/svg/a-cen.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="leftjus" src="style/svg/a-left.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="justjus" src="style/svg/a-jus.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="deindent" src="style/svg/in-de.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="deindent" src="style/svg/in-de.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="numlist" src="style/svg/li-num.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="bullist" src="style/svg/li-bul.svg">
+						      </a>
+						      <a href='#'>
+						        <img class="icons" id="expand" src="style/svg/size-large.svg">
+						      </a>
+						</div>
+					</div>	
+				</div>
 			</div>	
 			<textarea id='editor_div' name='editor_div'><!--CONTENT GOES HERE--></textarea>
 		</div>
 		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  sidebar  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 		<div id="sidebar">
 			<div id="sideheader">
-				<h1>Parsed Notes</h1>
+				<h1>Note Index</h1>
            		<div class="summary-wrapper"> <!--List of keys-->
 		          	<div id="notes-list">
 			            <ol class="topnoteslist">
@@ -237,3 +284,8 @@ QuiNote Main Workspace
 	      		});*/
 		});
 	</script>
+
+
+
+</body>
+</html>
