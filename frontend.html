@@ -1,7 +1,13 @@
+<!--
+Quinote Software Group 2015
+Author: Kat Glover
 
+QuiNote Main Workspace
+-->
 <div id="page">
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  header  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<div id="quinote-header">
-<!-- 		<img width="5%" height="50px"  src="style/svg/menu.svg"> -->
+		<!-- <img width="5%" height="50px"  src="style/svg/menu.svg"> -->
 		<a class="svg-link" href="index.html">
 			<img width="12%" height="50px"  id="logo" src="style/svg/typeQuinoteWhite.svg">
 		</a>
@@ -12,16 +18,14 @@
 			<form class="nav-buttons">
 				<img width="25%" height="50px"  src="style/svg/new.svg" id="newFileMaker" style='cursor:copy'>
 			</form>
-			
 			<div id="newFileMakerDiv">
-                				<form id='filemaker' action='editor.php' method='post' target='_blank'>
-                                    <input type='button' class='button quiButton' id='closeDiv' value='X' style='float:right' /><br />
-                                    <b>Title: </b><input type='text' name='title' value='Untitled' />
-                                    <input type='hidden' name='actionType' value='make' />
-                        			<input class='button quiButton' id='openQuinote' type='submit' value='Go' />
-                                </form>
-                        </div>
-			
+                <form id='filemaker' action='editor.php' method='post' target='_blank'>
+                	<input type='button' class='button quiButton' id='closeDiv' value='X' style='float:right' /><br />
+                    <b>Title: </b><input type='text' name='title' value='Untitled' />
+                    <input type='hidden' name='actionType' value='make' />
+                    <input class='button quiButton' id='openQuinote' type='submit' value='Go' />
+                </form>
+            </div>
 			<form class="nav-buttons">
 				<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
 				<input type='hidden' id='userid' value='<!--USER ID GOES HERE-->'>
@@ -29,142 +33,143 @@
 			</form>
 		</div>
 	</div>
-			<div id="pagecontainer">
-				<div id="editorspace">
-					<div id="editorToolbar">
-						<div id="toolbar-title">
-							<form>
-								<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
-								<!--TITLE GOES HERE--><span id='save-message'></span>
-							</form>
-						</div>
-						<!--<div id="toolbar">-->
-							<!--<div class="controlmenu" id="control1">-->
-								<!--<img class="icons" id="undo" src="style/svg/undo.svg">-->
-								<!--<img class="icons" id="redo" src="style/svg/redo.svg">-->
-							<!--</div>-->
-							<!-- -->
-							<!--<div class="controlmenu" id="colorControl">-->
-								<!--<img class="icons" id="color" src="style/svg/color.svg">-->
-								<!--<img class="icons" id="high" src="style/svg/high.svg">-->
-							<!--</div>-->
-							<!--<div class="controlmenu" id="formatControl">-->
-								<!--<img class="icons" id="bold" src="style/svg/bold.svg">-->
-								<!--<img class="icons" id="underline" src="style/svg/underline.svg">-->
-								<!--<img class="icons" id="italic" src="style/svg/italic.svg">-->
-								<!--<img class="icons" id="strike" src="style/svg/strike.svg">-->
-							<!--</div>-->
-							<!--<div class="controlmenu" id="fontselector">-->
-								<!--<select class="text-font">-->
-								  <!--<option value="timesnewroman">Times New Roman</option>-->
-								  <!--<option value="comicsans">Comic Sans</option>-->
-								  <!--<option value="cambria">Cambria</option>-->
-								  <!--<option value="arial" selected="">Arial</option>-->
-								<!--</select>-->
-								<!--<select class="text-size">-->
-								  <!--<option value="small">Small</option>-->
-								  <!--<option value="normal" selected>Normal</option>-->
-								  <!--<option value="large">Large</option>-->
-								  <!--<option value="huge">Huge</option>-->
-								<!--</select>-->
-							<!--</div>-->
-							<!--<div class="controlmenu" id="paragraphControls">-->
-								<!--<img class="icons" id="rightjus" src="style/svg/a-rig.svg">-->
-								<!--<img class="icons" id="centerjus" src="style/svg/a-cen.svg">-->
-								<!--<img class="icons" id="leftjus" src="style/svg/a-left.svg">-->
-								<!--<img class="icons" id="justjus" src="style/svg/a-jus.svg">-->
-							<!--</div>-->
-							<!--<div class="controlmenu"  id="indentControl">-->
-								<!--<img class="icons" id="deindent" src="style/svg/in-de.svg">-->
-							<!--</div>-->
-							<!--<div class="controlmenu" id="listControl">-->
-								<!--<img class="icons" id="numlist" src="style/svg/li-num.svg">-->
-								<!--<img class="icons" id="bullist" src="style/svg/li-bul.svg">-->
-							<!--</div>-->
-							<!--<div class="controlmenu" id="sizeControl">-->
-								<!--<img class="icons" id="expand" src="style/svg/size-large.svg">-->
-							<!--</div>	-->
-							<!-- -->
-						<!--</div>-->
-					</div>
-					
-<textarea id='editor_div' name='editor_div'><!--CONTENT GOES HERE--></textarea>
-
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  page contents: (text editor & sidebar)  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<div id="pagecontainer">
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  text editor  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<div id="editorspace">
+			<div id="editorToolbar">
+				<div id="toolbar-title">
+					<form>
+						<input type='hidden' id='fileid' value='<!--FILE ID GOES HERE-->'>
+						<!--TITLE GOES HERE--><span id='save-message'></span>
+					</form>
 				</div>
-				<div id="sidebar">
-					<div id="sideheader">
-						<h1>Parsed Notes</h1>
-            <div class="summary-wrapper"> <!--List of keys-->
-              <div id="notes-list">
-                <ol class="topnoteslist">
-                  <li>Once you enter notes, the keys will be shown here.</li>
-                </ol>
-              </div>
-            </div>
-						<h2>Quiz Options</h2>
-						<h3>Length:</h3>
-						<input size="3" type="text" id="qLengthMC" name="numeric" value="" class='numberonly'/> Multiple Choice
-						<br>
-						<input size="3" type="text" id="qLengthTF" name="numeric" value="" class='numberonly'/> Fill in the Blank
-						<br>
-						<input size="3" type="text" id="qLengthFB" name="numeric" value="" class='numberonly'/> True/False
-						<br>
-						<input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
-						<br><br>
-						<div id="generateQuizHolder">
-							<input class="dialogTrigger qbutton flatbutton-quiz" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
-						</div>
-					</div>
-				</div>
+				<!--<div id="toolbar">-->
+					<!--<div class="controlmenu" id="control1">-->
+						<!--<img class="icons" id="undo" src="style/svg/undo.svg">-->
+						<!--<img class="icons" id="redo" src="style/svg/redo.svg">-->
+					<!--</div>-->
+					<!-- -->
+					<!--<div class="controlmenu" id="colorControl">-->
+						<!--<img class="icons" id="color" src="style/svg/color.svg">-->
+						<!--<img class="icons" id="high" src="style/svg/high.svg">-->
+					<!--</div>-->
+					<!--<div class="controlmenu" id="formatControl">-->
+						<!--<img class="icons" id="bold" src="style/svg/bold.svg">-->
+						<!--<img class="icons" id="underline" src="style/svg/underline.svg">-->
+						<!--<img class="icons" id="italic" src="style/svg/italic.svg">-->
+						<!--<img class="icons" id="strike" src="style/svg/strike.svg">-->
+					<!--</div>-->
+					<!--<div class="controlmenu" id="fontselector">-->
+						<!--<select class="text-font">-->
+						  <!--<option value="timesnewroman">Times New Roman</option>-->
+						  <!--<option value="comicsans">Comic Sans</option>-->
+						  <!--<option value="cambria">Cambria</option>-->
+						  <!--<option value="arial" selected="">Arial</option>-->
+						<!--</select>-->
+						<!--<select class="text-size">-->
+						  <!--<option value="small">Small</option>-->
+						  <!--<option value="normal" selected>Normal</option>-->
+						  <!--<option value="large">Large</option>-->
+						  <!--<option value="huge">Huge</option>-->
+						<!--</select>-->
+					<!--</div>-->
+					<!--<div class="controlmenu" id="paragraphControls">-->
+						<!--<img class="icons" id="rightjus" src="style/svg/a-rig.svg">-->
+						<!--<img class="icons" id="centerjus" src="style/svg/a-cen.svg">-->
+						<!--<img class="icons" id="leftjus" src="style/svg/a-left.svg">-->
+						<!--<img class="icons" id="justjus" src="style/svg/a-jus.svg">-->
+					<!--</div>-->
+					<!--<div class="controlmenu"  id="indentControl">-->
+						<!--<img class="icons" id="deindent" src="style/svg/in-de.svg">-->
+					<!--</div>-->
+					<!--<div class="controlmenu" id="listControl">-->
+						<!--<img class="icons" id="numlist" src="style/svg/li-num.svg">-->
+						<!--<img class="icons" id="bullist" src="style/svg/li-bul.svg">-->
+					<!--</div>-->
+					<!--<div class="controlmenu" id="sizeControl">-->
+						<!--<img class="icons" id="expand" src="style/svg/size-large.svg">-->
+					<!--</div>	-->
+					<!-- -->
+				<!--</div>-->
+			</div>	
+			<textarea id='editor_div' name='editor_div'><!--CONTENT GOES HERE--></textarea>
 		</div>
-			<div class="dialog dialogEffect" id="quizDialog">
-				<div class="quizContent">
-					<div id="thequiz">
-						<div id="quizHead">
-							<button id="buttonCloseQuiz" class="dialogClose qbutton">Quit</button>
-						</div>
-					<div id="wrapper">
-						<div id="quiz.container">
-							<div id="quizopener">
-								<div id="openText">
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  sidebar  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<div id="sidebar">
+			<div id="sideheader">
+				<h1>Parsed Notes</h1>
+           		<div class="summary-wrapper"> <!--List of keys-->
+		          	<div id="notes-list">
+			            <ol class="topnoteslist">
+			              <li>Once you enter notes, the keys will be shown here.</li>
+			            </ol>
+              		</div>
+            	</div>
+				<h2>Quiz Options</h2>
+				<h3>Length:</h3>
+				<input size="3" type="text" id="qLengthMC" name="numeric" value="" class='numberonly'/> Multiple Choice
+				<br>
+				<input size="3" type="text" id="qLengthTF" name="numeric" value="" class='numberonly'/> Fill in the Blank
+				<br>
+				<input size="3" type="text" id="qLengthFB" name="numeric" value="" class='numberonly'/> True/False
+				<br>
+				<input size="3" type="text" id="qLength" name="numeric" value="" class='numberonly'/> Total Questions
+				<br><br>
+				<div id="generateQuizHolder">
+					<input class="dialogTrigger qbutton flatbutton-quiz" type="button" id="buttonGenerateQuiz" value="Generate Quiz" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  quiz overlay  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<div class="dialog dialogEffect" id="quizDialog">
+		<div class="quizContent">
+			<div id="thequiz">
+				<div id="quizHead">
+					<button id="buttonCloseQuiz" class="dialogClose qbutton">Quit</button>
+				</div>
+				<div id="wrapper">
+					<div id="quiz.container">
+						<div id="quizopener">
+							<div id="openText">
 								Your quiz is ready! Click start to begin!
-								</div>
-								<img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
-								<input class="qbutton flatbutton-quiz" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
 							</div>
-							<div id="quizframe">
-								<div id="question">
-								</div>
-								<div id="checkCon">
-									<div id="check">
-										<div id="one">
-											<h3>Correct</h3>
-										</div>
-										<div id="two">
-											<h3>Incorrect</h3>
-										</div>
+							<img width="500px" height="200px" src="style/svg/pageMainShadow.svg">
+							<input class="qbutton flatbutton-quiz" type="button" id="buttonStartQuiz" value="Start" onclick="showQuiz(); randomizeQuiz();"/>
+						</div>
+						<div id="quizframe">
+							<div id="question">
+							</div>
+							<div id="checkCon">
+								<div id="check">
+									<div id="one">
+										<h3>Correct</h3>
+									</div>
+									<div id="two">
+										<h3>Incorrect</h3>
 									</div>
 								</div>
-								<div id="answerSelections">
-									<div id="answer_choice">
-										<form id="form1" action="">
+							</div>
+							<div id="answerSelections">
+								<div id="answer_choice">
+									<form id="form1" action="">
 										<input type="radio" id="a1" name="rd" value="" /><label id="rad1"></label><br/>
 										<input type="radio" id="a2" name="rd" value="" /><label id="rad2"></label><br/>
 										<input type="radio" id="a3" name="rd" value="" /><label id="rad3"></label><br/>
 										<input type="radio" id="a4" name="rd" value="" /><label id="rad4"></label><br/>
-										</form>
-									</div>
-									<div id="answer_text">
-										<form id="form2" action="">
+									</form>
+								</div>
+								<div id="answer_text">
+									<form id="form2" action="">
 										fill in the blank: <input type="text" id="ansText" size="20" />
-										</form>
-									</div>
-									<div id="answer_check">
-										<form id="form3" action="">
+									</form>
+								</div>
+								<div id="answer_check">
+									<form id="form3" action="">
 										<input type="radio" id="true" name="ch" value="" /><label id="che1">True</label><br/>
 										<input type="radio" id="false" name="ch" value="" /><label id="che1">False</label>
-										</form>
-									</div>
+									</form>
 								</div>
 								<ul id="quizButtons">
 									<input class="qbutton flatbutton-quiz" type="button" id="buttonNext" value="Next Question" onclick="randomizeQuiz();" />
@@ -202,31 +207,33 @@
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>	
-			
-		    <!--Editor scripts-->
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  editor scripts  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<script type="text/javascript" src="tinymce/tinymce.min.js"></script>
 	<script type="text/javascript" src="js/editor.js"></script>
 	<script type="text/javascript" src="js/sidebar.js"></script>
 	<script type="text/javascript" src="js/parser.js"></script>
 	<script type="text/javascript" src="js/quizmaker.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>	
 	
 	<script>
-	$(document).ready( function () {
-		// set initial values of question quantity fields to 0 (instead of "")
-		$("#qLengthMC").val(0);
-		$("#qLengthTF").val(0);
-		$("#qLengthFB").val(0);
-		$("#qLength").val(0);
-		
-		/*$("#newFileMaker").click(function() {
-      			console.log('new file clicked');
-      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
-      		});
-      		$("#closeDiv").click(function() {
-      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
-      		});*/
-	});
+		$(document).ready( function () {
+			// set initial values of question quantity fields to 0 (instead of "")
+			$("#qLengthMC").val(0);
+			$("#qLengthTF").val(0);
+			$("#qLengthFB").val(0);
+			$("#qLength").val(0);
+			
+			/*$("#newFileMaker").click(function() {
+	      			console.log('new file clicked');
+	      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
+	      		});
+	      		$("#closeDiv").click(function() {
+	      			$( "#newFileMakerDiv" ).slideToggle( "slow" );
+	      		});*/
+		});
 	</script>

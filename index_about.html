@@ -1,16 +1,21 @@
 <?php include('trylogin/methods.php');
-//note: dont put anything before this or it will break
 ?>
+<!--
+Quinote Software Group 2015
+Author: Kat Glover
+
+About QuiNote
+-->
 <!DOCTYPE html>
 <html>
     <head>
 		<meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="style/quinote.css" />
     </head>
-
     <body>
-    	<div id="wrap">
-    		<div id="container">
+        <div id="wrap">
+    	   <div id="container">
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  header  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     			<div id="header">
     				<a class="svg-link" href="index.html">
                         <img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
@@ -21,19 +26,20 @@
     				<div class="right-nav">
     					<a id="home" class="nav" href="index.html">Home</a>
     					<a id="help" class="nav" href="index_help.html">Help</a>
-                <!--login stuff:-->
-                <?php
-                	if(islogged()){
-                		echo '<a id="home" class="nav" href="trylogin/logout.php">Log Out</a>';
-                		echo '<a class="nav" href="filebrowser.php">My Library</a>';
-                	}
-                	else {
-                		echo '<input type="submit" id="login" class="nav-home button quiButton" value="Login" />';
-                	}
-                ?>
-                </div><!--end .right-nav-->
+                        <!--login stuff:-->
+                        <?php
+                        	if(islogged()){
+                        		echo '<a id="home" class="nav" href="trylogin/logout.php">Log Out</a>';
+                        		echo '<a class="nav" href="filebrowser.php">My Library</a>';
+                        	}
+                        	else {
+                        		echo '<input type="submit" id="login" class="nav-home button quiButton" value="Login" />';
+                        	}
+                        ?>
+                    </div>
+                    <!--end .right-nav-->
                 </div>
-                
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  login menu  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
                 <div class="head-login">
                     <form action='filebrowser.php' method='post'>
                         <table>
@@ -56,7 +62,7 @@
                 </div><!--end .head-login-->
                 
     			<div id="content">
-
+                    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  main content about page  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     				<div id="main-content_about">
 	    				<div class="section" id="about">
 	    				    <div id="main_about">
@@ -71,8 +77,8 @@
 
                                 <br>
                                 <i>QuiNote is open source! Take a look at our code on <a href="https://github.com/Quinote">Github</a></i>
-
                             </div>
+                            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  sidebar profiles  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
                             <div id="side_about">
                                 <h2>The Team</h2>
                                 <img class="profile" src="style/images/c-info.jpg">
@@ -113,32 +119,29 @@
                                 <br>
                                 <img class="profile" src="style/images/s-info.jpg">
                                 <div class="social-links">
-<!--                                     <a href="">
-                                        <img class="social" src="style/svg/linkedin.svg">
-                                    </a> -->
                                     <a href="https://github.com/sdpzier">
                                         <img class="social" src="style/svg/github.svg">
                                     </a>
                                 </div>
                                 <br>
                                 Simone – Backend Architect
-                            </div>
-                                
+                            </div>    
 	    				 </div>
 	    			</div>
-	    				<div class="break"></div>
-    				</div>
+	    			<div class="break"></div>
     			</div>
-    			<footer>
-    			Quinote 2015
-    			</footer>
     		</div>
+    		<footer>
+    			Quinote 2015
+    		</footer>
     	</div>
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   scripts  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
         <script>
             $( "#login" ).click(function() {
               $( ".head-login" ).slideToggle( "slow" );
             });
         </script>
+
 	</body>
 </html>

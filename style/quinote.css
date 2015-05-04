@@ -485,8 +485,9 @@ h2 {
 	padding-bottom: 3px;
 }
 #landing-file {
-	float: left;
 	width: 100%;
+	text-align: left;
+	padding-top: 200px;
 }
 #newfile {
 	float: right;
@@ -521,6 +522,9 @@ h2 {
 #file-holder {
 	padding-left: 10px;
 	padding-right: 10px;
+}
+#files {
+	background: #000;
 }
 .user-file:before {
 	text-decoration: none;

@@ -1,54 +1,45 @@
 <?php include('trylogin/methods.php');
-//note: dont put anything before this or it will break
 ?>
+<!--
+Quinote Software Group 2015
+Author: Kat Glover
+
+Homepage of QuiNote
+-->
 <!DOCTYPE html>
 <html>
     <head>
 		<meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="style/quinote.css" />
     </head>
-
     <body>
     	<div id="wrap">
-    	<div id="headerContainer">
-    		<div class="headerBackground">
-    			<img class="background" src="style/images/background.jpg" />
-    			<div class="screen">
-    				<ul class="slideshow">
-    					<li><span>Image 01</span></li>
-    					<li><span>Image 02</span></li>
-    					<li><span>Image 03</span></li>
-    					<li><span>Image 04</span></li>
-    					<li><span>Image 05</span></li>
-    					<li><span>Image 06</span></li>
-    				</ul>
-    			</div>
-    		</div>
-    	</div>
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  header  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     		<div id="container">
-    			<div id="header-home">
+                <div id="header-home">
                     <a class="svg-link" href="index.html">
                         <img width="5%" height="50px"  src="style/svg/pageMainShadow.svg">
                     </a>
                     <a class="svg-link" href="index.html">
                         <img width="12%" height="50px"  src="style/svg/typeQuinote.svg">
                     </a>
-    				<div class="right-nav">
-    					<a id="about" class="nav-home" href="index_about.html">About</a>
-    					<a id="help" class="nav-home" href="index_help.html">Help</a>
-                <!--login stuff:-->
-                <?php
-                	if(islogged()){
-                		echo '<a id="home" class="nav" href="trylogin/logout.php">Log Out</a>';
-                		echo '<a class="nav" href="filebrowser.php">My Library</a>';
-                	}
-                	else {
-                		echo '<input type="submit" id="login" class="nav-home button quiButton" value="Login" />';
-                	}
-                ?>
-                </div><!--end .right-nav-->
+                    <div class="right-nav">
+                        <a id="about" class="nav-home" href="index_about.html">About</a>
+                        <a id="help" class="nav-home" href="index_help.html">Help</a>
+                        <!--login stuff:-->
+                        <?php
+                            if(islogged()){
+                                echo '<a id="home" class="nav" href="trylogin/logout.php">Log Out</a>';
+                                echo '<a class="nav" href="filebrowser.php">My Library</a>';
+                            }
+                            else {
+                                echo '<input type="submit" id="login" class="nav-home button quiButton" value="Login" />';
+                            }
+                        ?>
+                    </div>
+                    <!--end .right-nav-->
                 </div>
-                
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  login menu  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
                 <div class="head-login">
                     <form action='filebrowser.php' method='post'>
                         <table>
@@ -68,88 +59,100 @@
                     <div id="create-account">
                         No account? <a href='trylogin/register.php'>Register now</a><br />
                     </div>
+                </div><!--end .head-login-->    
+            </div>
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  slideshow and background  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<div id="headerContainer">
+                <div class="headerBackground">
+                    <img class="background" src="style/images/background.jpg" />
+                    <div class="screen">
+                        <ul class="slideshow">
+                            <li><span>Image 01</span></li>
+                            <li><span>Image 02</span></li>
+                            <li><span>Image 03</span></li>
+                            <li><span>Image 04</span></li>
+                            <li><span>Image 05</span></li>
+                            <li><span>Image 06</span></li>
+                        </ul>
+                    </div>
                 </div>
-				<div id="head-content">
-				    QuiNote is a study aid that reads your notes and generates quizzes!
-				</div>
-    			<div id="content">
+            </div>
+            <div id="head-content">
+			    QuiNote is a study aid that reads your notes and generates quizzes!
+			</div>
+    		<div id="content">
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  main content  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                <div id="main-content">
+	    			<div class="section" id="about">
+	    			    <div id="main">
+    				        <h2>A notebook with built-in study aids</h2>
 
-    				<div id="main-content">
-	    				<div class="section" id="about">
-	    				    <div id="main">
-	    				        <h2>A notebook with built-in study aids</h2>
-
-                                <p>Most people take notes. Most people need to review the notes to memorize their content. QuiNote allows you to effortlessly review your notes by quizzing you from them.</p>
-	    				        
-	    				        <p>QuiNote can generate any combination of true/false, multiple choice, or fill-in-the blank question from one or more note files. Check out our about page to learn <a href="index_help.html">how</a> QuiNote works.</p>
-	    				    </div>
-	    				</div>
-	    				
-	    				<div class="break"></div>
-
-	    				<div class="section" id="features">
-	    				    <h2>Features</h2>
-	    				    <table class="feature">
-	    				        <tr>
-	    				            <td class="icon">
-	    				                <img src="style/svg/leaf.svg">
-	    				            </td>
-	    				            <td class="text">
-	    				                <p><h3 class="home-h3">Paperless</h3 class="home-h3"></p>
-	    				                <p>QuiNote is a web-based application. You can take notes, generate quizzes, and save your progress without printing a single sheet of paper or handwriting any flash cards.</p>
-	    				            </td>
-	    				        </tr>
-	    				    </table>
-	    				    <table class="feature">
-	    				        <tr>
-	    				            <td class="icon">
-	    				                <img src="style/svg/leaf.svg">
-	    				            </td>
-	    				            <td class="text">
-	    				                <p><h3 class="home-h3">Accessible</h3 class="home-h3"></p>
-	    				                <p>All you need is an Internet connection to use QuiNote. There is no software to download and our product is not operating system dependent! Just login and get started.</p>
-	    				            </td>
-	    				        </tr>
-	    				    </table>
-	    				    <table class="feature">
-	    				        <tr>
-	    				            <td class="icon">
-	    				                <img src="style/svg/leaf.svg">
-	    				            </td>
-	    				            <td class="text">
-	    				                <p><h3 class="home-h3">Customizable</h3 class="home-h3"></p>
-	    				                <p>With QuiNote you can generate a multitude of quizzes from one or more sets of notes. Additionally, you can select the type of quiz (true/false, multiple choice, fill-in-the-blank) or choose a combination of the three.</p>
-	    				            </td>
-	    				        </tr>
-	    				    </table>
-	    				    <table class="feature">
-	    				        <tr>
-	    				            <td class="icon">
-	    				                <img src="style/svg/leaf.svg">
-	    				            </td>
-	    				            <td class="text">
-	    				                <p><h3 class="home-h3">Free</h3 class="home-h3"></p>
-	    				                <p>QuiNote was created as a project for a collaborative software development course. We made this program because we thought it would be useful and, as college students, we know useful things should be free.</p>
-	    				            </td>
-	    				        </tr>
-	    				    </table>
-	    				</div>
-	    				<div class="break"></div>
-    				</div>
+                            <p>Most people take notes. Most people need to review the notes to memorize their content. QuiNote allows you to effortlessly review your notes by quizzing you from them.</p>
+    				        
+    				        <p>QuiNote can generate any combination of true/false, multiple choice, or fill-in-the blank question from one or more note files. Check out our about page to learn <a href="index_help.html">how</a> QuiNote works.</p>
+	    				 </div>
+	    			</div>	
+	    			<div class="break"></div>
+                    <div class="section" id="features">
+    				    <h2>Features</h2>
+    				    <table class="feature">
+    				        <tr>
+    				            <td class="icon">
+    				                <img src="style/svg/leaf.svg">
+    				            </td>
+    				            <td class="text">
+    				                <p><h3 class="home-h3">Paperless</h3 class="home-h3"></p>
+    				                <p>QuiNote is a web-based application. You can take notes, generate quizzes, and save your progress without printing a single sheet of paper or handwriting any flash cards.</p>
+    				            </td>
+    				        </tr>
+    				    </table>
+    				    <table class="feature">
+    				        <tr>
+    				            <td class="icon">
+    				                <img src="style/svg/leaf.svg">
+    				            </td>
+    				            <td class="text">
+    				                <p><h3 class="home-h3">Accessible</h3 class="home-h3"></p>
+    				                <p>All you need is an Internet connection to use QuiNote. There is no software to download and our product is not operating system dependent! Just login and get started.</p>
+    				            </td>
+    				        </tr>
+    				    </table>
+    				    <table class="feature">
+    				        <tr>
+    				            <td class="icon">
+    				                <img src="style/svg/leaf.svg">
+    				            </td>
+    				            <td class="text">
+    				                <p><h3 class="home-h3">Customizable</h3 class="home-h3"></p>
+    				                <p>With QuiNote you can generate a multitude of quizzes from one or more sets of notes. Additionally, you can select the type of quiz (true/false, multiple choice, fill-in-the-blank) or choose a combination of the three.</p>
+    				            </td>
+    				        </tr>
+    				    </table>
+    				    <table class="feature">
+    				        <tr>
+    				            <td class="icon">
+    				                <img src="style/svg/leaf.svg">
+    				            </td>
+    				            <td class="text">
+    				                <p><h3 class="home-h3">Free</h3 class="home-h3"></p>
+    				                <p>QuiNote was created as a project for a collaborative software development course. We made this program because we thought it would be useful and, as college students, we know useful things should be free.</p>
+    				            </td>
+    				        </tr>
+    				    </table>
+	    			</div>
+	    			<div class="break"></div>
     			</div>
-    			<footer>
-    			Quinote 2015
-    			</footer>
     		</div>
+    		<footer>
+    	       Quinote 2015
+    		</footer>
     	</div>
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  scripts  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     	<script>
             $( "#login" ).click(function() {
               $( ".head-login" ).slideToggle( "slow" );
             });
-
     	</script>
 	</body>
-
-
 </html>
