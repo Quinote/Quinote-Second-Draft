@@ -1,0 +1,135 @@
+<html>
+<head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type='text/javascript'>
+$(document).ready(function(){
+ 
+    /*$.ajax({
+        type: "GET",
+        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Jimi_Hendrix&callback=?",
+        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Amygdala&callback=?",
+        url: "https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&iwurl=&titles=Amygdala&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            console.log(data.query);
+            for (var pageId in data.query.pages) {
+    		if (data.query.pages.hasOwnProperty(pageId)) {
+        		console.log(data.query.pages[pageId].thumbnail.original);
+        		$('#img_display').html("<img src='"+data.query.pages[pageId].thumbnail.original+"'>");
+   			}
+		}
+        },
+        error: function (errorMessage) {
+        }
+    });
+    
+    $.ajax({
+        type: "GET",
+        //url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Jimi_Hendrix&callback=?",
+        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=amygdala&callback=?",
+        //url: "https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&iwurl=&titles=Amygdala&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            console.log(data.query);
+            for (var pageId in data.query.pages) {
+    		if (data.query.pages.hasOwnProperty(pageId)) {
+        		console.log(data.query.pages[pageId].extract);
+        		var intro = data.query.pages[pageId].extract;
+        		var re = new RegExp("amygdala [^\.]*"+"(is|was|are)"+".*\.{1}",'i');
+        		console.log(re);
+        		console.log(re.exec("The amygdala is a thing."));
+        		console.log(re.exec(intro));
+   			}
+		}
+        },
+        error: function (errorMessage) {
+        }
+    });	*/
+    
+});
+
+function getIntro(title) {
+	var urlTitle = encodeURI(title);
+    $.ajax({
+        type: "GET",
+        //url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Jimi_Hendrix&callback=?",
+        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles="+urlTitle+"&callback=?",
+        //url: "https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&iwurl=&titles=Amygdala&callback=?",
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+        	console.log("\n\n\n");
+            console.log(data.query);
+            for (var pageId in data.query.pages) {
+    		if (data.query.pages.hasOwnProperty(pageId)) {
+        		console.log(data.query.pages[pageId].extract);
+        		var intro = data.query.pages[pageId].extract;
+        		var re = new RegExp(title+"[^\.]*"+"(is|was|are)"+".*\.{1}",'i');
+        		console.log(re.exec(intro));
+   			}
+		}
+        },
+        error: function (errorMessage) {
+        }
+    }); 	
+}
+
+function getInfobox(title) {
+	var searchTerm=title;
+	searchTerm = encodeURI(searchTerm);
+	var url="http://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + searchTerm+"&redirects&prop=text&callback=?";
+	$.getJSON(url,function(data){
+  		wikiHTML = data.parse.text["*"];
+  		$wikiDOM = $("<document>"+wikiHTML+"</document>");
+  		$("#result").append("<div class='myInfobox'>"+$wikiDOM.find('.infobox').html()+"</div>");
+  		console.log($wikiDOM.find('.infobox').html());
+	});
+}
+
+console.log("get infobox:");
+getInfobox("Ada Lovelace");
+getInfobox("Albert Einstein");
+getInfobox("Amygdala");
+</script>
+
+<style>
+table {
+  display: table;
+  border-collapse: separate;
+}
+.myInfobox {
+  width:22em;
+  border: 1px solid #aaa;
+  border-spacing: 3px;
+  background-color: #f9f9f9;
+  color: black;
+  margin: 0.5em 0 0.5em 1em;
+  padding: 0.2em;
+  /*float: right;
+  clear: right;*/
+  text-align: left;
+  font-size: 88%;
+  line-height: 1.5em;
+  margin-bottom:50px;
+  align:center;
+}
+.myInfobox th {
+  vertical-align: top;
+  font-weight:bold;
+}
+td, th {
+  display:table-cell;
+}
+</style>
+
+</head>
+<body>
+<div id='img_display'></div>
+<div id='result'></div>
+</body>
+</html>
